@@ -1,0 +1,2 @@
+Usage:
+    preprocessor <flags> <program.c>
