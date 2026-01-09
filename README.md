@@ -1,2 +1,2 @@
-# compilators-group-GF
+# Compilators Group GF
 Compilators Practices Projects
