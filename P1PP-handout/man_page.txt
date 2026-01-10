@@ -1,2 +1,9 @@
-Usage:
-    preprocessor <flags> <program.c>
+Usage: preprocessor <flags> <program.c>
+Preprocesses a C code file (.c or .h) generating an output file with a suffix _pp: example_pp.c.
+It can handle any text file.
+
+Options:
+  -c           Changes the comments of the files (/**/ or //) by spaces (default).
+  -d           Replaces compiler directives such as constants and macros by its content.
+  -all         Does both options -c and -d.
+  -help        Displays the manual page.
