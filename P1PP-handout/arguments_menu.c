@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "comments.h"
+#include "directives.h"
 #include "string_utils.h"
 #include "file_utils.h"
 #include "arguments_menu.h"
@@ -54,6 +55,6 @@ void execute_arguments(int argc, char *argv[]) {
 
     if (flags.directive) {
         printf("Call -d\n");
-        ///TODO: to implement
+        process_directives(input_path, output_path);
     }
 }
