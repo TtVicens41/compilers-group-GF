@@ -1,3 +1,10 @@
+// Title: Directives Processor Module
+// Brief: Handles the -d flag to process preprocessor directives
+// Description: Removes #define, #include, #ifndef, #endif and other directives,
+//              replacing defined constants and macros with their values
+// Authors: Pau Puig
+// Creation: 11/01/2026
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -5,64 +12,88 @@
 #include "string_utils.h"
 #include "errors_handling.h"
 
-#define MAX_LINE_LENGTH 1024
-#define MAX_DEFINES 100
+#define MAX_LINE_LENGTH 1024    // Maximum characters per line
+#define MAX_DEFINES 100         // Maximum number of #define directives to store
 
+// Structure to store a #define directive
 typedef struct {
-    char *name;
-    char *value;
+    char *name;     // Name of the constant/macro (e.g., "ON")
+    char *value;    // Value to replace it with (e.g., "1")
 } Define;
 
+// Global table storing all #define directives found in the file
 static Define defines[MAX_DEFINES];
-static int define_count = 0;
+static int define_count = 0;    // Current number of defines stored
 
-// Add a define to the table
+/**
+ * Add a new #define to the table
+ * @param name The name of the constant/macro
+ * @param value The replacement value
+ */
 void add_define(const char *name, const char *value) {
+    // Check if table is full
     if (define_count >= MAX_DEFINES) {
         return;
     }
     
+    // Allocate memory for the name and value strings
     defines[define_count].name = malloc(strlen(name) + 1);
     defines[define_count].value = malloc(strlen(value) + 1);
     
+    // Copy the strings into the allocated memory
     strcpy(defines[define_count].name, name);
     strcpy(defines[define_count].value, value);
     
+    // Increment the counter
     define_count++;
 }
 
-// Find a define by name
+/**
+ * Search for a #define by its name
+ * @param name The name to search for
+ * @return The value associated with the name, or NULL if not found
+ */
 const char* find_define(const char *name) {
+    // Linear search through the defines table
     for (int i = 0; i < define_count; i++) {
         if (strcmp(defines[i].name, name) == 0) {
             return defines[i].value;
         }
     }
-    return NULL;
+    return NULL;  // Not found
 }
 
-// Free all defines
+/**
+ * Free all dynamically allocated memory for defines
+ * Should be called when done processing a file
+ */
 void free_defines() {
     for (int i = 0; i < define_count; i++) {
         free(defines[i].name);
         free(defines[i].value);
     }
-    define_count = 0;
+    define_count = 0;  // Reset counter
 }
 
-// Trim whitespace from the beginning and end of a string
+/**
+ * Remove leading and trailing whitespace from a string
+ * @param str The string to trim (modified in place)
+ * @return Pointer to the trimmed string (within the original buffer)
+ */
 char* trim(char *str) {
     char *end;
     
-    // Trim leading space
+    // Trim leading whitespace (spaces and tabs)
     while (*str == ' ' || *str == '\t') str++;
     
+    // If string is now empty, return it
     if (*str == 0) return str;
     
-    // Trim trailing space
+    // Trim trailing whitespace (spaces, tabs, newlines, carriage returns)
     end = str + strlen(str) - 1;
     while (end > str && (*end == ' ' || *end == '\t' || *end == '\n' || *end == '\r')) end--;
     
+    // Null-terminate after the last non-whitespace character
     *(end + 1) = 0;
     return str;
 }
