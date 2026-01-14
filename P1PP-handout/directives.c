@@ -15,18 +15,20 @@
 #define MAX_LINE_LENGTH 1024    // Maximum characters per line
 #define MAX_DEFINES 100         // Maximum number of #define directives to store
 
-// Structure to store a #define directive
+/// @brief Structure to store a #define directive
 typedef struct {
     char *name;     // Name of the constant/macro (e.g., "ON")
     char *value;    // Value to replace it with (e.g., "1")
 } Define;
 
-// Global table storing all #define directives found in the file
+/// @brief Global table storing all #define directives found in the file
 static Define defines[MAX_DEFINES];
-static int define_count = 0;    // Current number of defines stored
+
+/// @brief Current number of defines stored
+static int define_count = 0;    
 
 /**
- * Add a new #define to the table
+ * @brief Add a new #define to the table
  * @param name The name of the constant/macro
  * @param value The replacement value
  */
