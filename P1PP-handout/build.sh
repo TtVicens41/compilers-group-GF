@@ -1,3 +1,5 @@
-gcc main.c -o preprocessor
-./preprocessor --c --d --all --help
-rm preprocessor
+gcc arguments_menu.c file_utils.c string_utils.c comments.c directives.c errors_handling.c main.c -o preprocessor
+chmod +x preprocessor
+mkdir -p ~/.local/bin
+mv preprocessor ~/.local/bin/
+source ~/.bashrc
