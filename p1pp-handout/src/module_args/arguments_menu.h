@@ -1,12 +1,18 @@
+/**
+ * @title: Argumennts Menu
+ * @brief: Declarations of arguments parsing utilities.
+ * @authors: Marc Bosch Manzano
+ * @creation: 10/01/2026
+ */
+
 #ifndef ARGUMENTS_MENU_H
 #define ARGUMENTS_MENU_H
 
-#define MANUAL_PAGE "man_page.txt"
+#define MANUAL_PAGE "./src/man_page.txt"
 
 typedef struct {
     char comment;
     char directive;
-    char all;
     char help;
     int file_position;
 } Flags;

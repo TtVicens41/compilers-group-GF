@@ -11,3 +11,5 @@ Tasks:
 What to do:
 
 In a Unix terminal, execute build.sh to compile the preprocessor code. Then, call it as command: preprocessor -help.
+
+Fer un developer manual. Fer un user manual d'usuari i un pel programador.

@@ -1,29 +1,29 @@
 /**
- * @brief
- * @author: Marc
- * @date 
+ * Comments Processor Module
+ * @author: Marc Bosch Manzano & Pol Goicoechea Esparza
+ * @creation: 09/01/2026
+ * @revisions: (14/01/2026) by authors. Added documentation.
  */
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
 #include "comments.h"
-#include "string_utils.h"
-#include "errors_handling.h"
+#include "../utils/string_utils.h"
+#include "../utils/errors_utils.h"
+#include "../utils/file_utils.h"
 
 void delete_comments(
     const char *input_path, 
     const char *output_path
-) {
+) 
+{
+    if(!check_input_file(input_path) || !check_output_file(output_path))
+        return;
+        
     FILE *input_file = fopen(input_path, "r");
-    if (!input_file) {
-        printf(OPEN_FAILURE, input_path);
-        return;
-    }
-
     FILE *output_file = fopen(output_path, "w");
-    if (!output_file) {
-        printf(OPEN_FAILURE, output_path);
-        return;
-    }
 
     char c;
     char next;
@@ -61,27 +61,16 @@ void delete_comments(
     fclose(output_file);    
 }
 
-
-/// TODO: review this function.
-/// @brief Function that writes only non-empty lines (lines containing 
-/// a non-whitespace character).
 void delete_empty_rows(
     const char *input_path, 
     const char *output_path
 ) 
 {
+    if(!check_input_file(input_path) || !check_output_file(output_path))
+        return;
+        
     FILE *input_file = fopen(input_path, "r");
-    if (!input_file) {
-        printf(OPEN_FAILURE, input_path);
-        return;
-    }
-
     FILE *output_file = fopen(output_path, "w");
-    if (!output_file) {
-        printf(OPEN_FAILURE, output_path);
-        fclose(input_file);
-        return;
-    }
 
     char line[4096];
     while (fgets(line, sizeof(line), input_file)) {
@@ -111,4 +100,7 @@ void process_comments(
 
     delete_comments(input_path, temp_path);
     delete_empty_rows(temp_path, output_path);
+    
+    remove(temp_path);
+    free(temp_path);
 }
