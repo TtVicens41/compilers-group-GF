@@ -2,236 +2,228 @@
 
 ## 1. Project Goal
 
-The goal of this project is to design and implement a **generic, extensible C preprocessor engine** that performs a subset of C preprocessing functionalities (comment elimination, directives, conditional inclusion, and substitution) over text files.
+This project implements a **simple C preprocessor** that removes comments and handles basic preprocessor directives from C source files.
 
-The solution is designed as an **engine**, independent from command-line flags, so that new preprocessing features or keywords can be added without modifying the core architecture.
+The design follows a modular, extensible architecture where the engine orchestrates processing and delegates specific tasks to specialized modules.
 
 ---
 
-## 2. Scope Definition
+## 2. Features
 
-### 2.1 Supported Functionalities
+### 2.1 Currently Implemented
 
-* Comment elimination (`//`, `/* */`)
-* `#define` (simple and extensible to macros)
-* `#include "file"` (recursive, same-directory only)
-* `#ifdef` / `#endif`
-* Recursive preprocessing of included files
-* Configurable execution via flags (`-c`, `-d`, `-all`, `-help`)
+* **Comment removal**: Both single-line (`//`) and multi-line (`/* */`) comments
+* **Directive detection**: Recognizes lines starting with `#`
+* **Dispatch table**: Extensible handler registration for directives
+* **Configurable flags**: `-c`, `-d`, `-all`, `-help`
 
-### 2.2 Explicitly Unsupported (but safely ignored)
+### 2.2 Planned (Stubs Ready)
+
+* `#define` – macro definitions
+* `#include "file"` – local file inclusion
+* `#ifdef` / `#endif` – conditional compilation
+
+### 2.3 Out of Scope
 
 * `#include <...>` (system headers)
-* Full macro language
+* Complex macro expansion
 * Full C syntax validation
-* Compiler-level semantic errors
 
-Unsupported directives are copied unchanged to the output and never cause program termination.
-
----
-
-## 3. High-Level Architecture Overview
-
-The preprocessor is structured as a **pipeline-based engine** that processes input files line by line, applying a sequence of transformations depending on the configuration.
-
-### Conceptual Flow
-
-1. Read a line from the current input file
-2. Update line counter
-3. Remove comments (if enabled)
-4. Detect directive
-5. Dispatch directive handler OR process as normal text
-6. Apply substitutions
-7. Write to output (if enabled)
+Unsupported directives are safely ignored and passed through to output.
 
 ---
 
-## 4. System Architecture Diagram
+## 3. Project Structure
 
 ```
-+------------------+
-|      main.c      |
-|------------------|
-| Parse arguments  |
-| Build config     |
-| Create context   |
-+--------+---------+
-         |
-         v
-+--------------------------+
-|   Preprocessor Engine    |
-|    (preprocessor.c)     |
-|--------------------------|
-| Engine loop              |
-| Pass orchestration       |
-| Context coordination    |
-+--------+-----------------+
-         |
-         v
-+--------------------------+
-|   Directive Dispatcher   |
-|     (directives.c)      |
-|--------------------------|
-| Keyword detection        |
-| Dispatch table lookup    |
-+----+---------+-----------+
-     |         |          |
-     v         v          v
-+---------+ +---------+ +---------+
-| define  | | include | |  ifdef  |
-| module  | | module  | | module  |
-+---------+ +---------+ +---------+
-
-(shared PreprocessorContext flows through all modules)
+src/
+├── main.c                    # Entry point, argument parsing
+├── context.h                 # Shared PreprocessorContext structure
+├── preprocessor/
+│   ├── preprocessor.h        # Engine interface
+│   └── preprocessor.c        # Main processing loop
+├── comments/
+│   ├── comments.h            # Comment removal interface
+│   └── comments.c            # Comment stripping logic
+└── directives/
+    ├── directives.h          # Directive dispatcher interface
+    └── directives.c          # Directive detection and dispatch table
 ```
 
-This diagram represents control flow and responsibility separation. No directive-specific logic exists in the engine.
+---
+
+## 4. Architecture Diagram
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                        main.c                            │
+│  • Parse command-line arguments                          │
+│  • Initialize PreprocessorContext                        │
+│  • Open input/output files                               │
+│  • Call run_preprocessor()                               │
+└────────────────────────┬─────────────────────────────────┘
+                         │
+                         ▼
+┌──────────────────────────────────────────────────────────┐
+│              preprocessor.c (Engine)                     │
+│  • Read file line by line                                │
+│  • Call remove_comments() if enabled                     │
+│  • Call process_directive() if enabled                   │
+│  • Write processed lines to output                       │
+└────────────┬─────────────────────────┬───────────────────┘
+             │                         │
+             ▼                         ▼
+┌────────────────────────┐   ┌─────────────────────────────┐
+│    comments.c          │   │      directives.c           │
+│  • Strip // comments   │   │  • Detect # directives      │ 
+│  • Strip /* */ blocks  │   │  • Lookup in dispatch table │
+│  • Track block state   │   │  • Call appropriate handler │
+└────────────────────────┘   └──────────────┬──────────────┘
+                                            │
+                         ┌──────────────────┼──────────────────┐
+                         ▼                  ▼                  ▼
+                   ┌──────────┐      ┌──────────┐       ┌──────────┐
+                   │ #define  │      │ #include │       │ #ifdef   │
+                   │ (stub)   │      │ (stub)   │       │ (stub)   │
+                   └──────────┘      └──────────┘       └──────────┘
+
+         All modules share the PreprocessorContext structure
+```
 
 ---
 
 ## 5. Core Data Structure
 
-### 5.1 PreprocessorContext
+### PreprocessorContext (context.h)
 
-The **PreprocessorContext** is the central shared state of the system. All modules operate on this context to avoid global variables and to ensure extensibility.
+The central structure that holds all shared state:
 
-Conceptually, it contains:
+```c
+typedef struct {
+    FILE *input;              // Input file stream
+    FILE *output;             // Output file stream
+    const char *input_filename;
+    const char *output_filename;
+    int current_line;         // Current line number
+    bool remove_comments;     // Flag: strip comments?
+    bool process_directives;  // Flag: handle directives?
+    bool output_enabled;      // Flag: write to output?
+    void *symbol_table;       // For future #define storage
+    bool in_block_comment;    // Tracks /* */ state
+} PreprocessorContext;
+```
 
-* Input and output streams
-* Current file and line information
-* Processing configuration (flags)
-* Symbol table for definitions
-* Conditional output state
-* Error reporting context
-
-This structure enables recursive includes, conditional compilation, and consistent error reporting.
-
----
-
-## 6. Processing Pipeline (Engine Behavior)
-
-The engine executes the following loop:
-
-1. Fetch next line from input
-2. Increment line counter
-3. If comment removal enabled → strip comments
-4. If directive detected:
-
-   * Extract directive keyword
-   * Dispatch to handler
-   * Do not write directive to output
-5. Else:
-
-   * Apply substitutions
-   * If output is enabled → write line to output
-
-This pipeline is fixed and independent from command-line options.
+This structure is passed to all modules, avoiding global variables.
 
 ---
 
-## 7. Directive Dispatch Mechanism
+## 6. Processing Pipeline
 
-Directive processing is implemented via **dispatch tables**, not conditional chains.
+The engine (`preprocessor.c`) processes each line through these steps:
 
-### Design Principles
+```
+┌─────────────────────────────────────────────────┐
+│  1. Read line from input                        │
+│  2. Increment line counter                      │
+│  3. If remove_comments enabled:                 │
+│     └── Call remove_comments(line)              │
+│  4. If process_directives enabled:              │
+│     └── Call process_directive(line)            │
+│         └── If directive found: skip output     │
+│  5. If output_enabled:                          │
+│     └── Write line to output file               │
+└─────────────────────────────────────────────────┘
+```
 
-* Each directive has exactly one handler
-* The engine does not know directive semantics
-* Adding a directive requires only adding a new table entry
+---
 
-### Conceptual Table
+## 7. Directive Dispatch System
 
-| Keyword | Handler Function |
-| ------- | ---------------- |
-| define  | handle_define    |
-| include | handle_include   |
-| ifdef   | handle_ifdef     |
-| endif   | handle_endif     |
+Directives are handled via a **dispatch table**, making it easy to add new handlers:
 
-Unknown directives are ignored and copied unchanged.
+```c
+static DirectiveEntry directive_table[] = {
+    {"define",  handle_define},
+    {"include", handle_include},
+    {"ifdef",   handle_ifdef},
+    {"endif",   handle_endif},
+    {NULL, NULL}  // Sentinel
+};
+```
+
+**Adding a new directive** only requires:
+1. Write the handler function
+2. Add an entry to the table
+
+No changes to the engine are needed.
 
 ---
 
 ## 8. Module Responsibilities
 
-| Module         | Responsibility                    |
-| -------------- | --------------------------------- |
-| main.c         | CLI parsing, configuration setup  |
-| preprocessor.c | Engine loop and orchestration     |
-| context.h      | Shared data structure definitions |
-| directives.c   | Directive detection and dispatch  |
-| define.c       | Symbol table updates              |
-| include.c      | Recursive include handling        |
-| ifdef.c        | Conditional output control        |
-| comments.c     | Comment elimination               |
-| errors.c       | Centralized error reporting       |
-
-Each module has a single responsibility and is independently testable.
+| File              | Responsibility                              |
+|-------------------|---------------------------------------------|
+| `main.c`          | CLI handling, context setup, file I/O       |
+| `context.h`       | Shared data structure definition            |
+| `preprocessor.c`  | Main loop, orchestrates processing          |
+| `comments.c`      | Removes // and /* */ comments               |
+| `directives.c`    | Detects and dispatches # directives         |
 
 ---
 
-## 9. Error Handling Strategy
+## 9. Usage
 
-Error handling is centralized and non-fatal by default.
+```bash
+# Build the project
+cd src && make
 
-For each error:
+# Run preprocessor
+./preprocessor input.c
 
-* File name is reported
-* Line number is reported
-* Relevant directive or identifier is included
+# Output is written to output_pp.c
+```
 
-The engine attempts to continue processing to provide maximum diagnostic information.
+### Command-Line Flags (Planned)
 
-At least one error type is fully implemented (e.g., unmatched `#endif`). Others are documented as future extensions.
-
----
-
-## 10. Command-Line Flags as Configuration
-
-Flags are parsed only in `main.c` and translated into configuration fields inside the context.
-
-The engine logic is **never modified** based on flags.
-
-This guarantees architectural stability and extensibility.
+| Flag    | Description                              |
+|---------|------------------------------------------|
+| `-c`    | Remove comments only (default)           |
+| `-d`    | Process directives only                  |
+| `-all`  | Remove comments and process directives   |
+| `-help` | Show usage information                   |
 
 ---
 
-## 11. Documentation Levels
+## 10. Error Handling
 
-This project includes documentation at three levels:
-
-1. **User Manual** – usage, flags, error messages
-2. **Conceptual Design Documentation** – this document and slides
-3. **Code Documentation** – file headers, function headers, and conceptual comments
-
-Documentation is maintained alongside design evolution.
+The preprocessor follows a **continue-on-error** approach:
+* Errors are reported with file name and line number
+* Processing continues to provide maximum diagnostic info
+* Unsupported directives are passed through unchanged
 
 ---
 
-## 12. Team Organization
+## 11. Current Status
 
-Work is distributed by **module ownership**, not by flags.
-
-Each module has:
-
-* A responsible team member
-* A corresponding design slide
-* Clear interaction boundaries
-
-This ensures parallel development without duplication.
-
----
-
-## 13. Design Status
-
-* Architecture: Defined and frozen (v1.0)
-* Data structures: Defined
-* Engine pipeline: Defined
-* Directive dispatch: Defined
-* Implementation: In progress
+| Component           | Status        |
+|---------------------|---------------|
+| Architecture        | ✅ Complete   |
+| Context structure   | ✅ Complete   |
+| Engine loop         | ✅ Complete   |
+| Comment removal     | ✅ Complete   |
+| Directive detection | ✅ Complete   |
+| Dispatch table      | ✅ Complete   |
+| #define handler     | 🔲 Stub       |
+| #include handler    | 🔲 Stub       |
+| #ifdef/#endif       | 🔲 Stub       |
+| CLI argument parser | 🔲 Pending    |
 
 ---
 
-## 14. Conclusion
+## 12. Next Steps
 
-This design establishes a clean, extensible, and maintainable foundation for the C preprocessor. It satisfies all architectural, documentation, and extensibility requirements of the assignment and allows incremental, safe implementation of all requested functionalities.
+1. Implement CLI argument parsing with flag support
+2. Implement `#define` macro storage and substitution
+3. Implement `#include` file expansion
+4. Implement `#ifdef`/`#endif` conditional compilation
+5. Add comprehensive error reporting
