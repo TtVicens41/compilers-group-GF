@@ -1,8 +1,7 @@
 #include "preprocessor.h"
 #include "directives.h"
+#include "comments.h"
 #include <string.h>
-
-#define MAX_LINE 1024
 
 void run_preprocessor(PreprocessorContext *ctx) {
     char line[MAX_LINE];
@@ -11,7 +10,13 @@ void run_preprocessor(PreprocessorContext *ctx) {
         ctx->current_line++;
 
         // TODO: remove comments
+        if (ctx->remove_comments) {
+            remove_comments(line, &ctx->in_block_comment);
+        }
         // TODO: detect directive
+        if (process_directive(ctx, line)) {
+            continue;
+        }
         // TODO: dispatch directive
         // TODO: apply substitutions
 

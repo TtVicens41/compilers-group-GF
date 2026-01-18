@@ -11,6 +11,7 @@ int main(int argc, char **argv) {
     // 2. Initialize state
     ctx.current_line = 0;
     ctx.output_enabled = true;
+    ctx.in_block_comment = false;
 
     // 3. Set filenames (temporary hardcode for now)
     ctx.input_filename = argv[1];

@@ -27,6 +27,9 @@ typedef struct {
     bool output_enabled;
 
     void *symbol_table;
+
+    bool in_block_comment;
+
 } PreprocessorContext;
 
 #endif

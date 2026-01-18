@@ -3,6 +3,8 @@
 
 #include "context.h"
 
+#define MAX_LINE 1024
+
 /*
  * run_preprocessor
  * ----------------
