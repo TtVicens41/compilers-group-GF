@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include "directives/define/define.h"
 
 /*
  * PreprocessorContext
@@ -26,7 +27,8 @@ typedef struct {
 
     bool output_enabled;
 
-    void *symbol_table;
+    /* Symbol table for #define macros */
+    DefineTable define_table;
 
     bool in_block_comment;
 
