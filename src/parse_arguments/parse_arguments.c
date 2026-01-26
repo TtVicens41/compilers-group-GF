@@ -17,7 +17,8 @@ void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
             print_file(MANUAL_PAGE);
         }
         else if(strcmp(argv[i],"-all") == 0){
-            
+            ctx->remove_comments = true;
+            ctx->process_directives = true;
         }
     }
 
