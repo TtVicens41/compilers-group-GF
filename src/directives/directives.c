@@ -2,6 +2,7 @@
 #include "keyword_dispatcher/keyword_dispatcher.h"
 #include "define/define.h"
 #include "ifdef/ifdef.h"
+#include "include/include.c"
 #include <string.h>
 #include <ctype.h>
 
@@ -24,7 +25,7 @@ static void handle_unsupported(PreprocessorContext *ctx, const char *line) {
  */
 static KeywordHandlerPair directive_table[] = {
     {"define", handle_define},
-    {"include", handle_unsupported},
+    {"include", handle_include},
     {"ifdef", handle_ifdef},
     {"endif", handle_endif},
     {NULL, NULL}

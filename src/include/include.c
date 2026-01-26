@@ -100,7 +100,7 @@ static void insert_file_content_with_includes(PreprocessorContext *ctx,
     fclose(included_file);
 }
 
-void process_include_directive(PreprocessorContext *ctx, const char *line) {
+void handle_include(PreprocessorContext *ctx, const char *line) {
     if (is_angle_bracket_include(line)) {
         if (ctx->output_enabled) {
             fputs(line, ctx->output);

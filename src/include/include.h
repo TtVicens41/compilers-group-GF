@@ -7,6 +7,6 @@
 #define MAX_INCLUDED_FILES 128
 #define MAX_FILENAME_IN_DIRECTIVE 256
 
-void process_include_directive(PreprocessorContext *ctx, const char *line);
+void handle_include(PreprocessorContext *ctx, const char *line);
 
 #endif
