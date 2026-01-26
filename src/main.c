@@ -1,10 +1,12 @@
 #include "preprocessor.h"
 #include "context.h"
-
+#include "parse_arguments.h"
 int main(int argc, char **argv) {
     PreprocessorContext ctx;
-
+    
+    parse_arguments(argc, argv, &ctx);
     // 1. Parse arguments (later)
+    
     ctx.remove_comments = true;
     ctx.process_directives = true;
 

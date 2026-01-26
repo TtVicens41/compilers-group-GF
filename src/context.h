@@ -1,8 +1,11 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
+#define MANUAL_PAGE "./src/man_page.txt"
+
 #include <stdio.h>
 #include <stdbool.h>
+
 
 /*
  * PreprocessorContext
