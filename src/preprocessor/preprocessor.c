@@ -1,6 +1,6 @@
 #include "preprocessor.h"
-#include "directives.h"
-#include "comments.h"
+#include "directives/directives.h"
+#include "comments/comments.h"
 #include <string.h>
 
 void run_preprocessor(PreprocessorContext *ctx) {

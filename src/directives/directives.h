@@ -11,12 +11,4 @@
  */
 bool process_directive(PreprocessorContext *ctx, const char *line);
 
-typedef void (*DirectiveHandler)(PreprocessorContext *, const char *line);
-
-typedef struct {
-    const char *keyword;
-    DirectiveHandler handler;
-} DirectiveEntry;
-
-
 #endif

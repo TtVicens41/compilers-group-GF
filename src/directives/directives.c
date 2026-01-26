@@ -1,4 +1,5 @@
 #include "directives.h"
+#include "keyword_dispatcher.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -6,7 +7,7 @@ static void handle_unsupported(PreprocessorContext *ctx, const char *line) {
     // For now: copy directive as-is or ignore, but do NOT crash
 }
 
-static DirectiveEntry directive_table[] = {
+static KeywordHandlerPair directive_table[] = {
     {"define", handle_unsupported},
     {"include", handle_unsupported},
     {"ifdef", handle_unsupported},
@@ -17,26 +18,28 @@ static DirectiveEntry directive_table[] = {
 bool process_directive(PreprocessorContext *ctx, const char *line) {
     const char *p = line;
 
+    // Skip leading whitespace
     while (isspace(*p)) p++;
+    
+    // Check if line starts with '#'
     if (*p != '#') return false;
 
-    p++; // skip '#'
-    while (isspace(*p)) p++;
+    // Skip the '#' 
+    p++;
 
+    // Extract the directive keyword (extract_first_keyword handles whitespace)
     char keyword[32];
-    int i = 0;
-    while (*p && !isspace(*p) && i < 31) {
-        keyword[i++] = *p++;
-    }
-    keyword[i] = '\0';
-
-    for (int j = 0; directive_table[j].keyword; j++) {
-        if (strcmp(keyword, directive_table[j].keyword) == 0) {
-            directive_table[j].handler(ctx, line);
-            return true;
-        }
+    if (!extract_first_keyword(p, keyword, sizeof(keyword))) {
+        // No keyword found after '#'
+        handle_unsupported(ctx, line);
+        return true;
     }
 
-    handle_unsupported(ctx, line);
+    // Dispatch to the appropriate handler
+    if (!find_and_handle_keyword(ctx, keyword, directive_table, line)) {
+        // Keyword not found in table, handle as unsupported
+        handle_unsupported(ctx, line);
+    }
+
     return true;
 }
