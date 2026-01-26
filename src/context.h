@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+// Forward declaration
+typedef struct SymbolTable SymbolTable;
+
 /*
  * PreprocessorContext
  * -------------------
@@ -26,9 +29,13 @@ typedef struct {
 
     bool output_enabled;
 
-    void *symbol_table;
+    SymbolTable *symbol_table;
 
     bool in_block_comment;
+
+    // ifdef nesting support
+    int ifdef_depth;           // Current nesting level
+    int ifdef_skip_depth;      // Depth at which we started skipping
 
 } PreprocessorContext;
 

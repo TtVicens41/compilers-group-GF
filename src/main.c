@@ -1,8 +1,10 @@
-#include "preprocessor.h"
+#include "preprocessor/preprocessor.h"
 #include "context.h"
+#include "symbol_table/symbol_table.h"
 
 int main(int argc, char **argv) {
     PreprocessorContext ctx;
+    SymbolTable symbol_table;
 
     // 1. Parse arguments (later)
     ctx.remove_comments = true;
@@ -12,6 +14,12 @@ int main(int argc, char **argv) {
     ctx.current_line = 0;
     ctx.output_enabled = true;
     ctx.in_block_comment = false;
+    ctx.ifdef_depth = 0;
+    ctx.ifdef_skip_depth = 0;
+    
+    // Initialize symbol table
+    symbol_table_init(&symbol_table);
+    ctx.symbol_table = &symbol_table;
 
     // 3. Set filenames (temporary hardcode for now)
     ctx.input_filename = argv[1];
