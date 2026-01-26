@@ -1,0 +1,52 @@
+/**
+ * @title: Error Handling Utilities.
+ * @author: Marc Bosch Manzano.
+ * @creation: 10/01/2026.
+ */
+
+#ifndef ERRORS_HANDLING_H
+#define ERRORS_HANDLING_H
+
+#include <errno.h>
+
+/// Preprocessor arguments error messages.
+#define FILE_NOT_PROVIDED "No input file name provided\n"
+
+/// File error messages.
+#define EONENT_MSG "No such file or directory: %s\n"
+#define EACCES_MSG "Permission denied: %s\n"
+#define EISDIR_MSG "Is a directory: %s\n"
+#define EMFILE_MSG "Too many open files: %s\n"
+#define ENAMETOOLONG_MSG "Filename too long: %s\n"
+
+/// Warining activation/deactivation.
+#define ON 1
+#define OFF !ON
+#define WARNING ON
+
+/// Message size definition.
+#define MAX_MESSAGE_SIZE 1024
+
+/// Data structure for error message handling.
+typedef struct {
+    char message[128];
+    int line;
+} Errors;
+
+/// Static structure to store error messages.
+static Errors errors;
+
+/**
+ * Initializes an error copying to it a message and a line position.
+ * @param message A read-only string.
+ * @param line An integer
+ */
+void init_error(const char *message, int line);
+
+/**
+ * Tells user the reason that a file has failed to open.
+ * @note The function works with `errno` of `errno.h` library
+ */
+void print_file_error(const char *path);
+
+#endif
