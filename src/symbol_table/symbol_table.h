@@ -13,7 +13,7 @@
  * Table for storing #define identifiers with their values.
  * Supports both simple constants and macros with parameters.
  */
-typedef struct {
+typedef struct SymbolTable {
     char identifiers[MAX_SYMBOLS][MAX_IDENTIFIER_LEN];
     char values[MAX_SYMBOLS][MAX_VALUE_LEN];
     bool is_macro[MAX_SYMBOLS];  // True if this is a macro with parameters

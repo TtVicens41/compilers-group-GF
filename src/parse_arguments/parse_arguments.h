@@ -2,11 +2,11 @@
 #define PARSE_ARGUMENTS_H
 
 #include "context.h"
-#define MANUAL_PAGE "./man_page.txt"
-
-
+#include <stdio.h>
 
 void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx);
+
+void print_file(const char *path);
 
 
 #endif

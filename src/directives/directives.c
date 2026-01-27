@@ -2,7 +2,7 @@
 #include "keyword_dispatcher/keyword_dispatcher.h"
 #include "define/define.h"
 #include "ifdef/ifdef.h"
-#include "include/include.c"
+#include "include/include.h"
 #include <string.h>
 #include <ctype.h>
 

@@ -1,7 +1,21 @@
 
 #include "parse_arguments.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
+void print_file(const char *path) {
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        fprintf(stderr, "Error: Could not open file %s\n", path);
+        return;
+    }
+    char line[1024];
+    while (fgets(line, sizeof(line), file)) {
+        printf("%s", line);
+    }
+    fclose(file);
+}
 
 void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
 
