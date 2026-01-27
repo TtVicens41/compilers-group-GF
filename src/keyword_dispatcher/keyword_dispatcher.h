@@ -1,8 +1,16 @@
+/**
+ * @title: Keyword Dispatcher.
+ * @brief: To do handles of keywords. It is a general file, reusable for
+ * other modules.
+ * @authors: Davi Panna-Mattos Dias de Paiva.
+ * @creation: before 2026/01/27.
+ */
+
 #ifndef KEYWORD_DISPATCHER_H
 #define KEYWORD_DISPATCHER_H
 
-#include "context.h"
 #include <stdbool.h>
+#include "context.h"
 
 /*
  * WordHandler

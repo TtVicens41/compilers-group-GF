@@ -1,6 +1,15 @@
-#include "keyword_dispatcher.h"
+/**
+ * @title: Keyword Dispatcher.
+ * @brief: To do handles of keywords. It is a general file, reusable for
+ * other modules.
+ * @authors: Davi Panna-Mattos Dias de Paiva.
+ * @creation: before 2026/01/27.
+ */
+
 #include <string.h>
 #include <ctype.h>
+
+#include "keyword_dispatcher.h"
 
 bool find_and_handle_keyword(PreprocessorContext *ctx, const char *keyword, 
                           const KeywordHandlerPair *table, const char *line) {

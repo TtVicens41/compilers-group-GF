@@ -1,35 +1,46 @@
-#include "comments.h"
-#include <string.h>
 /**
- * @brief Removes comments from a line of code.
- * @param line The line of code to process.
- * @param in_block Pointer to a boolean indicating if currently inside a block comment.
- * @return true if comments were removed.
+ * @title: Comments Processing.
+ * @authors: Davi Penna-Mattos, Pol Goicoechea Esparza, Marc Bosch Manzano.
+ * @creation: before 2026/01/27
  */
-bool remove_comments(char *line, bool *in_block) {
-    char *src = line;  
-    char *dst = line;   
+
+#include <string.h>
+#include "comments.h"
+
+
+#include "../language_defs.h"
+
+/// Helper: Check if string starts with a specific symbol
+static bool starts_with(const char *str, const char *symbol) {
+    return strncmp(str, symbol, strlen(symbol)) == 0;
+}
+
+void remove_comments(char *line, bool *in_block) {
+    char *src = line;
+    char *dst = line;
+
     while (*src) {
-        if (*in_block) {           
-            if (strcmp(src, STAR_SLASH, 2) == 0) {
+        if (*in_block) {
+            // Look for block comment end symbol
+            if (starts_with(src, COMMENT_BLOCK_END)) {
                 *in_block = false;
-                src += 2;
+                src += strlen(COMMENT_BLOCK_END);
             } else {
                 src++;
             }
-        } 
-        else {
-            if (strcmp(src, DOUBLE_SLASH, 2) == 0) {
-                break;
+        } else {
+            // Look for line comment symbol
+            if (starts_with(src, COMMENT_LINE)) {
+                break; // end of line
             }
-            if (strcmp(src, SLASH_STAR, 2) == 0) {
+            // Look for block comment start symbol
+            if (starts_with(src, COMMENT_BLOCK_START)) {
                 *in_block = true;
-                src += 2;
+                src += strlen(COMMENT_BLOCK_START);
                 continue;
             }
             *dst++ = *src++;
         }
     }
     *dst = '\0';
-    return true;
 }
