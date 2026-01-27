@@ -272,6 +272,120 @@ INPUT:     #endif
            ▼
 OUTPUT:    (directive consumed)
 ```
+Input: #define SQUARE(x) ((x)*(x))
+       int sq = SQUARE(5);
+
+┌─────────────────────────────────────────────────────────┐
+│              handle_define()                            │
+│                                                         │
+│  Parse: "#define SQUARE(x) ((x)*(x))"                   │
+│         ├─────── identifier = "SQUARE"                  │
+│         ├─────── parameters = "x"                       │
+│         └─────── value = "((x)*(x))"                    │
+│                                                         │
+│  Detect macro syntax: "SQUARE(x)" → YES                 │
+│                                                         │
+│  ┌─────────────────────────────────────────────┐        │
+│  │  symbol_table->identifiers[2] = "SQUARE"    │        │
+│  │  symbol_table->values[2] = "((x)*(x))"      │        │
+│  │  symbol_table->is_macro[2] = true           │        │
+│  │  symbol_table->parameters[2] = "x"          │        │
+│  └─────────────────────────────────────────────┘        │
+└─────────────────────────────────────────────────────────┘
+                       │
+                       ▼
+┌─────────────────────────────────────────────────────────┐
+│              expand_macros()                            │
+│                                                         │
+│  Input: "int sq = SQUARE(5);"                           │
+│                                                         │
+│  ┌─────────────────────────────────────────────┐        │
+│  │  Step 1: Detect macro invocation            │        │
+│  │  ──────────────────────────────              │        │
+│  │  Search for "SQUARE(" in line                │        │
+│  │  → Found at position 10                      │        │
+│  └─────────────────────────────────────────────┘        │
+│                       │                                 │
+│                       ▼                                 │
+│  ┌─────────────────────────────────────────────┐        │
+│  │      parse_macro_invocation()                │        │
+│  │  ──────────────────────────────              │        │
+│  │  Input: "SQUARE(5);"                         │        │
+│  │                                              │        │
+│  │  1. Extract macro name: "SQUARE"             │        │
+│  │  2. Find opening '(' at position 6           │        │
+│  │  3. Find matching ')' at position 8          │        │
+│  │  4. Extract arguments: "5"                   │        │
+│  │     ┌──────────────────────────────────┐     │        │
+│  │     │  Arguments parsing:              │     │        │
+│  │     │  - Split by ',' (ignoring nested │     │        │
+│  │     │    parentheses)                  │     │        │
+│  │     │  - Trim whitespace               │     │        │
+│  │     │  Result: ["5"]                   │     │        │
+│  │     └──────────────────────────────────┘     │        │
+│  │                                              │        │
+│  │  Output:                                     │        │
+│  │    macro_name = "SQUARE"                     │        │
+│  │    arguments = ["5"]                         │        │
+│  └─────────────────────────────────────────────┘        │
+│                       │                                 │
+│                       ▼                                 │
+│  ┌─────────────────────────────────────────────┐        │
+│  │  Step 2: Get macro definition from table    │        │
+│  │  ──────────────────────────────              │        │
+│  │  lookup_symbol("SQUARE")                     │        │
+│  │                                              │        │
+│  │  → identifiers[2] = "SQUARE"                 │        │
+│  │  → values[2] = "((x)*(x))"                   │        │
+│  │  → is_macro[2] = true                        │        │
+│  │  → parameters[2] = "x"                       │        │
+│  └─────────────────────────────────────────────┘        │
+│                       │                                 │
+│                       ▼                                 │
+│  ┌─────────────────────────────────────────────┐        │
+│  │   substitute_macro_parameters()              │        │
+│  │  ──────────────────────────────              │        │
+│  │  Template: "((x)*(x))"                       │        │
+│  │  Parameters: ["x"]                           │        │
+│  │  Arguments: ["5"]                            │        │
+│  │                                              │        │
+│  │  Substitution process:                       │        │
+│  │  ┌───────────────────────────────────────┐   │        │
+│  │  │ For each parameter[i] → argument[i]:  │   │        │
+│  │  │                                       │   │        │
+│  │  │ 1. Search "x" in "((x)*(x))"          │   │        │
+│  │  │    → Found at position 2              │   │        │
+│  │  │    → Check word boundary: '(' before  │   │        │
+│  │  │    → Check word boundary: ')' after   │   │        │
+│  │  │    → Valid match!                     │   │        │
+│  │  │                                       │   │        │
+│  │  │ 2. Replace "x" → "5": "((5)*(x))"     │   │        │
+│  │  │                                       │   │        │
+│  │  │ 3. Continue search for next "x"       │   │        │
+│  │  │    → Found at position 7              │   │        │
+│  │  │    → Valid match!                     │   │        │
+│  │  │                                       │   │        │
+│  │  │ 4. Replace "x" → "5": "((5)*(5))"     │   │        │
+│  │  │                                       │   │        │
+│  │  │ 5. No more occurrences                │   │        │
+│  │  └───────────────────────────────────────┘   │        │
+│  │                                              │        │
+│  │  Result: "((5)*(5))"                         │        │
+│  └─────────────────────────────────────────────┘        │
+│                       │                                 │
+│                       ▼                                 │
+│  ┌─────────────────────────────────────────────┐        │
+│  │  Step 3: Replace invocation in line          │        │
+│  │  ──────────────────────────────              │        │
+│  │  Original: "int sq = SQUARE(5);"             │        │
+│  │                                              │        │
+│  │  Replace "SQUARE(5)" → "((5)*(5))"           │        │
+│  │                                              │        │
+│  │  Result: "int sq = ((5)*(5));"               │        │
+│  └─────────────────────────────────────────────┘        │
+│                                                         │
+│  Output: "int sq = ((5)*(5));"                          │
+└─────────────────────────────────────────────────────────┘
 
 #### Comment Removal Flow
 ```
