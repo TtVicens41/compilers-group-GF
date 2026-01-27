@@ -272,6 +272,9 @@ INPUT:     #endif
            ▼
 OUTPUT:    (directive consumed)
 ```
+
+# Macros expanded
+```
 Input: #define SQUARE(x) ((x)*(x))
        int sq = SQUARE(5);
 
@@ -386,6 +389,7 @@ Input: #define SQUARE(x) ((x)*(x))
 │                                                         │
 │  Output: "int sq = ((5)*(5));"                          │
 └─────────────────────────────────────────────────────────┘
+```
 
 #### Comment Removal Flow
 ```
