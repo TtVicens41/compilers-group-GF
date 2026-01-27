@@ -52,7 +52,8 @@ bool process_directive(PreprocessorContext *ctx, const char *line) {
     while (isspace(*p)) p++;
     
     // Check if line starts with preprocessor directive character
-    if (*p != CHAR_HASH) return false;
+    if (*p != CHAR_HASH) 
+        return false;
 
     // Skip the directive character 
     p++;

@@ -13,6 +13,7 @@
 
 #include "symbol_table/symbol_table.h"
 
+/// Manual page path, with correspondence of the build.sh compilation.
 #define MANUAL_PAGE "%s/.local/share/preprocessor/man_page.txt"
 
 /**

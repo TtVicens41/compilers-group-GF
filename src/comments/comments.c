@@ -1,14 +1,16 @@
-#include "comments.h"
+
 #include <string.h>
+#include "comments.h"
+
 
 #include "../language_defs.h"
 
-// Helper: Check if string starts with a specific symbol
+/// Helper: Check if string starts with a specific symbol
 static bool starts_with(const char *str, const char *symbol) {
     return strncmp(str, symbol, strlen(symbol)) == 0;
 }
 
-bool remove_comments(char *line, bool *in_block) {
+void remove_comments(char *line, bool *in_block) {
     char *src = line;
     char *dst = line;
 
@@ -37,5 +39,4 @@ bool remove_comments(char *line, bool *in_block) {
     }
 
     *dst = '\0';
-    return true;
 }

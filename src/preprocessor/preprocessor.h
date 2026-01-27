@@ -14,7 +14,14 @@
 
 /**
  * Executes the preprocessing engine over the input file using the 
- * configuration stored in the context.
+ * configuration stored in the context. 
+ * 
+ * The prerpocess that it calls are the following, depending on the context:
+ * 
+ * - comments: remove comments.
+ * 
+ * - directives: replace directives by its content.
+ * 
  * @param ctx Pointer to context data structure, containing the 
  * input file.
  */

@@ -21,7 +21,6 @@ void run_preprocessor(PreprocessorContext *ctx) {
     while (fgets(line, sizeof(line), ctx->input)) {
         ctx->current_line++;
 
-        // Remove comments if enabled
         if (ctx->remove_comments) {
             remove_comments(line, &ctx->in_block_comment);
         }
