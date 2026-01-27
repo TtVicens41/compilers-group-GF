@@ -42,6 +42,5 @@ void remove_comments(char *line, bool *in_block) {
             *dst++ = *src++;
         }
     }
-
     *dst = '\0';
 }
