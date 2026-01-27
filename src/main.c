@@ -27,8 +27,11 @@ int main(int argc, char **argv) {
     ctx.output_filename = "output_pp.c";
 
     // 4. Open files
-    ctx.input = fopen(ctx.input_filename, "r");
-    ctx.output = fopen(ctx.output_filename, "w");
+    if(!ctx.help_request){
+        ctx.input = fopen(ctx.input_filename, "r");
+        ctx.output = fopen(ctx.output_filename, "w");
+    }
+    
 
     // 5. Run engine
     run_preprocessor(&ctx);

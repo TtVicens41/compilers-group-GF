@@ -28,7 +28,7 @@ typedef struct {
 
     bool remove_comments;
     bool process_directives;
-
+    bool help_request;
     bool output_enabled;
 
     SymbolTable *symbol_table;
