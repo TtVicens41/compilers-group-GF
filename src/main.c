@@ -3,9 +3,37 @@
 #include "parse_arguments/parse_arguments.h"
 #include "symbol_table/symbol_table.h"
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
+char* generate_output_filename(const char* input_filename) {
+    const char* dot = strrchr(input_filename, '.');
+    const char* slash = strrchr(input_filename, '/');
+    
+    char* base = malloc(strlen(input_filename) + 10);
+    if (!base) return NULL;
+    
+    if (dot && (!slash || dot > slash)) {
+        size_t base_len = dot - input_filename;
+        strncpy(base, input_filename, base_len);
+        base[base_len] = '\0';
+        strcat(base, "_pp");
+        strcat(base, dot);
+    } else {
+        strcpy(base, input_filename);
+        strcat(base, "_pp");
+    }
+    
+    return base;
+}
+
 int main(int argc, char **argv) {
+    if (argc < 2) {
+        fprintf(stderr, "Error: No input file provided\n");
+        fprintf(stderr, "Usage: %s [options] <input_file>\n", argv[0]);
+        return 1;
+    }
+    
     PreprocessorContext ctx;
     SymbolTable symbol_table;
     
@@ -35,20 +63,51 @@ int main(int argc, char **argv) {
     symbol_table_init(&symbol_table);
     ctx.symbol_table = &symbol_table;
 
-    // 3. Set filenames (temporary hardcode for now)
-    ctx.input_filename = argv[1];
-    ctx.output_filename = "output_pp.c";
+    // 3. Find input filename (last non-flag argument)
+    ctx.input_filename = NULL;
+    for(int i = argc - 1; i >= 1; i--){
+        if(argv[i][0] != '-'){
+            ctx.input_filename = argv[i];
+            break;
+        }
+    }
+    
+    if(!ctx.input_filename){
+        fprintf(stderr, "Error: No input file specified\n");
+        return 1;
+    }
+    
+    // Generate output filename
+    char* output_name = generate_output_filename(ctx.input_filename);
+    if(!output_name){
+        fprintf(stderr, "Error: Failed to generate output filename\n");
+        return 1;
+    }
+    ctx.output_filename = output_name;
 
     // 4. Open files
     ctx.input = fopen(ctx.input_filename, "r");
-    ctx.output = fopen(ctx.output_filename, "w");
+    if(!ctx.input){
+        fprintf(stderr, "Error: Cannot open input file '%s'\n", ctx.input_filename);
+        free(output_name);
+        return 1;
+    }
     
+    ctx.output = fopen(ctx.output_filename, "w");
+    if(!ctx.output){
+        fprintf(stderr, "Error: Cannot create output file '%s'\n", ctx.output_filename);
+        fclose(ctx.input);
+        free(output_name);
+        return 1;
+    }
+
     // 5. Run engine
     run_preprocessor(&ctx);
 
     // 6. Cleanup
     fclose(ctx.input);
     fclose(ctx.output);
+    free(output_name);
 
     return 0;
 }
