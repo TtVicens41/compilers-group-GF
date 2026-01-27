@@ -17,12 +17,16 @@ void run_preprocessor(PreprocessorContext *ctx) {
         }
         
         // Process directives (returns true if line was a directive)
-        if (process_directive(ctx, line)) {
+        if (ctx->process_directives && process_directive(ctx, line)) {
             continue;
         }
         
-        // Apply #define substitutions
-        replace_defines_in_line(ctx, line, processed_line);
+        // Apply #define substitutions only if directives are enabled
+        if (ctx->process_directives) {
+            replace_defines_in_line(ctx, line, processed_line);
+        } else {
+            strcpy(processed_line, line);
+        }
 
         // Output the processed line if output is enabled
         if (ctx->output_enabled) {
