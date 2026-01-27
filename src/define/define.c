@@ -1,3 +1,9 @@
+/**
+ * @title: Define Directive Processing.
+ * @authors: Pau Puig Guillén
+ * @creation: before 2026/01/27
+ */
+
 #include "define.h"
 #include "symbol_table/symbol_table.h"
 #include "keyword_dispatcher/keyword_dispatcher.h"

@@ -1,5 +1,14 @@
-#include "symbol_table.h"
+/**
+ * @title: Symbolic Table.
+ * @brief: Implements the all the functionalities regarding to the symbol 
+ * table data structure.
+ * @authors: Davi Panna-Mattos Dias de Paiva, Marc Bosch Manzano.
+ * @creation: before 2026/01/27.
+ */
+
 #include <string.h>
+
+#include "symbol_table.h"
 
 void symbol_table_init(SymbolTable *table) {
     if (!table) return;
@@ -58,8 +67,12 @@ bool symbol_table_add_with_value(SymbolTable *table, const char *identifier, con
     return true;
 }
 
-bool symbol_table_add_macro(SymbolTable *table, const char *identifier,
-                            const char *parameters, const char *body) {
+bool symbol_table_add_macro(
+    SymbolTable *table, 
+    const char *identifier,
+    const char *parameters, 
+    const char *body
+) {
     if (!table || !identifier) return false;
     
     if (table->count >= MAX_SYMBOLS) return false;

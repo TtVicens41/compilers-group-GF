@@ -1,3 +1,11 @@
+/**
+ * @title: Symbolic Table.
+ * @brief: Declares the data structe of the symbol table of the C preprocessor
+ * directives and all the functionalities regarding this data structure.
+ * @authors: Davi Panna-Mattos Dias de Paiva, Marc Bosch Manzano.
+ * @creation: before 2026/01/27.
+ */
+
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
@@ -7,10 +15,10 @@
 #define MAX_IDENTIFIER_LEN 64
 #define MAX_VALUE_LEN 256
 
-/*
+/**
  * SymbolTable
  * -----------
- * Table for storing #define identifiers with their values.
+ * Table for storing `#define` identifiers with their values.
  * Supports both simple constants and macros with parameters.
  */
 typedef struct SymbolTable {
@@ -21,68 +29,91 @@ typedef struct SymbolTable {
     int count;
 } SymbolTable;
 
-/*
- * symbol_table_init
- * -----------------
+/**
  * Initialize an empty symbol table.
+ * @param table A symbol table pointer.
  */
 void symbol_table_init(SymbolTable *table);
 
-/*
- * symbol_table_add
- * ----------------
- * Add an identifier to the symbol table (for ifdef).
- * Returns true on success, false if table is full.
+/** 
+ * Add an identifier to the symbol table for `#ifdef` directive.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @return True on success, false if table is full.
  */
 bool symbol_table_add(SymbolTable *table, const char *identifier);
 
-/*
- * symbol_table_add_with_value
- * ---------------------------
- * Add an identifier with its value to the symbol table (for define).
- * Returns true on success, false if table is full.
+/**
+ * Add an identifier with its value to the symbol table for `#define` directive.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @param value A string of the value that has to replece the identifier.
+ * @return True on success, false if table is full.
  */
-bool symbol_table_add_with_value(SymbolTable *table, const char *identifier, const char *value);
+bool symbol_table_add_with_value(
+    SymbolTable *table, 
+    const char *identifier, 
+    const char *value
+);
 
-/*
- * symbol_table_add_macro
- * ----------------------
- * Add a macro with parameters to the symbol table.
- * Returns true on success, false if table is full.
+/**
+ * Add a macro-instruction with parameters to the symbol table for `#define` 
+ * directive.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @param parameters A string of the parameters of the macro.
+ * @param body A string of the content inside the macro.
+ * @return True on success, false if table is full.
  */
-bool symbol_table_add_macro(SymbolTable *table, const char *identifier, 
-                            const char *parameters, const char *body);
+bool symbol_table_add_macro(
+    SymbolTable *table, 
+    const char *identifier, 
+    const char *parameters, 
+    const char *body
+);
 
-/*
- * symbol_table_contains
- * ---------------------
+/**
  * Check if an identifier exists in the symbol table.
- * Returns true if found, false otherwise.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @return True if found, false otherwise.
  */
-bool symbol_table_contains(const SymbolTable *table, const char *identifier);
+bool symbol_table_contains(
+    const SymbolTable *table, 
+    const char *identifier
+);
 
-/*
- * symbol_table_get_value
- * ----------------------
+/**
  * Get the value associated with an identifier.
- * Returns the value string, or NULL if not found.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @return The value string, or NULL if not found.
  */
-const char *symbol_table_get_value(const SymbolTable *table, const char *identifier);
+const char *symbol_table_get_value(
+    const SymbolTable *table, 
+    const char *identifier
+);
 
-/*
- * symbol_table_is_macro
- * ---------------------
+/**
  * Check if an identifier is a macro.
- * Returns true if it's a macro, false otherwise.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @return True if it's a macro, false otherwise.
  */
-bool symbol_table_is_macro(const SymbolTable *table, const char *identifier);
+bool symbol_table_is_macro(
+    const SymbolTable *table, 
+    const char *identifier
+);
 
-/*
- * symbol_table_get_parameters
- * ---------------------------
+/**
  * Get the parameter list for a macro.
- * Returns the parameter string, or NULL if not found or not a macro.
+ * @param table A symbol table pointer.
+ * @param identifier A string of an identifier.
+ * @return The parameter string, or NULL if not found or not a macro.
  */
-const char *symbol_table_get_parameters(const SymbolTable *table, const char *identifier);
+const char *symbol_table_get_parameters(
+    const SymbolTable *table, 
+    const char *identifier
+);
 
 #endif

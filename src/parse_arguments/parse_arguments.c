@@ -1,21 +1,16 @@
-#include "parse_arguments.h"
+/**
+ * @title: Argumennts Menu.
+ * @brief: Implementations of arguments parsing utilities.
+ * @authors: Alejandro Poole Becerra.
+ * @creation: before 2026/01/27.
+ */
+
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-void print_file(const char *path) {
-    FILE *file = fopen(path, "r");
-    if (!file) {
-        fprintf(stderr, "Error: Could not open file %s\n", path);
-        return;
-    }
-    char line[1024];
-    while (fgets(line, sizeof(line), file)) {
-        printf("%s", line);
-    }
-    fclose(file);
-}
+#include "parse_arguments.h"
 
 void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
     ctx->remove_comments = false;
@@ -44,5 +39,20 @@ void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
     
     if(!has_flags){
         ctx->remove_comments = true;
+    }
+
+    ctx->current_line = 0;
+    ctx->output_enabled = true;
+    ctx->in_block_comment = false;
+    ctx->ifdef_depth = 0;
+    ctx->ifdef_skip_depth = 0;
+
+    // Find input filename
+    ctx->input_filename = NULL;
+    for(int i = argc - 1; i >= 1; i--){
+        if(argv[i][0] != '-'){
+            ctx->input_filename = argv[i];
+            break;
+        }
     }
 }

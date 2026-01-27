@@ -1,11 +1,18 @@
-#include "include.h"
-#include "../preprocessor/preprocessor.h"
+/**
+ * @title: Include Directive Processing.
+ * @authors: Joan Vicente Martín.
+ * @creation: before 2026/01/27.
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <libgen.h>
 #include <stdlib.h>
+
+#include "include.h"
+#include "../preprocessor/preprocessor.h"
 
 #define QUOTE_CHAR '"'
 #define ANGLE_BRACKET_OPEN '<'

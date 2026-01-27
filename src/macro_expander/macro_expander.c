@@ -1,7 +1,16 @@
-#include "macro_expander.h"
-#include "macro_parser/macro_parser.h"
+/**
+ * @title: Macro Expander.
+ * @brief: Implementations of functions to process the macros. 
+ * @authors: Davi Panna-Mattos Dias de Paiva¡.
+ * @creation: before 2026/01/27.
+ */
+
 #include <string.h>
 #include <ctype.h>
+
+#include "macro_expander.h"
+#include "macro_parser/macro_parser.h"
+#include "../utils/string_utils.h"
 
 const char *find_matching_paren(const char *str) {
     int depth = 0;
@@ -29,8 +38,10 @@ int parse_macro_arguments(const char *call, char args[][256], int max_args) {
     int paren_depth = 0;
     
     for (const char *p = start; p < end; p++) {
-        if (*p == '(') paren_depth++;
-        else if (*p == ')') paren_depth--;
+        if (*p == '(') 
+            paren_depth++;
+        else if (*p == ')') 
+            paren_depth--;
         else if (*p == ',' && paren_depth == 0) {
             // End of argument
             size_t len = p - arg_start;

@@ -19,6 +19,9 @@ gcc -I. \
     parse_arguments/parse_arguments.c \
     preprocessor/preprocessor.c \
     symbol_table/symbol_table.c \
+    utils/error_utils.c \
+    utils/string_utils.c \
+    utils/file_utils.c \
     main.c \
     -o ../preprocessor
 

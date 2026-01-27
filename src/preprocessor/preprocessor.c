@@ -1,8 +1,18 @@
+/**
+ * @title: Run Preprocessor.
+ * @brief: Implements the main function to run the preprocessor
+ * using the context data structure.
+ * @author: Davi Panna-Mattos Dias de Paiva
+ * @creation: before 2026/01/27
+ */
+
+
+#include <string.h>
+
 #include "preprocessor.h"
 #include "directives/directives.h"
 #include "comments/comments.h"
 #include "define/define.h"
-#include <string.h>
 
 void run_preprocessor(PreprocessorContext *ctx) {
     char line[MAX_LINE];

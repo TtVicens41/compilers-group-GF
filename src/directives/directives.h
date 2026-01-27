@@ -1,3 +1,10 @@
+/**
+ * @title: Directives Directive Processing.
+ * @brief: Declarations of arguments parsing utilities.
+ * @authors: Davi Penna-Mattos & Pau Puig Guillén
+ * @creation: before 2026/01/27
+ */
+
 #ifndef DIRECTIVES_H
 #define DIRECTIVES_H
 

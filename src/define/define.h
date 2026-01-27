@@ -1,3 +1,9 @@
+/**
+ * @title: Define Directive Processing.
+ * @authors: Pau Puig Guillén
+ * @creation: before 2026/01/27
+ */
+
 #ifndef DEFINE_H
 #define DEFINE_H
 

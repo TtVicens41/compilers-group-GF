@@ -1,8 +1,15 @@
+/**
+ * @title: IFDEF Directive Processing.
+ * @authors: Davi Panna-Mattos Dias de Paiva.
+ * @creation: before 2026/01/27
+ */
+
+#include <string.h>
+#include <ctype.h>
+
 #include "ifdef.h"
 #include "symbol_table/symbol_table.h"
 #include "keyword_dispatcher/keyword_dispatcher.h"
-#include <string.h>
-#include <ctype.h>
 
 /*
  * handle_ifdef

@@ -1,3 +1,10 @@
+/**
+ * @title: Macro Expander.
+ * @brief: Declarations of functions to process the macros. 
+ * @authors: Davi Panna-Mattos Dias de Paiva¡.
+ * @creation: before 2026/01/27.
+ */
+
 #ifndef MACRO_EXPANDER_H
 #define MACRO_EXPANDER_H
 

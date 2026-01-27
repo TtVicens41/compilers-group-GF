@@ -1,3 +1,9 @@
+/**
+ * @title: IFDEF Directive Processing.
+ * @authors: Davi Panna-Mattos Dias de Paiva.
+ * @creation: before 2026/01/27.
+ */
+
 #ifndef IFDEF_H
 #define IFDEF_H
 
