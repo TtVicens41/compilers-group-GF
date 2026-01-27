@@ -1,6 +1,6 @@
 #include "preprocessor/preprocessor.h"
 #include "context.h"
-#include "parse_arguments.h"
+#include "parse_arguments/parse_arguments.h"
 #include "symbol_table/symbol_table.h"
 #include <stdio.h>
 int main(int argc, char **argv) {
