@@ -51,7 +51,9 @@ void execute_arguments(int argc, char *argv[]) {
     const Flags flags = process_arguments(argc, argv);
 
     if (flags.help) {
-        print_file(MANUAL_PAGE);
+        char path[128];
+        sprintf(path, MANUAL_PAGE, getenv("HOME"));
+        print_file(path);
         return;
     }
 
@@ -71,7 +73,11 @@ void execute_arguments(int argc, char *argv[]) {
         current_input = input_path;
         current_output = flags.directive ? temp_path : output_path;
 
-        printf("Call -c\n");
+#if (WARNING == ON)
+        PRINT("Call -c");
+        PRINT(current_input);
+        PRINT(current_output);
+#endif
         process_comments(current_input, current_output);
     }
 
@@ -79,8 +85,12 @@ void execute_arguments(int argc, char *argv[]) {
         current_input = current_output;
         current_output = output_path;
 
-        printf("Call -d\n");
-        process_directives(input_path, output_path);
+#if (WARNING == ON)
+        PRINT("Call -d");
+        PRINT(current_input);
+        PRINT(current_output);
+#endif
+        process_directives(current_input, current_output);
     }    
 
     if (flags.comment && flags.directive) {
@@ -90,5 +100,8 @@ void execute_arguments(int argc, char *argv[]) {
     free(input_path);
     free(temp_path);
     free(output_path);
-    printf("Program finished!\n");
+
+#if (WARNING == ON)
+    PRINT("Program finished!");
+#endif
 }

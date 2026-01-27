@@ -8,7 +8,7 @@
 #ifndef ARGUMENTS_MENU_H
 #define ARGUMENTS_MENU_H
 
-#define MANUAL_PAGE "./src/man_page.txt"
+#define MANUAL_PAGE "%s/.local/share/preprocessor/man_page.txt"
 
 typedef struct {
     char comment;

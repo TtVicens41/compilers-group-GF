@@ -96,7 +96,7 @@ void process_comments(
     const char *input_path, 
     const char *output_path
 ) {
-    char *temp_path = add_suffix_to_path(input_path, "_temp");
+    char *temp_path = add_suffix_to_path(output_path, "_temp");
 
     delete_comments(input_path, temp_path);
     delete_empty_rows(temp_path, output_path);

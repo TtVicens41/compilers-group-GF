@@ -109,7 +109,7 @@ void replace_defines_in_line(
     while (*pos) {
         // Check if this could be an identifier
         if ((*pos >= 'A' && *pos <= 'Z') || (*pos >= 'a' && *pos <= 'z') || *pos == '_') {
-            char identifier[256];
+            char word[256];
             int i = 0;
             
             // Extract the identifier
@@ -117,20 +117,20 @@ void replace_defines_in_line(
                    (*pos >= 'a' && *pos <= 'z') || 
                    (*pos >= '0' && *pos <= '9') || 
                    *pos == '_') {
-                identifier[i++] = *pos++;
+                word[i++] = *pos++;
             }
-            identifier[i] = '\0';
+            word[i] = '\0';
             
             // Check if it's a define
-            const char *value = find_define(identifier);
+            const char *value = find_define(word);
             if (value) {
                 // Replace with the value
                 strcpy(out, value);
                 out += strlen(value);
             } else {
-                // Keep the original identifier
-                strcpy(out, identifier);
-                out += strlen(identifier);
+                // Keep the original word
+                strcpy(out, word);
+                out += strlen(word);
             }
         } else {
             *out++ = *pos++;

@@ -11,7 +11,8 @@ gcc \
 chmod +x preprocessor
 mkdir -p ~/.local/bin
 mv preprocessor ~/.local/bin/
+mkdir -p ~/.local/share/preprocessor/
+cp man_page.txt ~/.local/share/preprocessor/man_page.txt
 source ~/.bashrc
 cd ..
-preprocessor ./input-code-example/input-example.c -help
-preprocessor ./input-code-example/input-example.h -d -c
+preprocessor ./input-code-example/input-example.c -c
