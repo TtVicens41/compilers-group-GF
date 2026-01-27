@@ -6,11 +6,10 @@
 int main(int argc, char **argv) {
     PreprocessorContext ctx;
     SymbolTable symbol_table;
-    parse_arguments(argc, argv, &ctx);
-    // 1. Parse arguments (later)
     
-    ctx.remove_comments = true;
-    ctx.process_directives = true;
+    // 1. Parse arguments 
+    parse_arguments(argc, argv, &ctx);
+   
 
     // 2. Initialize state
     ctx.current_line = 0;
