@@ -3,13 +3,26 @@
 #include "parse_arguments/parse_arguments.h"
 #include "symbol_table/symbol_table.h"
 #include <stdio.h>
+#include <stdlib.h>
+
 int main(int argc, char **argv) {
     PreprocessorContext ctx;
     SymbolTable symbol_table;
     
+    if (argc <= 1) {
+        fprintf(stdout, "No input file provided. Read -help.\n");
+        return 0;
+    }
+
     // 1. Parse arguments 
     parse_arguments(argc, argv, &ctx);
-   
+
+    if (ctx.help_request == true) {
+        char path[128];
+        sprintf(path, MANUAL_PAGE, getenv("HOME"));
+        print_file(path);
+        return 0;
+    }
 
     // 2. Initialize state
     ctx.current_line = 0;
@@ -27,12 +40,9 @@ int main(int argc, char **argv) {
     ctx.output_filename = "output_pp.c";
 
     // 4. Open files
-    if(!ctx.help_request){
-        ctx.input = fopen(ctx.input_filename, "r");
-        ctx.output = fopen(ctx.output_filename, "w");
-    }
+    ctx.input = fopen(ctx.input_filename, "r");
+    ctx.output = fopen(ctx.output_filename, "w");
     
-
     // 5. Run engine
     run_preprocessor(&ctx);
 

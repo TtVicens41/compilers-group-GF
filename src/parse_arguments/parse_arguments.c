@@ -1,4 +1,3 @@
-
 #include "parse_arguments.h"
 #include <string.h>
 #include <stdio.h>
@@ -18,26 +17,20 @@ void print_file(const char *path) {
 }
 
 void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
-
-    for(int i = 1; i<argc;i++){
-
-        if(strcmp(argv[i],"-c") == 0){
+    
+    for (int i = 1; i < argc; i++) {
+        if(strcmp(argv[i], FLAG_COMMENTS) == 0){
             ctx->remove_comments = true;
-            
         }
-        else if(strcmp(argv[i],"-d") == 0){
+        else if (strcmp(argv[i], FLAG_DIRECTIVES) == 0){
             ctx->process_directives = true;
         }
-        else if(strcmp(argv[i],"-help") == 0){
+        else if (strcmp(argv[i], FLAG_HELP) == 0){
             ctx->help_request = true;
-            print_file(MANUAL_PAGE);
         }
-        else if(strcmp(argv[i],"-all") == 0){
+        else if (strcmp(argv[i], FLAG_ALL) == 0){
             ctx->remove_comments = true;
             ctx->process_directives = true;
         }
     }
-
-
-
 }

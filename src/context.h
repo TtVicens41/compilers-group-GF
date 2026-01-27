@@ -1,10 +1,10 @@
 #ifndef CONTEXT_H
 #define CONTEXT_H
 
-#define MANUAL_PAGE "./src/man_page.txt"
-
 #include <stdio.h>
 #include <stdbool.h>
+
+#define MANUAL_PAGE "%s/.local/share/preprocessor/man_page.txt"
 
 // Forward declaration
 typedef struct SymbolTable SymbolTable;
@@ -16,7 +16,6 @@ typedef struct SymbolTable SymbolTable;
  * This structure is passed to all modules to avoid global state
  * and to allow extensibility of the engine.
  */
-
 typedef struct {
     FILE *input;
     FILE *output;
