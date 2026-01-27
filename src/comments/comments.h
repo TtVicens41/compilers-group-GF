@@ -1,3 +1,9 @@
+/**
+ * @title: Comments Processing.
+ * @authors: Davi Penna-Mattos, Pol Goicoechea Esparza, Marc Bosch Manzano.
+ * @creation: before 2026/01/27
+ */
+
 #ifndef COMMENTS_H
 #define COMMENTS_H
 

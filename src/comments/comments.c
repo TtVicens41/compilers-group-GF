@@ -1,3 +1,8 @@
+/**
+ * @title: Comments Processing.
+ * @authors: Davi Penna-Mattos, Pol Goicoechea Esparza, Marc Bosch Manzano.
+ * @creation: before 2026/01/27
+ */
 
 #include <string.h>
 #include "comments.h"
