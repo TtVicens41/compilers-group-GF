@@ -11,6 +11,7 @@
 #include <ctype.h>
 
 #include "string_utils.h"
+#include "../language_defs.h"
 
 char *get_copy(const char *string) {
     char *buffer = calloc(strlen(string) + 1, sizeof(char));
@@ -78,14 +79,14 @@ char *add_suffix_to_path(const char *path, const char *suffix) {
         return get_copy(path);
     }
 
-    char *directory = get_prefix_r(path, '/');
-    char *file_name = get_suffix_r(path, '/');
+    char *directory = get_prefix_r(path, PATH_SEPARATOR);
+    char *file_name = get_suffix_r(path, PATH_SEPARATOR);
     if (strcmp(file_name, directory) == 0) {
         directory = get_copy("\0");
     }
 
-    char *file_stem = get_prefix_r(file_name, '.');
-    char *extension = get_suffix_r(file_name, '.');
+    char *file_stem = get_prefix_r(file_name, EXTENSION_SEPARATOR);
+    char *extension = get_suffix_r(file_name, EXTENSION_SEPARATOR);
     if (strcmp(file_stem, extension) == 0) {
         extension = get_copy("\0");
     }
@@ -105,16 +106,16 @@ int find_trim(const char *string) {
     }
     size_t length = strlen(string);
     for (int i = 0; i < length; i++) {
-        if (IS_TRIM_CHAR(string[i]))
+        if (IS_WHITESPACE(string[i]))
             return i;
     }
     return 0;
 }
 
 char *copy_until_trim(const char *string) {
-    char *copy = calloc(MAX_LINE_LENGTH, sizeof(char));
+    char *copy = calloc(BUFFER_SIZE_LINE, sizeof(char));
     int i = 0;
-    while (*string && !IS_TRIM_CHAR(*string)) {
+    while (*string && !IS_WHITESPACE(*string)) {
         copy[i++] = *string++;
     }
     copy[i] = '\0';
@@ -126,7 +127,7 @@ char *trim(const char *str) {
         return NULL;
     }
 
-    while (IS_TRIM_CHAR(*str)) 
+    while (IS_WHITESPACE(*str)) 
         str++;
 
     if (*str == '\0') 
@@ -134,7 +135,7 @@ char *trim(const char *str) {
     
     char *str_copy = get_copy(str);
     char *end = str_copy + strlen(str_copy) - 1;
-    while (end > str_copy && IS_TRIM_CHAR(*end)) 
+    while (end > str_copy && IS_WHITESPACE(*end)) 
         end--;
 
     *(end + 1) = '\0';

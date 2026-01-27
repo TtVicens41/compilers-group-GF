@@ -10,6 +10,7 @@
 #include "ifdef.h"
 #include "symbol_table/symbol_table.h"
 #include "keyword_dispatcher/keyword_dispatcher.h"
+#include "../language_defs.h"
 
 /*
  * handle_ifdef
@@ -30,11 +31,11 @@ void handle_ifdef(PreprocessorContext *ctx, const char *line) {
     
     // Find the start of the directive content (after #ifdef)
     const char *p = line;
-    while (*p && *p != '#') p++;
-    if (*p == '#') p++;
+    while (*p && *p != CHAR_HASH) p++;
+    if (*p == CHAR_HASH) p++;
     
     // Skip "ifdef" keyword
-    char keyword[64];
+    char keyword[MAX_KEYWORD_LENGTH];
     p = extract_first_keyword(p, keyword, sizeof(keyword));
     if (!p) {
         // No keyword after #ifdef, treat as undefined
@@ -44,7 +45,7 @@ void handle_ifdef(PreprocessorContext *ctx, const char *line) {
     }
     
     // Extract the identifier to check
-    char identifier[MAX_IDENTIFIER_LEN];
+    char identifier[MAX_IDENTIFIER_LENGTH];
     if (extract_first_keyword(p, identifier, sizeof(identifier))) {
         // Check if identifier is defined in the symbol table
         if (!symbol_table_contains(ctx->symbol_table, identifier)) {

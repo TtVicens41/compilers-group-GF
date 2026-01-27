@@ -11,11 +11,7 @@
 #include <stdio.h>
 
 #include "context.h"
-
-#define FLAG_HELP "-help"
-#define FLAG_COMMENTS "-c"
-#define FLAG_DIRECTIVES "-d"
-#define FLAG_ALL "-all"
+#include "language_defs.h"
 
 /**
  * Parses the argument characters initializing the preprocessor context.

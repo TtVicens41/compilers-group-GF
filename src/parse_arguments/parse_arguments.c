@@ -11,6 +11,7 @@
 #include <stdbool.h>
 
 #include "parse_arguments.h"
+#include "../language_defs.h"
 
 void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
     ctx->remove_comments = false;
@@ -19,7 +20,7 @@ void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
     bool has_flags = false;
 
     for(int i = 1; i<argc;i++){
-        if(strcmp(argv[i],"-c") == 0){
+        if(strcmp(argv[i], FLAG_COMMENTS) == 0){
             ctx->remove_comments = true;
             has_flags = true;
         }
@@ -50,7 +51,7 @@ void parse_arguments(int argc, char *argv[], PreprocessorContext *ctx){
     // Find input filename
     ctx->input_filename = NULL;
     for(int i = argc - 1; i >= 1; i--){
-        if(argv[i][0] != '-'){
+        if(argv[i][0] != FLAG_PREFIX){
             ctx->input_filename = argv[i];
             break;
         }

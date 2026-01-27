@@ -13,12 +13,7 @@
 
 #include "include.h"
 #include "../preprocessor/preprocessor.h"
-
-#define QUOTE_CHAR '"'
-#define ANGLE_BRACKET_OPEN '<'
-#define HASH_CHAR '#'
-#define INCLUDE_KEYWORD "include"
-#define INCLUDE_KEYWORD_LENGTH 7
+#include "../language_defs.h"
 
 typedef struct {
     char files[MAX_INCLUDED_FILES][MAX_PATH_LENGTH];
@@ -46,13 +41,13 @@ static void mark_file_as_processed(const char *filepath) {
 }
 
 static bool extract_quoted_filename(const char *line, char *filename) {
-    const char *start = strchr(line, QUOTE_CHAR);
+    const char *start = strchr(line, CHAR_DOUBLE_QUOTE);
     if (!start) {
         return false;
     }
     
     start++;
-    const char *end = strchr(start, QUOTE_CHAR);
+    const char *end = strchr(start, CHAR_DOUBLE_QUOTE);
     if (!end || end == start) {
         return false;
     }
@@ -71,11 +66,11 @@ static bool extract_quoted_filename(const char *line, char *filename) {
 static bool is_angle_bracket_include(const char *line) {
     const char *p = line;
     
-    while (*p && *p != ANGLE_BRACKET_OPEN && *p != QUOTE_CHAR) {
+    while (*p && *p != CHAR_ANGLE_BRACKET_OPEN && *p != CHAR_DOUBLE_QUOTE) {
         p++;
     }
     
-    return (*p == ANGLE_BRACKET_OPEN);
+    return (*p == CHAR_ANGLE_BRACKET_OPEN);
 }
 
 static void resolve_include_path(const char *current_file, 

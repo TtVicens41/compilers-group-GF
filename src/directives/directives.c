@@ -10,6 +10,7 @@
 #include "define/define.h"
 #include "ifdef/ifdef.h"
 #include "include/include.h"
+#include "language_defs.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -31,10 +32,10 @@ static void handle_unsupported(PreprocessorContext *ctx, const char *line) {
  * Terminated by {NULL, NULL} sentinel.
  */
 static KeywordHandlerPair directive_table[] = {
-    {"define", handle_define},
-    {"include", handle_include},
-    {"ifdef", handle_ifdef},
-    {"endif", handle_endif},
+    {KEYWORD_DEFINE, handle_define},
+    {KEYWORD_INCLUDE, handle_include},
+    {KEYWORD_IFDEF, handle_ifdef},
+    {KEYWORD_ENDIF, handle_endif},
     {NULL, NULL}
 };
 
@@ -50,10 +51,10 @@ bool process_directive(PreprocessorContext *ctx, const char *line) {
     // Skip leading whitespace
     while (isspace(*p)) p++;
     
-    // Check if line starts with '#'
-    if (*p != '#') return false;
+    // Check if line starts with preprocessor directive character
+    if (*p != CHAR_HASH) return false;
 
-    // Skip the '#' 
+    // Skip the directive character 
     p++;
 
     // Extract the directive keyword (extract_first_keyword handles whitespace)

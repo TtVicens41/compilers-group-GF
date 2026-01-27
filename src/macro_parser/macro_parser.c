@@ -10,19 +10,20 @@
 
 #include "macro_parser.h"
 #include "../utils/string_utils.h"
+#include "../language_defs.h"
 
 bool is_macro_definition(const char *after_identifier) {
     while (isspace(*after_identifier)) after_identifier++;
-    return *after_identifier == '(';
+    return *after_identifier == CHAR_PAREN_OPEN;
 }
 
 bool parse_macro_parameters(const char *definition, char *params, size_t max_len) {
-    const char *start = strchr(definition, '(');
+    const char *start = strchr(definition, CHAR_PAREN_OPEN);
     if (!start) 
         return false;
-    start++; // Skip '('
+    start++; // Skip opening parenthesis
     
-    const char *end = strchr(start, ')');
+    const char *end = strchr(start, CHAR_PAREN_CLOSE);
     if (!end) 
         return false;
     
@@ -38,7 +39,7 @@ bool parse_macro_parameters(const char *definition, char *params, size_t max_len
 }
 
 bool parse_macro_body(const char *definition, char *body, size_t max_len) {
-    const char *end_paren = strchr(definition, ')');
+    const char *end_paren = strchr(definition, CHAR_PAREN_CLOSE);
     if (!end_paren) 
         return false;
     

@@ -10,7 +10,7 @@
 
 #include <stddef.h>
 
-#define MAX_MACRO_ARGS 10
+#include "../language_defs.h"
 
 /*
  * find_matching_paren
@@ -26,7 +26,7 @@ const char *find_matching_paren(const char *str);
  * Input: "MAX(5, 10)" starting after "MAX" -> Output: array of arguments
  * Returns: number of arguments parsed
  */
-int parse_macro_arguments(const char *call, char args[][256], int max_args);
+int parse_macro_arguments(const char *call, char args[][MAX_ARG_LENGTH], int max_args);
 
 /*
  * expand_macro
@@ -41,7 +41,7 @@ int parse_macro_arguments(const char *call, char args[][256], int max_args);
  *   - max_len: size of result buffer
  */
 void expand_macro(const char *body, const char *params,
-                  char args[][256], int arg_count,
+                  char args[][MAX_ARG_LENGTH], int arg_count,
                   char *result, size_t max_len);
 
 #endif // MACRO_EXPANDER_H

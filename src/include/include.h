@@ -8,10 +8,7 @@
 #define INCLUDE_H
 
 #include "../context.h"
-
-#define MAX_PATH_LENGTH 512
-#define MAX_INCLUDED_FILES 128
-#define MAX_FILENAME_IN_DIRECTIVE 256
+#include "../language_defs.h"
 
 /**
  * Handles the `#include` directive using the context of the preprocessor.

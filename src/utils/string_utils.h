@@ -10,16 +10,7 @@
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
 
-/// Maximum characters per line
-#define MAX_LINE_LENGTH 1024    
-
-/// Return true when character is space, tab, newline, or carriage return.
-#define IS_TRIM_CHAR(c) (\
-    (c) == ' ' ||\
-    (c) == '\t' ||\
-    (c) == '\n' ||\
-    (c) == '\r'\
-)
+#include "../language_defs.h"
 
 /// To easily print a string into stdout.
 #define PRINT(s) ({printf("%s\n", s);})

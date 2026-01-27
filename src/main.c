@@ -16,8 +16,7 @@
 #include "utils/string_utils.h"
 #include "utils/error_utils.h"
 #include "utils/file_utils.h"
-
-#define PREPROCESSOR_EXTENSION "_pp"
+#include "language_defs.h"
 
 int main(int argc, char **argv) {
     PreprocessorContext ctx;
@@ -28,7 +27,7 @@ int main(int argc, char **argv) {
 
     // 2. Skip: print manual page
     if(ctx.help_request == true) {
-        char path[128];
+        char path[BUFFER_SIZE_SMALL];
         sprintf(path, MANUAL_PAGE, getenv("HOME"));
         print_file(path);
         return 0;

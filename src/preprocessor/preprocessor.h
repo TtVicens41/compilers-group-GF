@@ -10,9 +10,7 @@
 #define PREPROCESSOR_H
 
 #include "context.h"
-
-/// Maximum characters in a line when reading a file.
-#define MAX_LINE 1024
+#include "../language_defs.h"
 
 /**
  * Executes the preprocessing engine over the input file using the 

@@ -9,6 +9,8 @@
 
 #include <errno.h>
 
+#include "../language_defs.h"
+
 /// Preprocessor arguments error messages.
 #define FILE_NOT_PROVIDED "No input file name provided\n"
 
@@ -19,17 +21,9 @@
 #define EMFILE_MSG "Too many open files: %s\n"
 #define ENAMETOOLONG_MSG "Filename too long: %s\n"
 
-/// Warining activation/deactivation.
-#define ON 1
-#define OFF !ON
-#define WARNING ON
-
-/// Message size definition.
-#define MAX_MESSAGE_SIZE 1024
-
 /// Data structure for error message handling.
 typedef struct {
-    char message[128];
+    char message[BUFFER_SIZE_SMALL];
     int line;
 } Errors;
 

@@ -11,9 +11,7 @@
 
 #include <stdbool.h>
 
-#define MAX_SYMBOLS 256
-#define MAX_IDENTIFIER_LEN 64
-#define MAX_VALUE_LEN 256
+#include "../language_defs.h"
 
 /**
  * SymbolTable
@@ -22,10 +20,10 @@
  * Supports both simple constants and macros with parameters.
  */
 typedef struct SymbolTable {
-    char identifiers[MAX_SYMBOLS][MAX_IDENTIFIER_LEN];
-    char values[MAX_SYMBOLS][MAX_VALUE_LEN];
-    bool is_macro[MAX_SYMBOLS];  // True if this is a macro with parameters
-    char parameters[MAX_SYMBOLS][MAX_VALUE_LEN];  // Parameter list for macros
+    char identifiers[SYMBOL_TABLE_SIZE][SYMBOL_NAME_SIZE];
+    char values[SYMBOL_TABLE_SIZE][SYMBOL_VALUE_SIZE];
+    bool is_macro[SYMBOL_TABLE_SIZE];  // True if this is a macro with parameters
+    char parameters[SYMBOL_TABLE_SIZE][SYMBOL_VALUE_SIZE];  // Parameter list for macros
     int count;
 } SymbolTable;
 

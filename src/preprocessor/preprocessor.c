@@ -15,8 +15,8 @@
 #include "define/define.h"
 
 void run_preprocessor(PreprocessorContext *ctx) {
-    char line[MAX_LINE];
-    char processed_line[MAX_LINE];
+    char line[BUFFER_SIZE_LINE];
+    char processed_line[BUFFER_SIZE_LINE];
 
     while (fgets(line, sizeof(line), ctx->input)) {
         ctx->current_line++;

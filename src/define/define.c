@@ -9,6 +9,7 @@
 #include "keyword_dispatcher/keyword_dispatcher.h"
 #include "macro_parser/macro_parser.h"
 #include "macro_expander/macro_expander.h"
+#include "../language_defs.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -26,9 +27,9 @@ static void handle_simple_define(PreprocessorContext *ctx, const char *identifie
     while (value_end > p && isspace(*value_end)) value_end--;
     
     // Copy value into buffer
-    char value[MAX_VALUE_LEN];
+    char value[SYMBOL_VALUE_SIZE];
     size_t value_len = value_end - p + 1;
-    if (value_len >= MAX_VALUE_LEN) value_len = MAX_VALUE_LEN - 1;
+    if (value_len >= SYMBOL_VALUE_SIZE) value_len = SYMBOL_VALUE_SIZE - 1;
     strncpy(value, p, value_len);
     value[value_len] = '\0';
     
@@ -41,8 +42,8 @@ static void handle_simple_define(PreprocessorContext *ctx, const char *identifie
  * Handle a macro definition with parameters.
  */
 static void handle_macro_define(PreprocessorContext *ctx, const char *identifier, const char *after_id) {
-    char params[MAX_VALUE_LEN];
-    char body[MAX_VALUE_LEN];
+    char params[SYMBOL_VALUE_SIZE];
+    char body[SYMBOL_VALUE_SIZE];
     
     if (parse_macro_parameters(after_id, params, sizeof(params)) &&
         parse_macro_body(after_id, body, sizeof(body))) {
@@ -62,14 +63,14 @@ void handle_define(PreprocessorContext *ctx, const char *line) {
     // Skip to content after '#define'
     const char *p = line;
     while (isspace(*p)) p++;
-    if (*p == '#') p++;
+    if (*p == CHAR_HASH) p++;
     
-    char keyword[64];
+    char keyword[MAX_KEYWORD_LENGTH];
     p = extract_first_keyword(p, keyword, sizeof(keyword));
     if (!p) return;
     
     // Extract identifier
-    char identifier[MAX_IDENTIFIER_LEN];
+    char identifier[MAX_IDENTIFIER_LENGTH];
     const char *after_id = p;
     p = extract_first_keyword(p, identifier, sizeof(identifier));
     if (!p) return;
@@ -103,14 +104,14 @@ static void replace_simple_define(const char *identifier, const char *value,
  */
 static bool replace_macro_call(PreprocessorContext *ctx, const char *identifier,
                                const char **src, char **dst, size_t *remaining) {
-    // Check if followed by '(' (macro call)
+    // Check if followed by opening parenthesis (macro call)
     const char *temp = *src;
     while (isspace(*temp)) temp++;
     
-    if (*temp != '(') return false;
+    if (*temp != CHAR_PAREN_OPEN) return false;
     
     // Parse macro call arguments
-    char args[MAX_MACRO_ARGS][MAX_VALUE_LEN];
+    char args[MAX_MACRO_ARGS][MAX_ARG_LENGTH];
     int arg_count = parse_macro_arguments(*src, args, MAX_MACRO_ARGS);
     
     // Get macro definition
@@ -120,7 +121,7 @@ static bool replace_macro_call(PreprocessorContext *ctx, const char *identifier,
     if (!params || !body) return false;
     
     // Expand macro
-    char expanded[MAX_VALUE_LEN];
+    char expanded[SYMBOL_VALUE_SIZE];
     expand_macro(body, params, args, arg_count, expanded, sizeof(expanded));
     
     size_t exp_len = strlen(expanded);
@@ -179,15 +180,15 @@ void replace_defines_in_line(PreprocessorContext *ctx, const char *line, char *o
     
     const char *src = line;
     char *dst = output_line;
-    size_t remaining = MAX_VALUE_LEN - 1;
+    size_t remaining = BUFFER_SIZE_LINE - 1;
 
     while (*src && remaining > 0) {
-        if (isalpha(*src) || *src == '_') {
+        if (IS_IDENTIFIER_START(*src)) {
             // Extract identifier
-            char identifier[MAX_IDENTIFIER_LEN];
+            char identifier[MAX_IDENTIFIER_LENGTH];
             int i = 0;
             
-            while ((isalnum(*src) || *src == '_') && i < MAX_IDENTIFIER_LEN - 1) {
+            while (IS_IDENTIFIER_CHAR(*src) && i < MAX_IDENTIFIER_LENGTH - 1) {
                 identifier[i++] = *src++;
             }
             identifier[i] = '\0';

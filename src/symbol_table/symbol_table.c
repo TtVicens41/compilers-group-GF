@@ -37,26 +37,26 @@ bool symbol_table_add(SymbolTable *table, const char *identifier) {
 bool symbol_table_add_with_value(SymbolTable *table, const char *identifier, const char *value) {
     if (!table || !identifier) return false;
     
-    if (table->count >= MAX_SYMBOLS) return false;
+    if (table->count >= SYMBOL_TABLE_SIZE) return false;
     
     // Check if already exists (update value if it does)
     int idx = find_symbol_index(table, identifier);
     if (idx >= 0) {
         if (value) {
-            strncpy(table->values[idx], value, MAX_VALUE_LEN - 1);
-            table->values[idx][MAX_VALUE_LEN - 1] = '\0';
+            strncpy(table->values[idx], value, SYMBOL_VALUE_SIZE - 1);
+            table->values[idx][SYMBOL_VALUE_SIZE - 1] = '\0';
         }
         table->is_macro[idx] = false;
         return true;
     }
     
     // Add new entry
-    strncpy(table->identifiers[table->count], identifier, MAX_IDENTIFIER_LEN - 1);
-    table->identifiers[table->count][MAX_IDENTIFIER_LEN - 1] = '\0';
+    strncpy(table->identifiers[table->count], identifier, SYMBOL_NAME_SIZE - 1);
+    table->identifiers[table->count][SYMBOL_NAME_SIZE - 1] = '\0';
     
     if (value) {
-        strncpy(table->values[table->count], value, MAX_VALUE_LEN - 1);
-        table->values[table->count][MAX_VALUE_LEN - 1] = '\0';
+        strncpy(table->values[table->count], value, SYMBOL_VALUE_SIZE - 1);
+        table->values[table->count][SYMBOL_VALUE_SIZE - 1] = '\0';
     } else {
         table->values[table->count][0] = '\0';
     }
@@ -75,37 +75,37 @@ bool symbol_table_add_macro(
 ) {
     if (!table || !identifier) return false;
     
-    if (table->count >= MAX_SYMBOLS) return false;
+    if (table->count >= SYMBOL_TABLE_SIZE) return false;
     
     // Check if already exists (update if it does)
     int idx = find_symbol_index(table, identifier);
     if (idx >= 0) {
         if (body) {
-            strncpy(table->values[idx], body, MAX_VALUE_LEN - 1);
-            table->values[idx][MAX_VALUE_LEN - 1] = '\0';
+            strncpy(table->values[idx], body, SYMBOL_VALUE_SIZE - 1);
+            table->values[idx][SYMBOL_VALUE_SIZE - 1] = '\0';
         }
         if (parameters) {
-            strncpy(table->parameters[idx], parameters, MAX_VALUE_LEN - 1);
-            table->parameters[idx][MAX_VALUE_LEN - 1] = '\0';
+            strncpy(table->parameters[idx], parameters, SYMBOL_VALUE_SIZE - 1);
+            table->parameters[idx][SYMBOL_VALUE_SIZE - 1] = '\0';
         }
         table->is_macro[idx] = true;
         return true;
     }
     
     // Add new macro
-    strncpy(table->identifiers[table->count], identifier, MAX_IDENTIFIER_LEN - 1);
-    table->identifiers[table->count][MAX_IDENTIFIER_LEN - 1] = '\0';
+    strncpy(table->identifiers[table->count], identifier, SYMBOL_NAME_SIZE - 1);
+    table->identifiers[table->count][SYMBOL_NAME_SIZE - 1] = '\0';
     
     if (body) {
-        strncpy(table->values[table->count], body, MAX_VALUE_LEN - 1);
-        table->values[table->count][MAX_VALUE_LEN - 1] = '\0';
+        strncpy(table->values[table->count], body, SYMBOL_VALUE_SIZE - 1);
+        table->values[table->count][SYMBOL_VALUE_SIZE - 1] = '\0';
     } else {
         table->values[table->count][0] = '\0';
     }
     
     if (parameters) {
-        strncpy(table->parameters[table->count], parameters, MAX_VALUE_LEN - 1);
-        table->parameters[table->count][MAX_VALUE_LEN - 1] = '\0';
+        strncpy(table->parameters[table->count], parameters, SYMBOL_VALUE_SIZE - 1);
+        table->parameters[table->count][SYMBOL_VALUE_SIZE - 1] = '\0';
     } else {
         table->parameters[table->count][0] = '\0';
     }
