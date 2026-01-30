@@ -25,22 +25,18 @@ gcc -I. \
     main.c \
     -o ../preprocessor
 
-# To store the program in the OS local executables
-chmod +x ../preprocessor
-mkdir -p ~/.local/bin
-mv ../preprocessor ~/.local/bin/preprocessor
-mkdir -p ~/.local/share/preprocessor/
-cp man_page.txt ~/.local/share/preprocessor/man_page.txt
-source ~/.bashrc
 
+chmod +x ../preprocessor
 cd ..
 
 if [ $? -eq 0 ]; then
     echo "Build successful!"
-    echo "Preprocessor executable created: preprocessor"
+    echo "Preprocessor executable created: ./preprocessor"
     echo ""
-    echo "Usage: preprocessor <input_file>"
-    echo "Example: preprocessor test_files/test_comments.c"
+    echo "Usage: ./preprocessor <input_file>"
+    echo "Example: ./preprocessor test_files/test_comments.c"
+    echo ""
+    echo "Warning: This command can only be executed in this directory"
 else
     echo "Build failed!"
     exit 1
