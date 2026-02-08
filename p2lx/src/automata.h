@@ -18,9 +18,8 @@ typedef struct {
     int initial_state;     
     int *accepting_states; 
     int **transitions; 
-    HashMap *map;
+    char *char_map;
 } DFA;
-
 
 
 #endif

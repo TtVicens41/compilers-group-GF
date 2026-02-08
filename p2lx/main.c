@@ -7,12 +7,11 @@
 #include <stdio.h>
 #include "src/error.h"
 
-#define MAIN 0
-#define NAME MAIN
+#define MAIN
 
 static COUNT = 0;
 
-#if (NAME == MAIN)
+#ifdef MAIN
 int main(void) {
     printf("%s\n", ERROR_MESSAGES[ERR_NON_RECOGNIZED]); COUNT++;
     printf("%s\n", ERROR_MESSAGES[ERR_UNTERMINATED_LITERAL]); COUNT++;
