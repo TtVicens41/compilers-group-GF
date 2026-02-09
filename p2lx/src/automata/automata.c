@@ -29,24 +29,26 @@ DFA *read_dfa(char *automaton_string) {
     int lines = string_splitted->size;
     
     DFA *dfa = empty_dfa();
+    if (!dfa) { return NULL; }
     
+    dfa->category = get_copy(buffer[CATEGORY]);
     dfa->alphabet = get_copy(buffer[ALPHABET]);
     dfa->alphabet_size = strlen(buffer[ALPHABET]);
     dfa->char_map = init_char_map(buffer[ALPHABET]);
     
     dfa->states_size = atoi(buffer[STATES_SIZE]);
     dfa->initial_state = atoi(buffer[INITIAL_STATE]);
-    dfa->accepting_states_size = atoi(buffer[ACCEPTING_STATES_SIZE]);
-    dfa->accepting_states = to_integer_array(
-        string_split(buffer[ACCEPTING_STATES], AUTOMATA_LIST_SEPARATOR), 
-        TRUE
+
+    StringList *accepting_states =  string_split(
+        buffer[ACCEPTING_STATES], AUTOMATA_LIST_SEPARATOR
     );
+    dfa->accepting_states_size = accepting_states->size;
+    dfa->accepting_states = to_integer_array(accepting_states, TRUE);
 
     dfa->transitions = calloc(dfa->states_size, sizeof(int *));
     for (int j = TRANSITIONS; j < lines; j++) {
         dfa->transitions[j - TRANSITIONS] = to_integer_array(
-            string_split(buffer[j], AUTOMATA_LIST_SEPARATOR), 
-            TRUE
+            string_split(buffer[j], AUTOMATA_LIST_SEPARATOR), TRUE
         );
     }
     
@@ -56,9 +58,7 @@ DFA *read_dfa(char *automaton_string) {
 
 DFA **init_dfa_list(StringList *automata_strings) {
     DFA **automata_list = calloc(automata_strings->size, sizeof(DFA *));
-    if (!automata_list) {
-        return NULL; 
-    }
+    if (!automata_list) { return NULL; }
 
     for (int i = 0; i < automata_strings->size; i++) {
         automata_list[i] = read_dfa(automata_strings->buffer[i]);
@@ -78,6 +78,8 @@ NFA *read_union_nfa(const char *file) {
     );
 
     NFA *nfa = empty_nfa();
+    if (!nfa) { return NULL; }
+
     nfa->size = automta_strings->size;
     nfa->automatas = init_dfa_list(automta_strings);
 
@@ -92,7 +94,7 @@ int is_accepted_dfa(const DFA *automaton, char *string) {
     for (int i = 0; i < length; i++) {
         int symbol = automaton->char_map[string[i]];
         if (symbol == KEY_ERROR) {
-            return FALSE;
+            state = EMPTY_STATE;
         }
         state = automaton->transitions[state][symbol];
     }
@@ -104,6 +106,39 @@ int is_accepted_dfa(const DFA *automaton, char *string) {
     }
 
     return FALSE;
+}
+
+SimpleToken *empty_token(char *string) {
+    SimpleToken *token = calloc(1, sizeof(SimpleToken));
+    if (!token) { return NULL; }
+
+    token->lexeme = get_copy(string);
+    token->category = get_copy(token_text[CAT_NONRECOGNIZED]);
+
+    return token;
+}
+
+SimpleToken *get_token_dfa(const DFA *automaton, char *string) {
+    SimpleToken *token = empty_token(string);
+    if (!token) { return NULL; }
+
+    token->lexeme = get_copy(string);
+
+    if (is_accepted_dfa(automaton, string)) {
+        free(token->category);
+        token->category = get_copy(automaton->category);
+    } 
+
+    return token;
+}
+
+SimpleToken *get_token_nfa(const NFA *automaton, char *string) {
+    for (int i = 0; i < automaton->size; i++) {
+        if (is_accepted_dfa(automaton->automatas[i], string)) {
+            return get_token_dfa(automaton->automatas[i], string);
+        }
+    }
+    return empty_token(string);
 }
 
 int is_accepted_nfa(const NFA *automaton, char *string) {
@@ -134,26 +169,23 @@ void print_dfa(const DFA *automaton) {
     if (!automaton) { return; }
 
     printf("{\n");
+    printf("category: %s,\n", automaton->category);
     printf("alphabet: %s,\n", automaton->alphabet);
     printf("alphabet_size: %d\n", automaton->alphabet_size);
     printf("states_size: %d\n", automaton->states_size );
     printf("initial_states: %d\n", automaton->initial_state);
-    printf("accepting_states_size: %d\n", automaton->accepting_states_size);
     printf("accepting_states: ");
-    
     print_integer_array(
         automaton->accepting_states, 
         automaton->accepting_states_size
     );
-
+    printf("accepting_states_size: %d\n", automaton->accepting_states_size);
     printf("transitions: \n");
-
     print_integer_matrix(
         automaton->transitions,
         automaton->states_size,
         automaton->alphabet_size
     );
-
     printf("}\n");
 }
 

@@ -8,6 +8,7 @@ cd src
 gcc -I. \
     automata/automata.c \
     char_map/char_map.c \
+    token.c \
     utils/error_utils.c \
     utils/string_utils.c \
     utils/string_list.c \

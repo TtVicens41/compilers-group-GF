@@ -4,8 +4,8 @@
  * @creation: 2026/01/30
  */
 
-#ifndef TOKEN
-#define TOKEN
+#ifndef TOKEN_H
+#define TOKEN_H
 
 #include "utils/error.h"
 
@@ -19,7 +19,7 @@ typedef enum {
     CAT_NONRECOGNIZED
 } TokenCategory;
 
-static const char *const TokenText[] = {
+static const char *const token_text[] = {
     [CAT_NUMBER] = "CAT_NUMBER",
     [CAT_IDENTIFIER] = "CAT_IDENTIFIER",
     [CAT_KEYWORD] = "CAT_KEYWORD",
@@ -32,7 +32,14 @@ static const char *const TokenText[] = {
 typedef struct {
     char *lexeme;
     TokenCategory category;
-    LineError error
+    LineError error;
 } Token;
 
-#endif TOKEN
+typedef struct {
+    char *lexeme;
+    char *category;
+} SimpleToken;
+
+void print_token(void *token);
+
+#endif // TOKEN_H

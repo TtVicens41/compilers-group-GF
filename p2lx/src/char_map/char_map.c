@@ -42,7 +42,3 @@ int main(void) {
     printf("%d\n", hash_map['2']);
 }
 #endif
-
-// void update(HashMap *map, void *key, void *value);
-// void *get(HashMap *map, void *key);
-// void delete(HashMap *map);

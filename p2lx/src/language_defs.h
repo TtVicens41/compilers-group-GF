@@ -62,15 +62,16 @@
  * ============================================================================ */
 
 #define AUTOMATA_FILE "./resources/automata.txt"
-#define AUTOMATA_SEPARATOR '_'
+#define AUTOMATA_SEPARATOR '#'
 #define AUTOMATA_LIST_SEPARATOR ' '
 #define AUTOMATA_ATTR_SEPARATOR '\n'
 
 typedef enum {
+    CATEGORY,
     ALPHABET,
     STATES_SIZE,
     INITIAL_STATE,
-    ACCEPTING_STATES_SIZE,
+    // ACCEPTING_STATES_SIZE,
     ACCEPTING_STATES,
     TRANSITIONS
 } AutomataAttributes;

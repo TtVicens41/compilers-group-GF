@@ -1,6 +1,7 @@
 /**
- * @title: Hash Map Module 
- * @description: The hash map has static number of elements. The hash
+ * @title: Char Map Module 
+ * @description: A char map has static number of elements, defined by
+ *      ASCII_SIZE. Each position
  * @author: Marc Bosch Manzano
  * @creation: 2026/02/08
  */
@@ -10,18 +11,6 @@
 
 #define ASCII_SIZE 128
 #define KEY_ERROR (-1)
-
-typedef struct {
-    int alphabet_size;
-    char *alphabet;
-    char map[ASCII_SIZE];
-} HashMap;
-
-/**
- * Removes repeated characters on a string, getting its unique
- * characters.
- */
-char *get_keys(const char *string);
 
 /**
  * Allocate a hash map of SIZE bytes per element.

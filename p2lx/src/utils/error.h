@@ -54,4 +54,4 @@ typedef struct {
     int *line_content;
 } LineError;
 
-#endif ERROR_H
+#endif // ERROR_H
