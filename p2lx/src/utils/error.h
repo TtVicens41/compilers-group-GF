@@ -30,4 +30,28 @@ static const char *const ERROR_MESSAGES[] = {
    [ERR_IDENTIFIER_TYPE_MISSING] = "Identifier type missing"
 };
 
-#endif ERROR_H
+typedef enum {
+    PREPROCESSOR,
+    LEXER,
+    PARSER
+} CompilationPhase;
+
+typedef struct {
+    ErrorCode code;
+    CompilationPhase phase;
+    char *message;
+} Error;
+
+typedef struct {
+    Error error;
+    char *file_name;
+} FileError;
+
+typedef struct {
+    FileError error;
+    int line;
+    int column;
+    int *line_content;
+} LineError;
+
+#endif // ERROR_H
