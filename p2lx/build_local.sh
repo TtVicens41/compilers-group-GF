@@ -10,6 +10,7 @@ gcc -I. \
     char_map/char_map.c \
     utils/error_utils.c \
     utils/string_utils.c \
+    utils/string_list.c \
     utils/file_utils.c \
     main.c \
     -o ../lexer

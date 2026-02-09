@@ -1,4 +1,14 @@
-# Automata Text File
+# Practice 2: Lexical Analysis
+
+Created by Marc Bosch Manzano<br>
+Date of creation 2026/02/09
+
+## How to start?
+
+In a Unix Operating System, execute `./build_local.sh`. It will compile our lexer program. Then, execute the compiled `./lexer`. At the moment, the full program implementation is not given, but we have implemented the automatas and we have checked they work fine.
+
+
+## Automata Text File
 
 Each automaton in automata text file is structured as following.
 ```

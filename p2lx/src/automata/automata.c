@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "utils/file_utils.h"
+#include "utils/string_list.h"
 #include "utils/string_utils.h"
 #include "automata.h"
 
@@ -62,7 +63,7 @@ DFA **init_dfa_list(StringList *automata_strings) {
     for (int i = 0; i < automata_strings->size; i++) {
         automata_list[i] = read_dfa(automata_strings->buffer[i]);
     }
-    
+
     return automata_list;
 }
 

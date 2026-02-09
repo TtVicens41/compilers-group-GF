@@ -98,20 +98,19 @@ char *trim_string(const char *str);
  */
 void trim_whitespace(char *str);
 
+/**
+ * Convert a string formatting the control characters '\n', '\t', etc. 
+ * to its raw repsresentation.
+ * @param[in] string A poiner to a read only string.
+ * @return A pointer to a dinamically allocated string raw string.
+ */
 char *get_raw_string(const char *string);
 
-typedef struct {
-    char **buffer;
-    int size;
-} StringList;
-
+/**
+ * Get a substring in a string from start to end positions, including them.
+ * @param[in] string A poiner to a read only string.
+ * @return A pointer to a dinamically allocated substring.
+ */
 char *get_substring(const char *string, int start, int end);
-StringList *init_string_list(char **buffer, int size);
-StringList *string_split(char *string, char splitter);
-StringList *apply_string_list(StringList *string_list, char *(*applier)(const char *), int delete);
-void clear_string_list(StringList *string_list);
-void delete_string_list(StringList **string_list);
-void print_string_list(StringList *string_list, int raw);
-int *to_integer_array(StringList *string_list, int delete);
 
 #endif

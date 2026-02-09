@@ -24,8 +24,17 @@ typedef struct {
     char *char_map;
 } DFA;
 
+/**
+ * Union Non-Deterministic Finite State Automata
+ * 
+ * Implementation of NFA as a list of DFAs. The intial state of the NFA has
+ * epsilon transitions to all initial states of DFA automatas. That can be 
+ * considered as running all DFA automatas and observe wether any automata
+ * accepts the imput string.
+ */
 typedef struct {
-    DFA **automatas;
+    
+    DFA **automatas; 
     int size;
 } NFA;
 

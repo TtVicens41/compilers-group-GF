@@ -19,5 +19,3 @@ int main(void) {
     printf("%d\n", is_accepted_dfa(dfa, "int"));
     printf("%d\n", is_accepted_nfa(nfa, "if"));
 }
-
-
