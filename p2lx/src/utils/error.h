@@ -1,57 +1,21 @@
-/**
- * @title: Error Handling Functionalities
- * @author: Marc Bosch Manzano
- * @creation: 2026/01/30
- */
-
 #ifndef ERROR_H
 #define ERROR_H
 
-/**
- * @brief Compiler error codes.
- * 
- * The elements of this enum are defined to be integer identifiers. The error
- * messages definition can be found in table `ERROR_MESSAGES`.
- */
 typedef enum {
-    ERR_NON_RECOGNIZED,
-    ERR_UNTERMINATED_LITERAL,
-    ERR_IDENTIFIER_NOT_DEFINED,
-    ERR_IDENTIFIER_TYPE_MISSING
+    STEP_PREPROCESSOR = 1,
+    STEP_LEXER = 2,
+    STEP_PARSER = 3
+} CompilationStep;
+
+typedef enum {
+    ERR_OK = 0,
+    ERR_NON_RECOGNIZED = 2001,
+    ERR_UNTERMINATED_LITERAL = 2002,
+    ERR_FILE_INPUT = 2003,
+    ERR_FILE_OUTPUT = 2004,
+    ERR_INTERNAL = 2005
 } ErrorCode;
 
-/**
- * @brief Compiler messages.
- */
-static const char *const ERROR_MESSAGES[] = {   
-   [ERR_NON_RECOGNIZED] = "Unknown error", 
-   [ERR_UNTERMINATED_LITERAL] = "Unterminated literal",   
-   [ERR_IDENTIFIER_NOT_DEFINED] = "Not defined identifier", 
-   [ERR_IDENTIFIER_TYPE_MISSING] = "Identifier type missing"
-};
+const char *error_message_text(ErrorCode code);
 
-typedef enum {
-    PREPROCESSOR,
-    LEXER,
-    PARSER
-} CompilationPhase;
-
-typedef struct {
-    ErrorCode code;
-    CompilationPhase phase;
-    char *message;
-} Error;
-
-typedef struct {
-    Error error;
-    char *file_name;
-} FileError;
-
-typedef struct {
-    FileError error;
-    int line;
-    int column;
-    int *line_content;
-} LineError;
-
-#endif // ERROR_H
+#endif

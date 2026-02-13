@@ -1,58 +1,38 @@
-/**
- * @title: Automata Module
- * @author: Marc Bosch Manzano
- * @creation: 2026/02/08
- */
-
 #ifndef AUTOMATA_H
 #define AUTOMATA_H
 
 #include "../char_map/char_map.h"
-#include "../language_defs.h"
 #include "../token.h"
 
 #define EMPTY_STATE 0
 
-/**
- * Deterministic Finite State Automata
- */
 typedef struct {
-    char *category;
+    TokenCategory category;
     char *alphabet;
-    int alphabet_size;   
-    int states_size;  
-    int initial_state;     
+    int alphabet_size;
+    int states_size;
+    int initial_state;
     int *accepting_states;
     int accepting_states_size;
-    int **transitions; 
+    int **transitions;
     char *char_map;
 } DFA;
 
-/**
- * Union Non-Deterministic Finite State Automata
- * 
- * Implementation of NFA as a list of DFAs. The intial state of the NFA has
- * epsilon transitions to all initial states of DFA automatas. That can be 
- * considered as running all DFA automatas and observe wether any automata
- * accepts the imput string.
- */
 typedef struct {
-    DFA **automatas; 
+    DFA **automatas;
     int size;
 } NFA;
 
 DFA *read_dfa(char *automaton_string);
-NFA *read_union_nfa(const char *file); 
+NFA *read_union_nfa(const char *file);
 
-int *computational_path(const DFA *automaton, char *string);
-int is_accepted_dfa(const DFA *automaton, char *string);
-int is_accepted_nfa(const NFA *automaton, char *string);
-SimpleToken *get_token_dfa(const DFA *automaton, char *string);
-SimpleToken *get_token_nfa(const NFA *automaton, char *string);
+int is_accepted_dfa(const DFA *automaton, const char *string);
+TokenCategory classify_lexeme_nfa(const NFA *automaton, const char *string);
 
-void print_nfa(const NFA *automaton);
+void free_dfa(DFA *automaton);
+void free_nfa(NFA *automaton);
+
 void print_dfa(const DFA *automaton);
-void print_integer_array(const int *array, int size);
-void print_integer_matrix(int **matrix, int rows, int cols);
+void print_nfa(const NFA *automaton);
 
 #endif

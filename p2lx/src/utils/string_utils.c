@@ -104,9 +104,10 @@ int find_trim(const char *string) {
         NULL;
     }
     size_t length = strlen(string);
-    for (int i = 0; i < length; i++) {
+    size_t i;
+    for (i = 0; i < length; i++) {
         if (IS_WHITESPACE(string[i]))
-            return i;
+            return (int)i;
     }
     return 0;
 }
@@ -156,7 +157,7 @@ void trim_whitespace(char *str) {
 }
 
 char *get_substring(const char *string, int start, int end) {
-    int length = strlen(string);
+    int length = (int)strlen(string);
     end = min(end, length - 1);
     start = max(start, 0);
     char *aux = (char *)calloc((end - start + 2), sizeof(char));
@@ -167,7 +168,7 @@ char *get_substring(const char *string, int start, int end) {
 }
 
 char *get_raw_string(const char *string) {
-    int length = strlen(string);
+    size_t length = strlen(string);
     char *out = calloc(length * 2 + 1, sizeof(char));
     if (!out) {
         return NULL;

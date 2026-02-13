@@ -1,27 +1,30 @@
-/**
- * @title: Error Handling Utilities.
- * @brief: Implements error handling utilities.
- * @author: Marc Bosch Manzano.
- * @creation: 10/01/2026.
- */
-
-#include <string.h>
+#include <errno.h>
 #include <stdio.h>
+#include <string.h>
 
+#include "error.h"
 #include "error_utils.h"
 
-void init_error(const char *message, int line) {
-    strcpy(errors.message, message);
-    errors.line = line;
+void print_file_error(const char *path) {
+    if (!path) {
+        return;
+    }
+
+    fprintf(stderr, "File error (%d): %s [%s]\n", errno, strerror(errno), path);
 }
 
-void print_file_error(const char *path) {
-    switch (errno) {
-        case ENOENT: fprintf(stderr, EONENT_MSG, path); break;
-        case EACCES: fprintf(stderr, EACCES_MSG, path); break;
-        case EISDIR: fprintf(stderr, EISDIR_MSG, path); break;
-        case EMFILE: fprintf(stderr, EMFILE_MSG, path); break;
-        case ENAMETOOLONG: fprintf(stderr, ENAMETOOLONG_MSG, path); break;   
-        default: break;
+void report_lexer_error(FILE *stream, ErrorCode code, int line, int column,
+                        const char *lexeme, const char *extra) {
+    FILE *target = stream ? stream : stderr;
+
+    fprintf(target,
+            "[ERR step=%d code=%d line=%d col=%d] %s | lexeme=\"%s\"",
+            STEP_LEXER, code, line, column, error_message_text(code),
+            lexeme ? lexeme : "");
+
+    if (extra && extra[0] != '\0') {
+        fprintf(target, " | %s", extra);
     }
+
+    fprintf(target, "\n");
 }

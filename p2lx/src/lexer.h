@@ -1,20 +1,32 @@
-/**
- * @title: Lexical Analyzer Module
- * @author: Marc Bosch Manzano
- * @creation: 2026/02/09
- */
-
 #ifndef LEXER_H
 #define LEXER_H
 
 #include <stdio.h>
+
+#include "automata/automata.h"
+#include "counter.h"
 #include "token.h"
+#include "utils/error.h"
 
 typedef struct {
     FILE *output_file;
-    Token *tokens;
-    int num_tokens;
+    FILE *debug_stream;
+    FILE *count_stream;
+    CounterState counter;
+    NFA *nfa;
+    TokenList tokens;
+    int current_line;
 } Lexer;
 
+typedef int (*ParserHookFn)(const TokenList *tokens, const char *token_path);
 
-#endif // LEXER_H
+int run_lexer(const char *input_path, const char *output_path, TokenList *out_tokens);
+int run_pipeline_with_optional_parser(const char *input_path,
+                                      ParserHookFn parser_hook,
+                                      TokenList *out_tokens,
+                                      char **generated_output_path);
+
+char *build_scanner_output_path(const char *input_path);
+char *build_count_output_path(const char *input_path);
+
+#endif

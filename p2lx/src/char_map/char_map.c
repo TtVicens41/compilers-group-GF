@@ -24,7 +24,7 @@ char *init_char_map(const char *string) {
     size_t length = strlen(string);
     char value = 0;
     for (size_t i = 0; i < length; i++) {
-        char key = string[i];
+        unsigned char key = (unsigned char)string[i];
         if (map[key] == KEY_ERROR) {
             map[key] = value++;
         }

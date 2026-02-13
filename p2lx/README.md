@@ -1,36 +1,117 @@
-# Practice 2: Lexical Analysis
+# Practice 2: Lexical Analysis (P2LX)
 
-Created by Marc Bosch Manzano<br>
-Date of creation 2026/02/09
+## Overview
 
-## How to start?
+`p2lx` implements a character-by-character lexical scanner for the P2 assignment.
+It reads a `.c` input file, generates a token stream in memory, and writes a token
+file with extension `<input>.cscn`.
 
-In a Unix Operating System, execute `./build_local.sh`. It will compile our lexer program. Then, execute the compiled `./lexer`. At the moment, the full program implementation is not given, but we have implemented the automatas and we have checked they work fine.
+The scanner supports:
+- Keywords: `if`, `else`, `while`, `return`, `int`, `char`, `void`
+- Operators: `=`, `>`, `+`, `*`
+- Special characters: `(` `)` `;` `{` `}` `[` `]` `,`
+- Numbers: integer sequences `[0-9]+`
+- Identifiers: `[A-Za-z][A-Za-z0-9]*`
+- Literals: text inside double quotes `"..."` (including quotes)
+- Non-recognized lexemes with informative errors
 
+## Build
 
-## Automata Text File
-
-Each automaton in automata text file is structured as following.
+```bash
+./build_local.sh
 ```
-1. unique symbols of the alfabet as characters
-2. number of symbols of the alfabet as integer
-3. number of states as integer 
-4. initial state as integer
-5. accepting states as integer list
-6. transition function as integer matrix
+
+You can pass compile-time configuration flags through `EXTRA_CFLAGS`:
+
+```bash
+EXTRA_CFLAGS='-DOUTFORMAT=OUTFORMAT_RELEASE -DDEBUG=DEBUG_OFF' ./build_local.sh
 ```
 
-Each automaton is separated by an extra line jump character.
+## Usage
 
-An example of automaton:
+```bash
+./lexer <input_file.c>
+./lexer -help
 ```
-if
-2
-4
-1
-3
-0 0
-2 0
-0 3
-0 0
+
+Output file is generated as:
+
+```text
+<input_file.c>scn
 ```
+
+Example:
+- Input: `example_app.c`
+- Output: `example_app.cscn`
+
+## Output Formats (`OUTFORMAT`)
+
+Configured at compile time in `src/lexer_config.h` or via `EXTRA_CFLAGS`.
+
+- `OUTFORMAT_RELEASE`: one token line per non-empty input line; no empty lines.
+- `OUTFORMAT_DEBUG`: same line mapping, with input line number prefix and an
+  empty separator line after each token line.
+
+Token text format:
+
+```text
+<lexeme, CAT_CATEGORY>
+```
+
+## Message Routing (`DEBUG`)
+
+- `DEBUG_ON`: messages/errors are written to the scanner output file.
+- `DEBUG_OFF`: messages/errors are written to stdout.
+
+## Counter Configuration
+
+Counters are enabled only when:
+- `COUNTCONFIG == COUNT_ENABLED`
+- `OUTFORMAT == OUTFORMAT_DEBUG`
+
+Available counters:
+- `COUNTCOMP`: comparisons
+- `COUNTIO`: I/O operations (counted by character amount)
+- `COUNTGEN`: generic operations
+
+Output routing:
+- `COUNTOUT == OUT`: count messages go to scanner output file.
+- `COUNTOUT == DBGCOUNT`: count messages go to `<input>.cdbgcnt`.
+
+Each count line includes:
+- input line number
+- function name
+- increment amount
+- partial per function
+- total global counters
+
+## Architecture
+
+- `src/automata/`: DFA/NFA parser and lexeme classification
+- `src/lexer.c`: scanner core, line processing, output generation
+- `src/token.c`: token categories and dynamic token list
+- `src/counter.c`: operation counting and reporting
+- `src/utils/error*.c`: error IDs, templates and reporting
+
+## Parser Hook (P3 preparation)
+
+`run_pipeline_with_optional_parser(...)` provides a hook point for chaining the
+future parser phase without redesigning the scanner pipeline.
+
+## Acceptance Test Script
+
+```bash
+./tests/run_acceptance.sh
+```
+
+This script validates:
+- token categories
+- release/debug output behavior
+- non-recognized grouping
+- count file generation and contents
+
+## Notes
+
+- Input is expected to be preprocessed (no `#` directives and no comments), as
+  requested by the assignment.
+- The scanner continues after errors and emits `CAT_NONRECOGNIZED` tokens.
