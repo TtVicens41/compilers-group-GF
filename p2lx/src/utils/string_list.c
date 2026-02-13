@@ -1,3 +1,9 @@
+/**
+ * @title: string_list.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -16,27 +22,6 @@ StringList *init_string_list(char **buffer, int size) {
 }
 
 #define UNSET_TOKEN (-1)
-
-static int is_token_set(int token_start) {
-    return token_start != UNSET_TOKEN;
-}
-
-static void reset_token(int *token_start) {
-    *token_start = UNSET_TOKEN;
-}
-
-static int is_split_condition(char c, char splitter) {
-    return c == splitter || c == '\0';
-}
-
-StringList *string_split(char *string, char splitter) {
-    int length;
-    char **buffer = NULL;
-    int size = 0;
-    int token_start = UNSET_TOKEN;
-    int i;
-
-    if (!string) {
         return init_string_list(NULL, 0);
     }
 
@@ -58,7 +43,6 @@ StringList *string_split(char *string, char splitter) {
             reset_token(&token_start);
         }
     }
-
     return init_string_list(buffer, size);
 }
 
@@ -88,10 +72,15 @@ StringList *apply_string_list(
     if (delete) {
         delete_string_list(&string_list);
     }
-
     return init_string_list(buffer, size);
 }
 
+/**
+ * @brief Explica la responsabilidad de `clear_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList *string_list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void clear_string_list(StringList *string_list) {
     int i;
     if (!string_list) {
@@ -108,6 +97,12 @@ void clear_string_list(StringList *string_list) {
     string_list->size = 0;
 }
 
+/**
+ * @brief Explica la responsabilidad de `delete_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList **string_list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void delete_string_list(StringList **string_list) {
     if (!string_list || !*string_list) {
         return;
@@ -117,6 +112,12 @@ void delete_string_list(StringList **string_list) {
     *string_list = NULL;
 }
 
+/**
+ * @brief Explica la responsabilidad de `print_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList *string_list, int raw`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void print_string_list(StringList *string_list, int raw) {
     int i;
     if (!string_list || !string_list->buffer) {

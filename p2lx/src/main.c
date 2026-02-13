@@ -1,3 +1,9 @@
+/**
+ * @title: main.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,11 +12,23 @@
 #include "token.h"
 #include "utils/file_utils.h"
 
+/**
+ * @brief Explica la responsabilidad de `print_usage` en el flujo del compilador.
+ * @param Recibe: `const char *argv0`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static void print_usage(const char *argv0) {
     fprintf(stderr, "Usage: %s <input_file.c>\n", argv0);
     fprintf(stderr, "       %s -help\n", argv0);
 }
 
+/**
+ * @brief Explica la responsabilidad de `print_manual` en el flujo del compilador.
+ * @param No recibe parametros.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static void print_manual(void) {
     const char *candidates[] = {
         "./src/man_page.txt",
@@ -32,6 +50,12 @@ static void print_manual(void) {
     fprintf(stderr, "Man page not found.\n");
 }
 
+/**
+ * @brief Explica la responsabilidad de `main` en el flujo del compilador.
+ * @param Recibe: `int argc, char **argv`.
+ * @return Devuelve un valor de tipo `int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 int main(int argc, char **argv) {
     TokenList tokens;
     char *output_path = NULL;

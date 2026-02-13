@@ -1,12 +1,7 @@
 /**
- * @title: Language-Specific Definitions for Lexer
- * @description: Centralized header containing all character constants, 
- *      string constants, and language-specific defines used 
- *      throughout the preprocessor.
- * @author: Marc Bosch Manzano  
- * @adapted_from: Language-Specific Definitions for Preprocessor by 
- *      Davi Penna-Mattos Dias de Paiva 
- * @creation: 2026/02/08.
+ * @title: language_defs.h
+ * @authors:
+ * @creation:
  */
 
 #ifndef LEXER_LANGUAGE_DEFS_H

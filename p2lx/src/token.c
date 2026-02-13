@@ -1,3 +1,9 @@
+/**
+ * @title: token.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,6 +28,12 @@ const char *token_category_text(TokenCategory category) {
     return TOKEN_TEXT[category];
 }
 
+/**
+ * @brief Explica la responsabilidad de `token_category_from_text` en el flujo del compilador.
+ * @param Recibe: `const char *text`.
+ * @return Devuelve un valor de tipo `TokenCategory`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 TokenCategory token_category_from_text(const char *text) {
     int i;
     if (!text) {
@@ -37,6 +49,12 @@ TokenCategory token_category_from_text(const char *text) {
     return CAT_NONRECOGNIZED;
 }
 
+/**
+ * @brief Explica la responsabilidad de `token_list_init` en el flujo del compilador.
+ * @param Recibe: `TokenList *list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void token_list_init(TokenList *list) {
     list->items = NULL;
     list->size = 0;
@@ -68,6 +86,12 @@ int token_list_push(TokenList *list, const char *lexeme, TokenCategory category,
     return 1;
 }
 
+/**
+ * @brief Explica la responsabilidad de `token_list_free` en el flujo del compilador.
+ * @param Recibe: `TokenList *list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void token_list_free(TokenList *list) {
     size_t i;
 
@@ -85,6 +109,12 @@ void token_list_free(TokenList *list) {
     list->capacity = 0;
 }
 
+/**
+ * @brief Explica la responsabilidad de `print_token` en el flujo del compilador.
+ * @param Recibe: `const Token *token`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void print_token(const Token *token) {
     if (!token) {
         return;

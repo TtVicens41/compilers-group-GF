@@ -1,8 +1,7 @@
 /**
- * @title: String Utilities.
- * @brief: Implementation of string handling functions.
- * @authors: Marc Bosch Manzano & Pau Puig Guillén
- * @creation: 10/01/2026
+ * @title: string_utils.c
+ * @authors:
+ * @creation:
  */
 
 #include <stdio.h>
@@ -98,39 +97,6 @@ char *add_suffix_to_path(const char *path, const char *suffix) {
 
     return new_path;
 }
-
-int find_trim(const char *string) {
-    if (!string) {
-        NULL;
-    }
-    size_t length = strlen(string);
-    size_t i;
-    for (i = 0; i < length; i++) {
-        if (IS_WHITESPACE(string[i]))
-            return (int)i;
-    }
-    return 0;
-}
-
-char *copy_until_trim(const char *string) {
-    char *copy = calloc(BUFFER_SIZE_LINE, sizeof(char));
-    int i = 0;
-    while (*string && !IS_WHITESPACE(*string)) {
-        copy[i++] = *string++;
-    }
-    copy[i] = '\0';
-    return copy;
-}
-
-char *trim_string(const char *str) {
-    if (!str) {
-        return NULL;
-    }
-
-    while (IS_WHITESPACE(*str)) 
-        str++;
-
-    if (*str == '\0') 
         return get_copy(str);
     
     char *str_copy = get_copy(str);
@@ -142,6 +108,12 @@ char *trim_string(const char *str) {
     return str_copy;
 }
 
+/**
+ * @brief Explica la responsabilidad de `trim_whitespace` en el flujo del compilador.
+ * @param Recibe: `char *str`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void trim_whitespace(char *str) {
     char *start = str;
     while (isspace(*start)) 

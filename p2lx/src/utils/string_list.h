@@ -1,8 +1,7 @@
 /**
- * @title: String List Utilities.
- * @brief: Implementation of string list handling functions.
- * @authors: Marc Bosch Manzano
- * @creation: 2026/02/09
+ * @title: string_list.h
+ * @authors:
+ * @creation:
  */
 
 /**
@@ -26,10 +25,28 @@ StringList *string_split(char *string, char splitter);
 
 StringList *apply_string_list(StringList *string_list, char *(*applier)(const char *), int delete);
 
+/**
+ * @brief Explica la responsabilidad de `clear_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList *string_list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void clear_string_list(StringList *string_list);
 
+/**
+ * @brief Explica la responsabilidad de `delete_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList **string_list`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void delete_string_list(StringList **string_list);
 
+/**
+ * @brief Explica la responsabilidad de `print_string_list` en el flujo del compilador.
+ * @param Recibe: `StringList *string_list, int raw`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void print_string_list(StringList *string_list, int raw);
 
 int *to_integer_array(StringList *string_list, int delete);

@@ -1,3 +1,9 @@
+/**
+ * @title: error_utils.c
+ * @authors:
+ * @creation:
+ */
+
 #include <errno.h>
 #include <stdio.h>
 #include <string.h>
@@ -5,6 +11,12 @@
 #include "error.h"
 #include "error_utils.h"
 
+/**
+ * @brief Explica la responsabilidad de `print_file_error` en el flujo del compilador.
+ * @param Recibe: `const char *path`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void print_file_error(const char *path) {
     if (!path) {
         return;

@@ -1,8 +1,20 @@
+/**
+ * @title: counter.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdio.h>
 #include <string.h>
 
 #include "counter.h"
 
+/**
+ * @brief Explica la responsabilidad de `should_count` en el flujo del compilador.
+ * @param Recibe: `const CounterState *counter`.
+ * @return Devuelve un valor de tipo `static int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static int should_count(const CounterState *counter) {
     return counter && counter->enabled;
 }
@@ -33,6 +45,12 @@ static CounterFunctionRow *get_row(CounterState *counter, const char *func) {
     return &counter->rows[free_idx];
 }
 
+/**
+ * @brief Explica la responsabilidad de `counter_init` en el flujo del compilador.
+ * @param Recibe: `CounterState *counter, FILE *stream, int enabled`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void counter_init(CounterState *counter, FILE *stream, int enabled) {
     int i;
     if (!counter) {
@@ -54,6 +72,12 @@ void counter_init(CounterState *counter, FILE *stream, int enabled) {
     }
 }
 
+/**
+ * @brief Explica la responsabilidad de `counter_set_stream` en el flujo del compilador.
+ * @param Recibe: `CounterState *counter, FILE *stream`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 void counter_set_stream(CounterState *counter, FILE *stream) {
     if (!counter) {
         return;

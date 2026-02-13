@@ -1,3 +1,9 @@
+/**
+ * @title: lexer_config.h
+ * @authors:
+ * @creation:
+ */
+
 #ifndef LEXER_CONFIG_H
 #define LEXER_CONFIG_H
 

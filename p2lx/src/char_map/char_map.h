@@ -1,9 +1,7 @@
 /**
- * @title: Char Map Module 
- * @description: A char map has static number of elements, defined by
- *      ASCII_SIZE. Each position
- * @author: Marc Bosch Manzano
- * @creation: 2026/02/08
+ * @title: char_map.h
+ * @authors:
+ * @creation:
  */
 
 #ifndef HASH_MAP_H

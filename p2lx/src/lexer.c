@@ -1,3 +1,9 @@
+/**
+ * @title: lexer.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,46 +20,6 @@
 #define AUTOMATA_CANDIDATE_3 "../resources/automata.txt"
 
 #define LINE_BUFFER_SIZE 4096
-
-static int is_whitespace_char(char c) {
-    return c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\f' || c == '\v';
-}
-
-static const char *resolve_automata_path(void) {
-    const char *candidates[] = {
-        AUTOMATA_CANDIDATE_1,
-        AUTOMATA_CANDIDATE_2,
-        AUTOMATA_CANDIDATE_3,
-        NULL
-    };
-    int i = 0;
-
-    while (candidates[i]) {
-        FILE *probe = fopen(candidates[i], "r");
-        if (probe) {
-            fclose(probe);
-            return candidates[i];
-        }
-        i++;
-    }
-
-    return NULL;
-}
-
-static int is_operator_char(char c) {
-    return c == '=' || c == '>' || c == '+' || c == '*';
-}
-
-static int is_special_char(char c) {
-    return c == '(' || c == ')' || c == ';' || c == '{' || c == '}' ||
-           c == '[' || c == ']' || c == ',';
-}
-
-static char *copy_slice(const char *src, int start, int end) {
-    int len;
-    char *out;
-
-    if (end < start) {
         return get_copy("");
     }
 
@@ -68,6 +34,12 @@ static char *copy_slice(const char *src, int start, int end) {
     return out;
 }
 
+/**
+ * @brief Explica la responsabilidad de `append_text` en el flujo del compilador.
+ * @param Recibe: `char **buffer, size_t *cap, size_t *len, const char *text`.
+ * @return Devuelve un valor de tipo `static int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static int append_text(char **buffer, size_t *cap, size_t *len, const char *text) {
     size_t need;
     char *grown;
@@ -174,6 +146,12 @@ static int parse_literal(const char *line, int *i, int len, char **lexeme_out,
     return 1;
 }
 
+/**
+ * @brief Explica la responsabilidad de `parse_generic_chunk` en el flujo del compilador.
+ * @param Recibe: `const char *line, int *i, int len, char **lexeme_out`.
+ * @return Devuelve un valor de tipo `static int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static int parse_generic_chunk(const char *line, int *i, int len, char **lexeme_out) {
     int start = *i;
     int cursor = *i;
@@ -189,6 +167,12 @@ static int parse_generic_chunk(const char *line, int *i, int len, char **lexeme_
     return 1;
 }
 
+/**
+ * @brief Explica la responsabilidad de `classify_generic_chunk` en el flujo del compilador.
+ * @param Recibe: `const Lexer *lexer, const char *lexeme`.
+ * @return Devuelve un valor de tipo `static TokenCategory`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static TokenCategory classify_generic_chunk(const Lexer *lexer, const char *lexeme) {
     TokenCategory category = classify_lexeme_nfa(lexer->nfa, lexeme);
 
@@ -211,6 +195,12 @@ static TokenCategory classify_generic_chunk(const Lexer *lexer, const char *lexe
     return CAT_NONRECOGNIZED;
 }
 
+/**
+ * @brief Explica la responsabilidad de `process_line` en el flujo del compilador.
+ * @param Recibe: `Lexer *lexer, const char *line`.
+ * @return Devuelve un valor de tipo `static int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static int process_line(Lexer *lexer, const char *line) {
     int len = (int)strlen(line);
     int i = 0;
@@ -359,6 +349,12 @@ char *build_count_output_path(const char *input_path) {
     return out;
 }
 
+/**
+ * @brief Explica la responsabilidad de `has_c_extension` en el flujo del compilador.
+ * @param Recibe: `const char *path`.
+ * @return Devuelve un valor de tipo `static int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 static int has_c_extension(const char *path) {
     const char *dot;
     if (!path) {
@@ -373,6 +369,12 @@ static int has_c_extension(const char *path) {
     return strcmp(dot, ".c") == 0;
 }
 
+/**
+ * @brief Explica la responsabilidad de `run_lexer` en el flujo del compilador.
+ * @param Recibe: `const char *input_path, const char *output_path, TokenList *out_tokens`.
+ * @return Devuelve un valor de tipo `int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 int run_lexer(const char *input_path, const char *output_path, TokenList *out_tokens) {
     Lexer lexer;
     FILE *input = NULL;

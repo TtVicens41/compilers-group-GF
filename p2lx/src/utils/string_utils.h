@@ -1,11 +1,7 @@
 /**
- * @title: String Utilities.
- * @brief: Declarations of functions and macro definitions of string handling 
- *      utilities. Most string functions get as argument an string and return
- *      another string. Take account dinamyc allocated strings have to be 
- *      freed.
- * @authors: Marc Bosch Manzano & Pau Puig Guillén
- * @creation: 10/01/2026
+ * @title: string_utils.h
+ * @authors:
+ * @creation:
  */
 
 #ifndef STRING_UTILS_H
@@ -75,6 +71,12 @@ char *add_suffix_to_path(const char *path, const char *suffix);
  * @return The position fom 0 to N - 1 where trim is found; returns 0 if it 
  * is not found the trim.
  */
+/**
+ * @brief Explica la responsabilidad de `find_trim` en el flujo del compilador.
+ * @param Recibe: `const char *string`.
+ * @return Devuelve un valor de tipo `int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 int find_trim(const char *string);
 
 /**
@@ -95,6 +97,12 @@ char *trim_string(const char *str);
 /**
  * Trim leading and trailing whitespace in place.
  * @param[inout] str A pointer to read-write character array.
+ */
+/**
+ * @brief Explica la responsabilidad de `trim_whitespace` en el flujo del compilador.
+ * @param Recibe: `char *str`.
+ * @return No devuelve valor.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
  */
 void trim_whitespace(char *str);
 

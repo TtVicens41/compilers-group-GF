@@ -1,3 +1,9 @@
+/**
+ * @title: error.c
+ * @authors:
+ * @creation:
+ */
+
 #include "error.h"
 
 const char *error_message_text(ErrorCode code) {

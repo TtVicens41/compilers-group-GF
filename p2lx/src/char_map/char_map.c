@@ -1,3 +1,9 @@
+/**
+ * @title: char_map.c
+ * @authors:
+ * @creation:
+ */
+
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -34,6 +40,12 @@ char *init_char_map(const char *string) {
 }
 
 #if (0)
+/**
+ * @brief Explica la responsabilidad de `main` en el flujo del compilador.
+ * @param No recibe parametros.
+ * @return Devuelve un valor de tipo `int`.
+ * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ */
 int main(void) {
     char *hash_map = init_char_map("if");
     printf("%d\n", hash_map['i']);

@@ -1,7 +1,7 @@
 /**
- * @title: Alphabet Definition for the Language Lexer
- * @author: Marc Bosch Manzano
- * @creation: 2026/01/30
+ * @title: alphabet.h
+ * @authors:
+ * @creation:
  */
 
 #ifndef ALPHABET_H
