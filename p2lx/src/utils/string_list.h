@@ -26,26 +26,26 @@ StringList *string_split(char *string, char splitter);
 StringList *apply_string_list(StringList *string_list, char *(*applier)(const char *), int delete);
 
 /**
- * @brief Explica la responsabilidad de `clear_string_list` en el flujo del compilador.
- * @param Recibe: `StringList *string_list`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `clear_string_list` in the compiler pipeline.
+ * @param Receives: `StringList *string_list`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void clear_string_list(StringList *string_list);
 
 /**
- * @brief Explica la responsabilidad de `delete_string_list` en el flujo del compilador.
- * @param Recibe: `StringList **string_list`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `delete_string_list` in the compiler pipeline.
+ * @param Receives: `StringList **string_list`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void delete_string_list(StringList **string_list);
 
 /**
- * @brief Explica la responsabilidad de `print_string_list` en el flujo del compilador.
- * @param Recibe: `StringList *string_list, int raw`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_string_list` in the compiler pipeline.
+ * @param Receives: `StringList *string_list, int raw`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void print_string_list(StringList *string_list, int raw);
 

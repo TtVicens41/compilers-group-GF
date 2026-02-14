@@ -21,10 +21,10 @@ typedef enum {
 
 const char *token_category_text(TokenCategory category);
 /**
- * @brief Explica la responsabilidad de `token_category_from_text` en el flujo del compilador.
- * @param Recibe: `const char *text`.
- * @return Devuelve un valor de tipo `TokenCategory`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `token_category_from_text` in the compiler pipeline.
+ * @param Receives: `const char *text`.
+ * @return Returns a value of type `TokenCategory`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 TokenCategory token_category_from_text(const char *text);
 
@@ -42,27 +42,27 @@ typedef struct {
 } TokenList;
 
 /**
- * @brief Explica la responsabilidad de `token_list_init` en el flujo del compilador.
- * @param Recibe: `TokenList *list`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `token_list_init` in the compiler pipeline.
+ * @param Receives: `TokenList *list`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void token_list_init(TokenList *list);
 int token_list_push(TokenList *list, const char *lexeme, TokenCategory category,
                     int line, int column);
 /**
- * @brief Explica la responsabilidad de `token_list_free` en el flujo del compilador.
- * @param Recibe: `TokenList *list`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `token_list_free` in the compiler pipeline.
+ * @param Receives: `TokenList *list`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void token_list_free(TokenList *list);
 
 /**
- * @brief Explica la responsabilidad de `print_token` en el flujo del compilador.
- * @param Recibe: `const Token *token`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_token` in the compiler pipeline.
+ * @param Receives: `const Token *token`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void print_token(const Token *token);
 

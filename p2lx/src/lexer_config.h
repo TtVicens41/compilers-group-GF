@@ -1,6 +1,6 @@
 /**
  * @title: lexer_config.h
- * @authors:
+ * @authors: Joan Vicente, Alejandro Poole
  * @creation:
  */
 

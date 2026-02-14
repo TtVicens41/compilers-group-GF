@@ -29,17 +29,17 @@ typedef struct {
 } CounterState;
 
 /**
- * @brief Explica la responsabilidad de `counter_init` en el flujo del compilador.
- * @param Recibe: `CounterState *counter, FILE *stream, int enabled`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `counter_init` in the compiler pipeline.
+ * @param Receives: `CounterState *counter, FILE *stream, int enabled`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void counter_init(CounterState *counter, FILE *stream, int enabled);
 /**
- * @brief Explica la responsabilidad de `counter_set_stream` en el flujo del compilador.
- * @param Recibe: `CounterState *counter, FILE *stream`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `counter_set_stream` in the compiler pipeline.
+ * @param Receives: `CounterState *counter, FILE *stream`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void counter_set_stream(CounterState *counter, FILE *stream);
 void counter_add_comp(CounterState *counter, int line, const char *func,

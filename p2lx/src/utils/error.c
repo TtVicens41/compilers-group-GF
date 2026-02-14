@@ -1,6 +1,6 @@
 /**
  * @title: error.c
- * @authors:
+ * @authors: Joan Vicente, Pau Puig
  * @creation:
  */
 

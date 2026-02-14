@@ -1,6 +1,6 @@
 /**
  * @title: counter.c
- * @authors:
+ * @authors: Joan Vicente, Davi Paiva
  * @creation:
  */
 
@@ -10,10 +10,10 @@
 #include "counter.h"
 
 /**
- * @brief Explica la responsabilidad de `should_count` en el flujo del compilador.
- * @param Recibe: `const CounterState *counter`.
- * @return Devuelve un valor de tipo `static int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `should_count` in the compiler pipeline.
+ * @param Receives: `const CounterState *counter`.
+ * @return Returns a value of type `static int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 static int should_count(const CounterState *counter) {
     return counter && counter->enabled;
@@ -46,10 +46,10 @@ static CounterFunctionRow *get_row(CounterState *counter, const char *func) {
 }
 
 /**
- * @brief Explica la responsabilidad de `counter_init` en el flujo del compilador.
- * @param Recibe: `CounterState *counter, FILE *stream, int enabled`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `counter_init` in the compiler pipeline.
+ * @param Receives: `CounterState *counter, FILE *stream, int enabled`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void counter_init(CounterState *counter, FILE *stream, int enabled) {
     int i;
@@ -73,10 +73,10 @@ void counter_init(CounterState *counter, FILE *stream, int enabled) {
 }
 
 /**
- * @brief Explica la responsabilidad de `counter_set_stream` en el flujo del compilador.
- * @param Recibe: `CounterState *counter, FILE *stream`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `counter_set_stream` in the compiler pipeline.
+ * @param Receives: `CounterState *counter, FILE *stream`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void counter_set_stream(CounterState *counter, FILE *stream) {
     if (!counter) {

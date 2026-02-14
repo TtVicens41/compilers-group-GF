@@ -11,10 +11,10 @@
 #include "error_utils.h"
 
 /**
- * @brief Explica la responsabilidad de `print_file` en el flujo del compilador.
- * @param Recibe: `const char *path`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_file` in the compiler pipeline.
+ * @param Receives: `const char *path`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void print_file(const char *path) {
     FILE *file_ptr;
@@ -78,10 +78,10 @@ char *read_file(const char *path) {
 }
 
 /**
- * @brief Explica la responsabilidad de `dump_file` en el flujo del compilador.
- * @param Recibe: `const char *path, char *str, int max_len`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `dump_file` in the compiler pipeline.
+ * @param Receives: `const char *path, char *str, int max_len`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void dump_file(const char *path, char *str, int max_len) {
     FILE *file_ptr;
@@ -106,10 +106,10 @@ void dump_file(const char *path, char *str, int max_len) {
 }
 
 /**
- * @brief Explica la responsabilidad de `copy_file` en el flujo del compilador.
- * @param Recibe: `const char *input_path, const char *output_path`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `copy_file` in the compiler pipeline.
+ * @param Receives: `const char *input_path, const char *output_path`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void copy_file(const char *input_path, const char *output_path) {
     FILE *input_file_ptr;
@@ -141,10 +141,10 @@ void copy_file(const char *input_path, const char *output_path) {
 }
 
 /**
- * @brief Explica la responsabilidad de `check_input_file` en el flujo del compilador.
- * @param Recibe: `const char *input_path`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `check_input_file` in the compiler pipeline.
+ * @param Receives: `const char *input_path`.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int check_input_file(const char *input_path) {
     FILE *input_file = fopen(input_path, "r");
@@ -157,10 +157,10 @@ int check_input_file(const char *input_path) {
 }
 
 /**
- * @brief Explica la responsabilidad de `check_output_file` en el flujo del compilador.
- * @param Recibe: `const char *output_path`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `check_output_file` in the compiler pipeline.
+ * @param Receives: `const char *output_path`.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int check_output_file(const char *output_path) {
     FILE *output_file = fopen(output_path, "w");

@@ -72,10 +72,10 @@ char *add_suffix_to_path(const char *path, const char *suffix);
  * is not found the trim.
  */
 /**
- * @brief Explica la responsabilidad de `find_trim` en el flujo del compilador.
- * @param Recibe: `const char *string`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `find_trim` in the compiler pipeline.
+ * @param Receives: `const char *string`.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int find_trim(const char *string);
 
@@ -99,10 +99,10 @@ char *trim_string(const char *str);
  * @param[inout] str A pointer to read-write character array.
  */
 /**
- * @brief Explica la responsabilidad de `trim_whitespace` en el flujo del compilador.
- * @param Recibe: `char *str`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `trim_whitespace` in the compiler pipeline.
+ * @param Receives: `char *str`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void trim_whitespace(char *str);
 

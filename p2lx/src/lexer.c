@@ -1,6 +1,6 @@
 /**
  * @title: lexer.c
- * @authors:
+ * @authors: Joan Vicente, Pau Puig
  * @creation:
  */
 
@@ -20,6 +20,76 @@
 #define AUTOMATA_CANDIDATE_3 "../resources/automata.txt"
 
 #define LINE_BUFFER_SIZE 4096
+
+/**
+ * @brief Checks whether a character acts as a lexical separator.
+ * @param Receives: `char c`.
+ * @return Returns `1` for whitespace and `0` otherwise.
+ * @details Used to delimit tokens during character-by-character scanning.
+ */
+static int is_whitespace_char(char c) {
+    return c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '\f' || c == '\v';
+}
+
+/**
+ * @brief Resolves the automata file path among candidate locations.
+ * @param Does not receive parameters.
+ * @return Returns the valid path or `NULL` when no file is found.
+ * @details Allows running from different working directories without breaking the scanner.
+ */
+static const char *resolve_automata_path(void) {
+    const char *candidates[] = {
+        AUTOMATA_CANDIDATE_1,
+        AUTOMATA_CANDIDATE_2,
+        AUTOMATA_CANDIDATE_3,
+        NULL
+    };
+    int i = 0;
+
+    while (candidates[i]) {
+        FILE *probe = fopen(candidates[i], "r");
+        if (probe) {
+            fclose(probe);
+            return candidates[i];
+        }
+        i++;
+    }
+
+    return NULL;
+}
+
+/**
+ * @brief Checks whether a character belongs to the supported operator set.
+ * @param Receives: `char c`.
+ * @return Returns `1` for operator characters and `0` otherwise.
+ * @details Quickly isolates operator tokens without relying on the general NFA.
+ */
+static int is_operator_char(char c) {
+    return c == '=' || c == '>' || c == '+' || c == '*';
+}
+
+/**
+ * @brief Checks whether a character belongs to the supported special-character set.
+ * @param Receives: `char c`.
+ * @return Returns `1` for special characters and `0` otherwise.
+ * @details Helps generate one-character tokens for language punctuation.
+ */
+static int is_special_char(char c) {
+    return c == '(' || c == ')' || c == ';' || c == '{' || c == '}' ||
+           c == '[' || c == ']' || c == ',';
+}
+
+/**
+ * @brief Copies a substring into a new dynamic buffer.
+ * @param Receives: `const char *src, int start, int end`.
+ * @return Returns the allocated substring.
+ * @details Used to extract lexemes without mutating the input buffer.
+ */
+static char *copy_slice(const char *src, int start, int end) {
+    int len;
+    char *out;
+
+    if (end < start) {
         return get_copy("");
     }
 
@@ -35,10 +105,10 @@
 }
 
 /**
- * @brief Explica la responsabilidad de `append_text` en el flujo del compilador.
- * @param Recibe: `char **buffer, size_t *cap, size_t *len, const char *text`.
- * @return Devuelve un valor de tipo `static int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Appends text to a dynamic buffer with automatic growth.
+ * @param Receives: `char **buffer, size_t *cap, size_t *len, const char *text`.
+ * @return Returns `1` on success and `0` on allocation failure.
+ * @details Centralizes reallocation logic while building output lines.
  */
 static int append_text(char **buffer, size_t *cap, size_t *len, const char *text) {
     size_t need;
@@ -67,6 +137,12 @@ static int append_text(char **buffer, size_t *cap, size_t *len, const char *text
     return 1;
 }
 
+/**
+ * @brief Formats and appends the textual representation of one token.
+ * @param Receives: `char **line_buffer, size_t *cap, size_t *len, const char *lexeme, TokenCategory category, int include_sep`.
+ * @return Returns `1` when appended correctly and `0` on allocation failure.
+ * @details Mantiene un unico formato `<lexeme, CAT_X>` para todos los modos.
+ */
 static int append_token_repr(char **line_buffer, size_t *cap, size_t *len,
                              const char *lexeme, TokenCategory category,
                              int include_sep) {
@@ -85,6 +161,12 @@ static int append_token_repr(char **line_buffer, size_t *cap, size_t *len,
     return 1;
 }
 
+/**
+ * @brief Writes one tokenized line to the output file using the active format.
+ * @param Receives: `Lexer *lexer, int input_line, const char *line_text, int has_tokens`.
+ * @return Returns `1` if writing succeeds and `0` otherwise.
+ * @details Keeps RELEASE/DEBUG output policy isolated from scanning logic.
+ */
 static int write_line_output(Lexer *lexer, int input_line, const char *line_text,
                              int has_tokens) {
     if (!has_tokens) {
@@ -101,6 +183,12 @@ static int write_line_output(Lexer *lexer, int input_line, const char *line_text
     return 1;
 }
 
+/**
+ * @brief Inserts one token in memory and in the current rendered line.
+ * @param Receives: `Lexer *lexer, const char *lexeme, TokenCategory category, int line, int column, char **out_line, size_t *out_cap, size_t *out_len, int *line_has_tokens`.
+ * @return Returns `1` on success and `0` on failure.
+ * @details Keeps the internal token list synchronized with textual output.
+ */
 static int push_token(Lexer *lexer, const char *lexeme, TokenCategory category,
                       int line, int column, char **out_line, size_t *out_cap,
                       size_t *out_len, int *line_has_tokens) {
@@ -118,12 +206,24 @@ static int push_token(Lexer *lexer, const char *lexeme, TokenCategory category,
     return 1;
 }
 
+/**
+ * @brief Reports a non-recognized lexeme with line and column context.
+ * @param Receives: `Lexer *lexer, int line, int column, const char *lexeme`.
+ * @return Does not return a value.
+ * @details Centraliza el mensaje para mantener formato de error uniforme.
+ */
 static void report_nonrecognized(Lexer *lexer, int line, int column,
                                  const char *lexeme) {
     report_lexer_error(lexer->debug_stream, ERR_NON_RECOGNIZED, line, column, lexeme,
                        "Token emitted as CAT_NONRECOGNIZED");
 }
 
+/**
+ * @brief Parses a quoted literal starting at the current cursor position.
+ * @param Receives: `const char *line, int *i, int len, char **lexeme_out, int *is_terminated`.
+ * @return Returns `1` after processing the literal and updating cursors.
+ * @details Detects unterminated literals and emits a specific lexical error.
+ */
 static int parse_literal(const char *line, int *i, int len, char **lexeme_out,
                          int *is_terminated) {
     int start = *i;
@@ -147,10 +247,10 @@ static int parse_literal(const char *line, int *i, int len, char **lexeme_out,
 }
 
 /**
- * @brief Explica la responsabilidad de `parse_generic_chunk` en el flujo del compilador.
- * @param Recibe: `const char *line, int *i, int len, char **lexeme_out`.
- * @return Devuelve un valor de tipo `static int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Extracts a generic chunk until a lexical delimiter is found.
+ * @param Receives: `const char *line, int *i, int len, char **lexeme_out`.
+ * @return Returns `1` after producing the lexeme and moving the cursor.
+ * @details Used for numbers, identifiers, and non-recognized chunks.
  */
 static int parse_generic_chunk(const char *line, int *i, int len, char **lexeme_out) {
     int start = *i;
@@ -168,10 +268,10 @@ static int parse_generic_chunk(const char *line, int *i, int len, char **lexeme_
 }
 
 /**
- * @brief Explica la responsabilidad de `classify_generic_chunk` en el flujo del compilador.
- * @param Recibe: `const Lexer *lexer, const char *lexeme`.
- * @return Devuelve un valor de tipo `static TokenCategory`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Classifies a generic lexeme using the loaded NFA.
+ * @param Receives: `const Lexer *lexer, const char *lexeme`.
+ * @return Returns the resulting token category.
+ * @details Explicitly filters categories accepted by this scanning flow.
  */
 static TokenCategory classify_generic_chunk(const Lexer *lexer, const char *lexeme) {
     TokenCategory category = classify_lexeme_nfa(lexer->nfa, lexeme);
@@ -196,10 +296,10 @@ static TokenCategory classify_generic_chunk(const Lexer *lexer, const char *lexe
 }
 
 /**
- * @brief Explica la responsabilidad de `process_line` en el flujo del compilador.
- * @param Recibe: `Lexer *lexer, const char *line`.
- * @return Devuelve un valor de tipo `static int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Processes a full input line and generates tokens in memory and output.
+ * @param Receives: `Lexer *lexer, const char *line`.
+ * @return Returns `1` if the line is processed correctly and `0` on failure.
+ * @details This is the line-level scanning core with lexical error handling.
  */
 static int process_line(Lexer *lexer, const char *line) {
     int len = (int)strlen(line);
@@ -311,6 +411,12 @@ static int process_line(Lexer *lexer, const char *line) {
     return 1;
 }
 
+/**
+ * @brief Builds the scanner output path by appending `scn`.
+ * @param Receives: `const char *input_path`.
+ * @return Returns a newly allocated output path or `NULL`.
+ * @details Preserves the `<input>.cscn` convention required by the assignment.
+ */
 char *build_scanner_output_path(const char *input_path) {
     size_t len;
     char *out;
@@ -330,6 +436,12 @@ char *build_scanner_output_path(const char *input_path) {
     return out;
 }
 
+/**
+ * @brief Builds the counter output path by appending `dbgcnt`.
+ * @param Receives: `const char *input_path`.
+ * @return Returns the allocated counter file path or `NULL`.
+ * @details Used when `COUNTOUT` redirects counting messages to a separate file.
+ */
 char *build_count_output_path(const char *input_path) {
     size_t len;
     char *out;
@@ -350,10 +462,10 @@ char *build_count_output_path(const char *input_path) {
 }
 
 /**
- * @brief Explica la responsabilidad de `has_c_extension` en el flujo del compilador.
- * @param Recibe: `const char *path`.
- * @return Devuelve un valor de tipo `static int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Validates that the input file has `.c` extension.
+ * @param Receives: `const char *path`.
+ * @return Returns `1` if the extension is valid and `0` otherwise.
+ * @details Enforces the input restriction defined by the P2 specification.
  */
 static int has_c_extension(const char *path) {
     const char *dot;
@@ -370,10 +482,10 @@ static int has_c_extension(const char *path) {
 }
 
 /**
- * @brief Explica la responsabilidad de `run_lexer` en el flujo del compilador.
- * @param Recibe: `const char *input_path, const char *output_path, TokenList *out_tokens`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Runs the complete scanner pipeline on one input file.
+ * @param Receives: `const char *input_path, const char *output_path, TokenList *out_tokens`.
+ * @return Returns `0` on success and `1` on error.
+ * @details Initializes resources, processes lines, handles errors, and frees memory.
  */
 int run_lexer(const char *input_path, const char *output_path, TokenList *out_tokens) {
     Lexer lexer;
@@ -482,6 +594,12 @@ cleanup:
     return status;
 }
 
+/**
+ * @brief Runs scanner and optionally chains the parser phase.
+ * @param Receives: `const char *input_path, ParserHookFn parser_hook, TokenList *out_tokens, char **generated_output_path`.
+ * @return Returns `0` on success and `1` when any phase fails.
+ * @details Leaves a prepared hook to integrate P3 without redesigning the pipeline.
+ */
 int run_pipeline_with_optional_parser(const char *input_path,
                                       ParserHookFn parser_hook,
                                       TokenList *out_tokens,

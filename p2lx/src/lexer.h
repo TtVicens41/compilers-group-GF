@@ -27,10 +27,10 @@ typedef struct {
 typedef int (*ParserHookFn)(const TokenList *tokens, const char *token_path);
 
 /**
- * @brief Explica la responsabilidad de `run_lexer` en el flujo del compilador.
- * @param Recibe: `const char *input_path, const char *output_path, TokenList *out_tokens`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `run_lexer` in the compiler pipeline.
+ * @param Receives: `const char *input_path, const char *output_path, TokenList *out_tokens`.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int run_lexer(const char *input_path, const char *output_path, TokenList *out_tokens);
 int run_pipeline_with_optional_parser(const char *input_path,

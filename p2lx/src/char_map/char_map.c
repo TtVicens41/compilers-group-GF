@@ -41,10 +41,10 @@ char *init_char_map(const char *string) {
 
 #if (0)
 /**
- * @brief Explica la responsabilidad de `main` en el flujo del compilador.
- * @param No recibe parametros.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `main` in the compiler pipeline.
+ * @param Does not receive parameters.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int main(void) {
     char *hash_map = init_char_map("if");

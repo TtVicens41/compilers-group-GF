@@ -13,10 +13,10 @@
 #include "utils/file_utils.h"
 
 /**
- * @brief Explica la responsabilidad de `print_usage` en el flujo del compilador.
- * @param Recibe: `const char *argv0`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_usage` in the compiler pipeline.
+ * @param Receives: `const char *argv0`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 static void print_usage(const char *argv0) {
     fprintf(stderr, "Usage: %s <input_file.c>\n", argv0);
@@ -24,10 +24,10 @@ static void print_usage(const char *argv0) {
 }
 
 /**
- * @brief Explica la responsabilidad de `print_manual` en el flujo del compilador.
- * @param No recibe parametros.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_manual` in the compiler pipeline.
+ * @param Does not receive parameters.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 static void print_manual(void) {
     const char *candidates[] = {
@@ -51,10 +51,10 @@ static void print_manual(void) {
 }
 
 /**
- * @brief Explica la responsabilidad de `main` en el flujo del compilador.
- * @param Recibe: `int argc, char **argv`.
- * @return Devuelve un valor de tipo `int`.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `main` in the compiler pipeline.
+ * @param Receives: `int argc, char **argv`.
+ * @return Returns a value of type `int`.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 int main(int argc, char **argv) {
     TokenList tokens;

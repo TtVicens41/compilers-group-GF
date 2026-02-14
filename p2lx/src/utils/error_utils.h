@@ -12,10 +12,10 @@
 #include "error.h"
 
 /**
- * @brief Explica la responsabilidad de `print_file_error` en el flujo del compilador.
- * @param Recibe: `const char *path`.
- * @return No devuelve valor.
- * @details Ejecuta una tarea concreta para mantener el codigo modular y facilitar mantenimiento.
+ * @brief Describes the responsibility of `print_file_error` in the compiler pipeline.
+ * @param Receives: `const char *path`.
+ * @return Does not return a value.
+ * @details Performs a focused task to keep the code modular and easier to maintain.
  */
 void print_file_error(const char *path);
 void report_lexer_error(FILE *stream, ErrorCode code, int line, int column,
