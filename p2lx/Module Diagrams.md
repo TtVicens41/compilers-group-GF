@@ -7,13 +7,21 @@ All function and type identifiers are taken directly from the code.
 
 ```mermaid
 graph TD
-    A["main.c\nmain()"] --> B["lexer.c\nrun_pipeline_with_optional_parser()"]
-    B --> C["lexer.c\nrun_lexer()"]
-    C --> D["automata/automata.c\nread_union_nfa()"]
-    C --> E["token.c\nTokenList API"]
-    C --> F["counter.c\nCounterState API"]
-    C --> G["utils/error_utils.c\nreport_lexer_error()"]
-    C --> H["utils/file_utils.c\nread/write/check files"]
+    A["main.c
+    main()"] --> B["lexer.c
+    run_pipeline_with_optional_parser()"]
+    B --> C["lexer.c
+    run_lexer()"]
+    C --> D["automata/automata.c
+    read_union_nfa()"]
+    C --> E["token.c
+    TokenList API"]
+    C --> F["counter.c
+    CounterState API"]
+    C --> G["utils/error_utils.c
+    report_lexer_error()"]
+    C --> H["utils/file_utils.c
+    read/write/check files"]
     D --> I["resources/automata.txt"]
 ```
 
@@ -21,20 +29,32 @@ graph TD
 
 ```mermaid
 graph LR
-    IN["input_path: const char*"] --> P0["run_pipeline_with_optional_parser(input_path, parser_hook, out_tokens, generated_output_path)\nreturns int"]
-    P0 --> P1["build_scanner_output_path(input_path)\nreturns char*"]
-    P1 --> P2["run_lexer(input_path, output_path, out_tokens)\nreturns int"]
+    IN["input_path: const char*"] --> P0["run_pipeline_with_optional_parser(input_path, parser_hook, out_tokens, generated_output_path)
+    returns int"]
+    P0 --> P1["build_scanner_output_path(input_path)
+    returns char*"]
+    P1 --> P2["run_lexer(input_path, output_path, out_tokens)
+    returns int"]
 
-    P2 --> L1["resolve_automata_path()\nreturns const char*"]
-    P2 --> L2["read_union_nfa(file)\nreturns NFA*"]
-    P2 --> L3["process_line(lexer, line)\nreturns int"]
+    P2 --> L1["resolve_automata_path()
+    returns const char*"]
+    P2 --> L2["read_union_nfa(file)
+    returns NFA*"]
+    P2 --> L3["process_line(lexer, line)
+    returns int"]
 
-    L3 --> L4["parse_literal(line, &i, len, &lexeme_out, &is_terminated)\nreturns int"]
-    L3 --> L5["parse_generic_chunk(line, &i, len, &lexeme_out)\nreturns int"]
-    L5 --> L6["classify_generic_chunk(lexer, lexeme)\nreturns TokenCategory"]
-    L6 --> L7["classify_lexeme_nfa(nfa, lexeme)\nreturns TokenCategory"]
-    L3 --> L8["push_token(...)\nreturns int"]
-    L8 --> L9["token_list_push(list, lexeme, category, line, column)\nreturns int"]
+    L3 --> L4["parse_literal(line, &i, len, &lexeme_out, &is_terminated)
+    returns int"]
+    L3 --> L5["parse_generic_chunk(line, &i, len, &lexeme_out)
+    returns int"]
+    L5 --> L6["classify_generic_chunk(lexer, lexeme)
+    returns TokenCategory"]
+    L6 --> L7["classify_lexeme_nfa(nfa, lexeme)
+    returns TokenCategory"]
+    L3 --> L8["push_token(...)
+    returns int"]
+    L8 --> L9["token_list_push(list, lexeme, category, line, column)
+    returns int"]
 
     P2 --> OUT1["output_path (.cscn)"]
     P2 --> OUT2["out_tokens: TokenList"]
@@ -44,17 +64,50 @@ graph LR
 
 ```mermaid
 graph TD
-    LEX["struct Lexer\n- FILE *output_file\n- FILE *debug_stream\n- FILE *count_stream\n- CounterState counter\n- NFA *nfa\n- TokenList tokens\n- int current_line"]
+    LEX["struct Lexer
+    - FILE *output_file
+    - FILE *debug_stream
+    - FILE *count_stream
+    - CounterState counter
+    - NFA *nfa
+    - TokenList tokens
+    - int current_line"]
 
-    TOKLIST["struct TokenList\n- Token *items\n- size_t size\n- size_t capacity"]
-    TOKARR["Token[] array\n[item0 | item1 | ...]"]
-    TOK["struct Token\n- char *lexeme\n- TokenCategory category\n- int line\n- int column"]
+    TOKLIST["struct TokenList
+    - Token *items
+    - size_t size
+    - size_t capacity"]
+    TOKARR["Token[] array
+    [item0 | item1 | ...]"]
+    TOK["struct Token
+    - char *lexeme
+    - TokenCategory category
+    - int line
+    - int column"]
 
-    NFA["struct NFA\n- DFA **automatas\n- int size"]
-    DFAARR["DFA*[] array\n[dfa0 | dfa1 | ...]"]
-    DFA["struct DFA\n- TokenCategory category\n- char *alphabet\n- int alphabet_size\n- int states_size\n- int initial_state\n- int *accepting_states\n- int accepting_states_size\n- int **transitions\n- char *char_map"]
+    NFA["struct NFA
+    - DFA **automatas
+    - int size"]
+    DFAARR["DFA*[] array
+    [dfa0 | dfa1 | ...]"]
+    DFA["struct DFA
+    - TokenCategory category
+    - char *alphabet
+    - int alphabet_size
+    - int states_size
+    - int initial_state
+    - int *accepting_states
+    - int accepting_states_size
+    - int **transitions
+    - char *char_map"]
 
-    CNT["struct CounterState\n- long total_comp\n- long total_io\n- long total_gen\n- CounterFunctionRow rows[128]\n- FILE *stream\n- int enabled"]
+    CNT["struct CounterState
+    - long total_comp
+    - long total_io
+    - long total_gen
+    - CounterFunctionRow rows[128]
+    - FILE *stream
+    - int enabled"]
 
     LEX --> TOKLIST
     TOKLIST --> TOKARR
@@ -82,12 +135,22 @@ graph TD
 
 ```mermaid
 graph LR
-    A["Input line buffer\nchar line[]"] --> B["process_line()"]
+    A["Input line buffer
+    char line[]"] --> B["process_line()"]
 
-    B --> C1["Rule: whitespace\nis_whitespace_char()\n=> skip"]
-    B --> C2["Rule: operator/special\nis_operator_char()/is_special_char()\n=> CAT_OPERATOR/CAT_SPECIALCHAR"]
-    B --> C3["Rule: literal\nparse_literal()\n=> CAT_LITERAL or CAT_NONRECOGNIZED"]
-    B --> C4["Rule: generic chunk\nparse_generic_chunk()\nclassify_generic_chunk()\n=> CAT_NUMBER / CAT_IDENTIFIER / CAT_KEYWORD / CAT_NONRECOGNIZED"]
+    B --> C1["Rule: whitespace
+    is_whitespace_char()
+    => skip"]
+    B --> C2["Rule: operator/special
+    is_operator_char()/is_special_char()
+    => CAT_OPERATOR/CAT_SPECIALCHAR"]
+    B --> C3["Rule: literal
+    parse_literal()
+    => CAT_LITERAL or CAT_NONRECOGNIZED"]
+    B --> C4["Rule: generic chunk
+    parse_generic_chunk()
+    classify_generic_chunk()
+    => CAT_NUMBER / CAT_IDENTIFIER / CAT_KEYWORD / CAT_NONRECOGNIZED"]
 
     C2 --> D["push_token()"]
     C3 --> D
@@ -95,7 +158,8 @@ graph LR
 
     D --> E1["TokenList tokens (memory)"]
     D --> E2["line_render buffer"]
-    E2 --> F["write_line_output()\n=> .cscn file"]
+    E2 --> F["write_line_output()
+    => .cscn file"]
 
     B --> ERR["report_lexer_error() for lexical issues"]
 ```
