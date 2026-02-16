@@ -1,8 +1,9 @@
 /**
- * @title: Counters for Token Operations
- * @author: Marc Bosch Manzano
- * @creation: 2026/01/30
+ * @title: counter.h
+ * @authors: Pol Goicoechea, Pau Puig
+ * @creation: 16/02/2026
  */
+
 
 #ifndef COUNTER_H
 #define COUNTER_H

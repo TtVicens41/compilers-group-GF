@@ -1,33 +1,15 @@
 #!/bin/bash
-# Build script for C Lexical Analyzer
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 echo "Building C Lexical Analyzer..."
 
-cd src
-
-gcc -I. \
-    automata/automata.c \
-    char_map/char_map.c \
-    token.c \
-    utils/error_utils.c \
-    utils/string_utils.c \
-    utils/string_list.c \
-    utils/file_utils.c \
-    main.c \
-    -o ../lexer
-
-if [ $? -ne 0 ]; then
-    echo "Build failed!"
-    exit 1
-fi
-
-chmod +x ../lexer
-cd ..
+debug=0
+local=1
+"$SCRIPT_DIR/build.sh" "$debug" "$local"
 
 echo "Build successful!"
-echo "Lexical Analyzer executable created: ./lexer"
+echo "Lexical Analyzer executable created: $SCRIPT_DIR/lexer"
 echo ""
-echo "Usage: ./lexer <input_file>"
-echo "Example: ./lexer test_files/example.c"
-echo ""
-echo "Warning: This command can only be executed in this directory"
+echo "Usage: $SCRIPT_DIR/lexer <input_file>"

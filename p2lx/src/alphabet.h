@@ -1,5 +1,13 @@
 /**
- * @title: Alphabet Definition for the Language Lexer
+ * @title: alphabet.h
+ * @authors: Pol Goicoechea, Marc Bosch Manzano
+ * @creation: 16/02/2026
+ */
+
+#ifdef DEPRECATED
+/**
+ * Alphabet Definition for the Language Lexer
+ * 
  * @author: Marc Bosch Manzano
  * @creation: 2026/01/30
  */
@@ -133,3 +141,4 @@ static const char NON_ESSENTIAL_CHARACTERS[] = {
 static const char LITERAL = '\"';
 
 #endif // ALPHABET_H
+#endif

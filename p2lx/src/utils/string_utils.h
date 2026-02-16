@@ -1,20 +1,23 @@
 /**
- * @title: String Utilities.
- * @brief: Declarations of functions and macro definitions of string handling 
- *      utilities. Most string functions get as argument an string and return
- *      another string. Take account dinamyc allocated strings have to be 
- *      freed.
- * @authors: Marc Bosch Manzano & Pau Puig Guillén
- * @creation: 10/01/2026
+ * @title: string_utils.h
+ * @authors: Davi Paiva
+ * @creation: 16/02/2026
  */
+
 
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
 
 #include "../language_defs.h"
 
-/** To easily print a string into stdout. */
-#define PRINT(s) ({printf("%s\n", s);})
+/** To easily print a string into stdout with newline. */
+#define PRINT_STR(s)({printf("%s\n", (char *)(s));})
+
+/** To easily print an integer into stdout with newline. */
+#define PRINT_INT(i)({printf("%d\n", (int)(i));})
+
+/** To easily print a character into stdout with newline. */
+#define PRINT_CHAR(c)({printf("%c\n", (char)(c));})
 
 /**
  * Copies a string into a new one.
@@ -69,6 +72,16 @@ char *get_suffix_r(const char *string, char separator);
  */
 char *add_suffix_to_path(const char *path, const char *suffix);
 
+
+/**
+ * Concatenate two strings
+ * @param[in] left_string A pointer to read-only string.
+ * @param[in] right_string A pointer to read-only string.
+ * @return A pointer to a dinamically allocated string of concatenated 
+ * strings.
+ */
+char *concat_strings(const char *left_string, const char *right_string);
+
 /**
  * Retrieves the position where a trim character is found.
  * @param[in] string A pointer to read-only character array.
@@ -112,5 +125,21 @@ char *get_raw_string(const char *string);
  * @return A pointer to a dinamically allocated substring.
  */
 char *get_substring(const char *string, int start, int end);
+
+/**
+ * Gets the raw representation of spcecial characters. Converts the characters
+ * '\n', '\t', '\r', \ into strings of the literal string representation of them.
+ * For the rest of characters, it returns a string of the character as is.
+ * @param character An ASCII character.
+ * @return A dynamic allocated string of the raw representation of the character.
+ */
+char *get_raw_char(char character);
+
+/**
+ * Says whether the string is empty or not.
+ * @param[in] string A read-only character array.
+ * @return More than 1 when string is not empty, 0 otherwise.
+ */
+int is_not_empty(const char *string);
 
 #endif

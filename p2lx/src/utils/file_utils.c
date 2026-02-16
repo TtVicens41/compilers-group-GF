@@ -1,11 +1,14 @@
 /**
- * @title: File Management Utilities.
- * @brief: Implements file I/O handling functions.
- * @author: Marc Bosch Manzano & Pol Goicoechea Esparza
- * @creation: 09/01/2026
+ * @title: file_utils.c
+ * @authors: Marc Bosch
+ * @creation: 16/02/2026
  */
 
+
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "file_utils.h"
 #include "error_utils.h"
 
@@ -28,13 +31,67 @@ void dump_file(const char *path, char *str, int max_len) {
         return;
 
     FILE *file_ptr = fopen(path, "r"); 
-    
     int i = 0;
     char c = 0;
-    while ((c = fgetc(file_ptr)) != EOF && i < max_len) {
+
+    while ((c = fgetc(file_ptr)) != EOF && i < max_len - 1) {
         str[i++] = c;
     }
+    str[i] = '\0';
+    fclose(file_ptr);
 }
+
+char *read_file(const char *path) {
+    if (!check_input_file(path))
+        return NULL;
+    
+    FILE *file_ptr = fopen(path, "r");
+    if (!file_ptr) {
+        return NULL;
+    }
+    const int m = BUFFER_SIZE_MEDIUM;
+    char *str = calloc(1, sizeof(char));
+    if (!str) {
+        fclose(file_ptr);
+        return NULL;
+    }
+    char c = 0;
+    int i = 0;
+
+    while ((c = fgetc(file_ptr)) != EOF) {
+        if ((i % m) == 0) {
+            char *tmp = (char *)realloc(str, (i + 1) * m);
+            if (!tmp) {
+                free(str);
+                fclose(file_ptr);
+                return NULL;
+            }
+            str = tmp;
+        }
+        str[i++] = c;
+    }
+
+    fclose(file_ptr);
+    str[i] = '\0';
+    return str;
+}
+
+void write_file(const char *path, const char *string) {
+    if (!check_output_file(path) || !string)
+        return;
+    
+    FILE *file_ptr = fopen(path, "w");
+    if (!file_ptr) {
+        return;
+    }
+    const size_t str_length = strlen(string);
+    
+    for (size_t i = 0; i < str_length; i++) {
+        fputc(string[i], file_ptr);
+    }
+    fclose(file_ptr);
+}
+
 
 void copy_file(
     const char *input_path,
@@ -58,6 +115,9 @@ void copy_file(
 int check_input_file(
     const char *input_path
 ) {
+    if (!input_path) {
+        return 0;
+    }
     FILE *input_file = fopen(input_path, "r");
     if (!input_file) {
         print_file_error(input_path);
@@ -70,6 +130,9 @@ int check_input_file(
 int check_output_file(
     const char *output_path
 ) {
+    if (!output_path) {
+        return 0;
+    }
     FILE *output_file = fopen(output_path, "w");
     if (!output_file) {
         print_file_error(output_path);

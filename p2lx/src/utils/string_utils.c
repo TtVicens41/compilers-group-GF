@@ -1,9 +1,9 @@
 /**
- * @title: String Utilities.
- * @brief: Implementation of string handling functions.
- * @authors: Marc Bosch Manzano & Pau Puig Guillén
- * @creation: 10/01/2026
+ * @title: string_utils.c
+ * @authors: Alejandro Poole
+ * @creation: 16/02/2026
  */
+
 
 #include <stdio.h>
 #include <string.h>
@@ -99,20 +99,32 @@ char *add_suffix_to_path(const char *path, const char *suffix) {
     return new_path;
 }
 
+char *concat_strings(const char *left_string, const char *right_string) {
+    const size_t left_length = strlen(left_string);
+    const size_t right_length = strlen(right_string);
+    const size_t concat_length = left_length + right_length + 1;
+
+    char *concat_string = calloc(concat_length, sizeof(char));
+    strcat(concat_string, left_string);
+    strcat(concat_string, right_string);
+
+    return concat_string;
+}
+
 int find_trim(const char *string) {
-    if (!string) {
-        NULL;
-    }
+    if (!string) { NULL; }
+
     size_t length = strlen(string);
     for (int i = 0; i < length; i++) {
         if (IS_WHITESPACE(string[i]))
             return i;
     }
+    
     return 0;
 }
 
 char *copy_until_trim(const char *string) {
-    char *copy = calloc(BUFFER_SIZE_LINE, sizeof(char));
+    char *copy = calloc(BUFFER_SIZE_XLARGE, sizeof(char));
     int i = 0;
     while (*string && !IS_WHITESPACE(*string)) {
         copy[i++] = *string++;
@@ -122,22 +134,21 @@ char *copy_until_trim(const char *string) {
 }
 
 char *trim_string(const char *str) {
-    if (!str) {
-        return NULL;
-    }
+    if (!str) { return NULL; }
 
     while (IS_WHITESPACE(*str)) 
         str++;
 
-    if (*str == '\0') 
+    if (*str == '\0') {
         return get_copy(str);
+    }
     
     char *str_copy = get_copy(str);
     char *end = str_copy + strlen(str_copy) - 1;
     while (end > str_copy && IS_WHITESPACE(*end)) 
         end--;
-
     *(end + 1) = '\0';
+
     return str_copy;
 }
 
@@ -166,25 +177,51 @@ char *get_substring(const char *string, int start, int end) {
     return aux;
 }
 
+char *get_raw_char(char c) {
+    char *out = calloc(3, sizeof(char));
+    size_t j = 0;
+    switch (c) {
+        case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+        case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+        case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
+        case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+        case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+        case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+        case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
+        case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
+        default: out[j++] = c;
+    }
+    return out;
+}
+
 char *get_raw_string(const char *string) {
     int length = strlen(string);
     char *out = calloc(length * 2 + 1, sizeof(char));
     if (!out) {
         return NULL;
     }
-
-   size_t j = 0;
+    
+    size_t j = 0;
     for (size_t i = 0; i < length; i++) {
         char c = string[i];
         switch (c) {
-            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+            case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+            case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
             case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+            case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
             case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
-            case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
+            //case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
             default: out[j++] = c;
         }
     }
 
     out[j] = '\0';
     return out;
+}
+
+int is_not_empty(const char *string) {
+    return (int)strlen(string); 
 }
