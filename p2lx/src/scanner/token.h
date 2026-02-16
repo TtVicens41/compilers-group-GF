@@ -11,7 +11,7 @@
 #include "../language_defs.h"
 #include "../automata/automata.h"
 
-#define NON_RECOGNIZED_TOKEN "CAT_NON_RECOGNIZED"
+#define NON_RECOGNIZED_TOKEN "CAT_NONRECOGNIZED"
 
 typedef struct {
     char *lexeme;
