@@ -1,10 +1,14 @@
 /**
- * @title: File Utilities.
- * @brief: Declares file I/O handling functions. All functions recieve
- *      a path, or both input and output paths, as parameters. The main logic 
- *      is to read from that input path, and wirte content to that output path.
+ * File I/O Handling Utilities.
+ * 
+ * @description: 
+ *      Declares file I/O handling functions. All functions recieve a path, 
+ *      or both input and output paths, as parameters. The main logic is to 
+ *      read from that input path, and wirte content to that output path.
+ * 
  * @author: Marc Bosch Manzano & Pol Goicoechea Esparza
  * @creation: 09/01/2026
+ * @see_also: Improved from P1 Preprocessor file_utils.h.
  */
 
 #ifndef FILE_UTILS_H
@@ -24,6 +28,13 @@ void print_file(const char *path);
  * @return A dynamically string containing the full file body.
  */
 char *read_file(const char *path);
+
+/**
+ * Writes string into a file, overwritting it.
+ * @param[in] path Path from we write content.
+ * @param[in] string A read-only character array.
+ */
+void write_file(const char *path, const char *string);
 
 /**
  * Reads the full content of a file into a string.
@@ -56,4 +67,4 @@ int check_input_file(const char *input_path);
  */
 int check_output_file(const char *output_path); 
 
-#endif
+#endif // FILE_UTILS_H

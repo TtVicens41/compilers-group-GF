@@ -17,7 +17,7 @@ void init_error(const char *message, int line) {
 
 void print_file_error(const char *path) {
     switch (errno) {
-        case ENOENT: fprintf(stderr, EONENT_MSG, path); break;
+        case ENOENT: fprintf(stderr, ENOENT_MSG, path); break;
         case EACCES: fprintf(stderr, EACCES_MSG, path); break;
         case EISDIR: fprintf(stderr, EISDIR_MSG, path); break;
         case EMFILE: fprintf(stderr, EMFILE_MSG, path); break;

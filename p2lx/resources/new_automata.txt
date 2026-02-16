@@ -1,6 +1,6 @@
 CAT_KEYWORD
-ifnt
 3 5
+i f n t
 0 0 0 0
 2 0 0 0
 0 3 4 0
@@ -9,8 +9,8 @@ ifnt
 0 0 0 0
 #
 CAT_KEYWORD
-els
 5
+e l s
 0 0 0
 2 0 0
 0 3 0
@@ -19,8 +19,8 @@ els
 0 0 0
 #
 CAT_KEYWORD
-while
 6
+w h i l e
 0 0 0 0 0
 2 0 0 0 0
 0 3 0 0 0
@@ -30,8 +30,8 @@ while
 0 0 0 0 0
 #
 CAT_KEYWORD
-retun
 7
+r e t u n
 0 0 0 0 0
 2 0 0 0 0
 0 3 0 0 0
@@ -42,8 +42,8 @@ retun
 0 0 0 0 0
 #
 CAT_KEYWORD
-void
 5
+v o i d
 0 0 0 0
 2 0 0 0
 0 3 0 0
@@ -52,8 +52,8 @@ void
 0 0 0 0
 #
 CAT_KEYWORD
-char
 5
+c h a r
 0 0 0 0
 2 0 0 0
 0 3 0 0
@@ -62,30 +62,36 @@ char
 0 0 0 0
 #
 CAT_OPERATOR
-=>+*
 2
+= > + *
 0 0 0 0
 2 2 2 2
 0 0 0 0
 #
 CAT_SPECIALCHAR
-;,(){}[]
 2
+; , ( ) { } [ ]
 0 0 0 0 0 0 0 0
 2 2 2 2 2 2 2 2
 0 0 0 0 0 0 0 0
 #
 CAT_NUMBER
-0123456789
 2
-0 0 0 0 0 0 0 0 0 0
-2 2 2 2 2 2 2 2 2 2
-2 2 2 2 2 2 2 2 2 2
+[0-9]
+0
+2
+2
 #
 CAT_LITERAL
-"
 3
+" OTHER
 0 0
 2 0
 3 2
 0 0
+#
+CAT_IDENTIFIER
+[0-9] [a-zA-Z] OTHER
+0 0 0
+0 2 0
+2 2 0

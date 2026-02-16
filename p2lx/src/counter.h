@@ -1,5 +1,6 @@
 /**
- * @title: Counters for Token Operations
+ * Counters for Token Operations
+ * 
  * @author: Marc Bosch Manzano
  * @creation: 2026/01/30
  */

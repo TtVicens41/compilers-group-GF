@@ -13,7 +13,7 @@
 #include "../language_defs.h"
 
 /// To easily print a string into stdout.
-#define PRINT(s) ({printf("%s\n", s);})
+#define PRINT_STR(s) ({printf("%s\n", s);})
 
 /**
  * Copies a string into a new one.
