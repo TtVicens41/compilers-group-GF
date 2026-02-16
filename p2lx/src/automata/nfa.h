@@ -31,7 +31,7 @@ void delete_nfa(NFA **automaton);
 void reset_nfa(NFA *automaton);
 void consume_char_nfa(NFA *automaton, char symbol);
 int accept_string_nfa(NFA *automaton, const char *string);
-int is_valid_nfa(const NFA *automaton);
+int is_valid_nfa(const NFA *automaton, const char *categories);
 int is_alive_nfa(const NFA *automaton);
 int is_look_ahead_alive_nfa(const NFA *automaton, char symbol);
 void print_nfa(const NFA *automaton);

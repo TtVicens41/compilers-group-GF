@@ -12,8 +12,8 @@
 #include "./token.h"
 #include "../utils/utils.h"
 
-SimpleToken *init_token(const char *lexeme, const char *category, int column_count) {
-    SimpleToken *token = calloc(1, sizeof(SimpleToken));
+Token *init_token(const char *lexeme, const char *category, int column_count) {
+    Token *token = calloc(1, sizeof(Token));
     if (!token) { return NULL; }
 
     token->lexeme = get_copy(lexeme);
@@ -23,18 +23,18 @@ SimpleToken *init_token(const char *lexeme, const char *category, int column_cou
     return token;
 }
 
-SimpleToken *nonrecognized_token(const char *lexeme) {
-    SimpleToken *token = calloc(1, sizeof(SimpleToken));
+Token *nonrecognized_token(const char *lexeme) {
+    Token *token = calloc(1, sizeof(Token));
     if (!token) { return NULL; }
 
     token->lexeme = get_copy(lexeme);
-    token->category = get_copy(category_text[CAT_NONRECOGNIZED]);
+    token->category = get_copy(NON_RECOGNIZED_TOKEN);
 
     return token;
 }
 
-SimpleToken *produce_token_from_string_dfa(DFA *automaton, const char *string) {
-    SimpleToken *token = nonrecognized_token(string);
+Token *produce_token_from_string_dfa(DFA *automaton, const char *string) {
+    Token *token = nonrecognized_token(string);
     if (!token) { 
         return NULL; 
     }
@@ -49,7 +49,7 @@ SimpleToken *produce_token_from_string_dfa(DFA *automaton, const char *string) {
     return token;
 }
 
-SimpleToken *produce_token_from_string_nfa(NFA *automaton, const char *string) {
+Token *produce_token_from_string_nfa(NFA *automaton, const char *string) {
     for (int i = 0; i < automaton->size; i++) {
         if (accept_string_dfa(automaton->automatons[i], string)) {
             return produce_token_from_string_dfa(automaton->automatons[i], string);
@@ -59,34 +59,27 @@ SimpleToken *produce_token_from_string_nfa(NFA *automaton, const char *string) {
     return nonrecognized_token(string);
 }
 
-void clear_token(void *token) {
-    SimpleToken *simple_token = (SimpleToken *)token;
+void clear_token(Token *token) {
+    if (!token) { return; }
 
-    free(simple_token->category);
-    simple_token->category = NULL;
+    free(token->category);
+    token->category = NULL;
 
-    free(simple_token->lexeme);
-    simple_token->lexeme = NULL;
+    free(token->lexeme);
+    token->lexeme = NULL;
+
+    token->column_count = 0;
 }
 
-void delete_token(void **token) {
+void delete_token(Token **token) {
+    if (!*token) { return; }
+
     clear_token(*token);
     free(*token);
     *token = NULL;
 }
 
-void print_token(void *token) {
-    SimpleToken *simple_token = (SimpleToken *)token;
-
-    printf("{\n");
-    printf("lexeme: %s\n", simple_token->lexeme);
-    printf("category: %s,\n", simple_token->category);
-    printf("}\n");
-}
-
-char *get_formatted_token(void *token) {
-    SimpleToken *simple_token = (SimpleToken *)token;
-
+char *to_token_string(const Token *token) {
     char *str_token = "";
     
 #if (DEBUG == 1)
@@ -99,15 +92,15 @@ char *get_formatted_token(void *token) {
     sprintf(
         buffer,
         "<%s, %s> ",
-        simple_token->lexeme,
-        simple_token->category
+        token->lexeme,
+        token->category
     );
 
     return concat_strings(str_token, buffer);
 }
 
-void print_formatted_token(void *token) {
-    printf("%s", get_formatted_token(token));
+void print_formatted_token(const Token *token) {
+    printf("%s", to_token_string(token));
 }
 
 int update_column_count(int *column_count, char symbol) {

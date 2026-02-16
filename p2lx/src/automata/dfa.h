@@ -24,6 +24,7 @@ typedef struct {
     int *accepting_states;
     int accepting_states_size;
     int **transitions; 
+    int transitions_size;
     char *char_map;
 } DFA;
 
@@ -33,11 +34,11 @@ void clear_dfa(DFA *automaton);
 void delete_dfa(DFA **automaton);
 void reset_dfa(DFA *automaton);
 void consume_char_dfa(DFA *automaton, char symbol);
-int is_valid_dfa(const DFA *automaton);
+int is_valid_dfa(const DFA *automaton, const char *categories);
 int accept_string_dfa(DFA *automaton, const char *string);
 int is_alive_dfa(const DFA *automaton);
 int is_look_ahead_alive_dfa(const DFA *automaton, char symbol);
 int check_accepting_condition_dfa(const DFA *automaton); 
 void print_dfa(const DFA *automaton);
 
-#endif // DFA_h
+#endif // DFA_H

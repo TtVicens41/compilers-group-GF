@@ -182,10 +182,14 @@ char *get_raw_char(char c) {
     char *out = calloc(3, sizeof(char));
     size_t j = 0;
     switch (c) {
-        case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+        case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+        case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+        case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
         case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+        case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+        case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+        case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
         case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
-        case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
         default: out[j++] = c;
     }
     return out;
@@ -197,15 +201,20 @@ char *get_raw_string(const char *string) {
     if (!out) {
         return NULL;
     }
-
-   size_t j = 0;
+    
+    size_t j = 0;
     for (size_t i = 0; i < length; i++) {
         char c = string[i];
         switch (c) {
-            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+            case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+            case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
             case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+            case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
             case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
-            case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
+            //case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
             default: out[j++] = c;
         }
     }

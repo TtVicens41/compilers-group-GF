@@ -76,16 +76,23 @@ CAT_SPECIALCHAR
 0 0 0 0 0 0 0 0
 #
 CAT_NUMBER
-0123456789
+[0-9]
 2
-0 0 0 0 0 0 0 0 0 0
-2 2 2 2 2 2 2 2 2 2
-2 2 2 2 2 2 2 2 2 2
+0
+2
+2
 #
 CAT_LITERAL
-"
+" OTHER
 3
 0 0
 2 0
 3 2
 0 0
+#
+CAT_IDENTIFIER
+[0-9] [a-zA-Z]
+2
+0 0
+0 2
+2 2

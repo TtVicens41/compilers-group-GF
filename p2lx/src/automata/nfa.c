@@ -81,12 +81,12 @@ void consume_char_nfa(NFA *automaton, char symbol) {
     }
 }
 
-int is_valid_nfa(const NFA *automaton) {
+int is_valid_nfa(const NFA *automaton, const char *categories) {
     if (!automaton) { 
         return FALSE; 
     }
     for (int i = 0; i < automaton->size; i++) {
-        if (!is_valid_dfa(automaton->automatons[i])) {
+        if (!is_valid_dfa(automaton->automatons[i], categories)) {
             return FALSE;
         }
     }

@@ -23,46 +23,109 @@ char *empty_char_map(void) {
 
     return map;
 }
-    
-char *init_char_map(const char *string, const char *category) {
-    char *map = empty_char_map();
-    if (!map) { return NULL; }
 
-    size_t length = strlen(string);
-    char value = 0;
+void set_character(char *map, const char *value, char character) {
+    if (map[character] == KEY_ERROR) {
+        map[character] = *value;
+    }
+}
+
+void set_range(char *map, const char *value, char start, char end) {
+    if (!map) { 
+        return; 
+    }
+    start = max(min(start, end), 0);
+    end = min(max(start, end), ASCII_SIZE - 1);
+    for (size_t key = start; key <= end; key++) {
+        if (map[key] == KEY_ERROR)  {
+            map[key] = *value;
+        }
+    }
+}
+
+void set_characters(char *map, char *value, const char *characters) {
+    if (!map || !value || !characters) { 
+        return; 
+    }
+    size_t length = strlen(characters);
     for (size_t i = 0; i < length; i++) {
-        char key = string[i];
+        char key = characters[i];
         if (map[key] == KEY_ERROR) {
-            map[key] = value++;
+            map[key] = (*value)++;
         }
     }
+    (*value)--;
+}
 
-    if (strcmp(category, category_text[CAT_LITERAL]) == 0) {
-        for (size_t key = 0; key < ASCII_SIZE; key++) {
-            if (map[key] == KEY_ERROR) {
-                map[key] = value;
-            }
-        }
+void set_regular_expression(char *map, char *value, const char *regular_expression) {
+    if (strcmp(regular_expression, NUMBERS) == 0) {
+        set_range(map, value, '0', '9'); 
+    } 
+    else if (strcmp(regular_expression, LETTERS) == 0) {
+        set_range(map, value, 'A', 'Z');
+        set_range(map, value, 'a', 'z');
+    } 
+    else if (strcmp(regular_expression, NUMBERS_LETTERS) == 0) {
+        set_range(map, value, '0', '9');
+        set_range(map, value, 'A', 'Z');
+        set_range(map, value, 'a', 'z');
+    }
+    else if (strcmp(regular_expression, UPPER_CASE) == 0) {
+        set_range(map, value, 'A', 'Z');
+    }
+    else if (strcmp(regular_expression, LOWER_CASE) == 0) {
+        set_range(map, value, 'a', 'z');
+    }
+    else if (strcmp(regular_expression, OTHER) == 0) {
+        set_range(map, value, 0, ASCII_SIZE - 1);
+    }
+    else if (strcmp(regular_expression, SPACE) == 0) {
+        set_character(map, value, ' ');
+    }
+    else {
+        set_characters(map, value, regular_expression);
+    }
+}
+
+char *init_char_map_str(const char *alphabet) {
+    char *map = empty_char_map();
+    if (!map || !alphabet) { 
+        return NULL; 
     }
 
+    StringList *regular_expressions;
+    regular_expressions = string_split(alphabet, SYMBOL_SEPARATION);
+    char value = 0;
+
+    for (int i = 0; i < regular_expressions->size; i++) {
+        char *regular_expression = regular_expressions->buffer[i];
+        set_regular_expression(map, &value, regular_expression);
+        value++;
+    }
     return map;
+}
+
+int compute_num_assigned_chars(const char *map) {
+    int count = 0;
+    for (size_t key = 0; key < ASCII_SIZE; key++) {
+        count += map[key] != KEY_ERROR;
+    }
+    return count;
 }
 
 void print_char_map(const char *map) {
     if (!map) { return; }
-
+    
     printf("[\n");
     for (size_t i = 0; i < ASCII_SIZE; i++) {
-        printf("%c %d\n", (char)i, map[i]);
+        printf("%s %d\n", get_raw_char((char)i), map[(char)i]);
     }
     printf("]\n");
 }
 
 #if (0)
 int main(void) {
-    char *char_map = init_char_map("if");
-    printf("%d\n", char_map['i']);
-    printf("%d\n", char_map['f']);
-    printf("%d\n", char_map['2']);
+    char *char_map = init_char_map_str("[a-z] [0-9] {} |");
+    print_char_map(char_map);
 }
 #endif

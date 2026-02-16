@@ -13,25 +13,18 @@
 #include "../char_map/char_map.h"
 #include "../language_defs.h"
 
-int compute_alphabet_size(const char *alphabet, const char *category) {
-    return (
-        (strlen(alphabet)) + 
-        (strcmp(category, category_text[CAT_LITERAL]) == 0)
-    );
-}
-
 DFA *empty_dfa(void) {
     return calloc(1, sizeof(DFA));
 }
 
 DFA *init_dfa(const char *automaton_string) {
-    StringList *string_splitted;
-    string_splitted = string_split(
+    StringList *automaton_string_splitted;
+    automaton_string_splitted = string_split(
         automaton_string, AUTOMATA_ATTRIBUTE_SEPARATOR
     );
 
-    const char **buffer = (const char **)string_splitted->buffer;
-    const int size = (int)string_splitted->size;
+    const char **buffer = (const char **)automaton_string_splitted->buffer;
+    const int size = (int)automaton_string_splitted->size;
     
     DFA *dfa = empty_dfa();
     if (!dfa) { 
@@ -42,18 +35,24 @@ DFA *init_dfa(const char *automaton_string) {
     dfa->initial_state = INITIAL_STATE_NUM;
     dfa->empty_state = EMPTY_STATE_NUM;
 
-    if (size == CATEGORY) { return dfa; }
-    const char *category = buffer[CATEGORY];
-    dfa->category = get_copy(category);
+    if (size <= CATEGORY) { 
+        return dfa; 
+    }
 
-    if (size == ALPHABET) { return dfa; }
-    const char *alphabet = buffer[ALPHABET];
-    dfa->alphabet = get_copy(alphabet);
+    dfa->category = get_copy(buffer[CATEGORY]);
 
-    dfa->alphabet_size = compute_alphabet_size(alphabet, category);
-    dfa->char_map = init_char_map(alphabet, category);
+    if (size <= ALPHABET) { 
+        return dfa; 
+    }
 
-    if (size == ACCEPTING_STATES) { return dfa; }
+    dfa->alphabet = get_copy(buffer[ALPHABET]);
+    dfa->char_map = init_char_map_str(buffer[ALPHABET]);
+    dfa->alphabet_size = compute_num_assigned_chars(dfa->char_map);
+
+    if (size <= ACCEPTING_STATES) { 
+        return dfa; 
+    }
+
     StringList *accepting_states;
     accepting_states = string_split(
         buffer[ACCEPTING_STATES], AUTOMATA_LIST_SEPARATOR
@@ -62,15 +61,22 @@ DFA *init_dfa(const char *automaton_string) {
     dfa->accepting_states_size = accepting_states->size;
     dfa->accepting_states = to_integer_array(accepting_states, TRUE);
 
-    if (size == TRANSITIONS) { return dfa; }
+    if (size <= TRANSITIONS) { 
+        return dfa; 
+    }
+
+    dfa->transitions_size = ASCII_SIZE;
     dfa->transitions = calloc(dfa->states_size, sizeof(int *));
+
     for (int j = TRANSITIONS; j < size; j++) {
         StringList *transitions;
         transitions = string_split(buffer[j], AUTOMATA_LIST_SEPARATOR);
+        
+        dfa->transitions_size = min(dfa->transitions_size, transitions->size);
         dfa->transitions[j - TRANSITIONS] = to_integer_array(transitions, TRUE);
     }
     
-    delete_string_list(&string_splitted);
+    delete_string_list(&automaton_string_splitted);
     return dfa;
 }
 
@@ -146,16 +152,7 @@ int accept_string_dfa(DFA *automaton, const char *string) {
     return check_accepting_condition_dfa(automaton);
 }
 
-int is_valid_category(const char *category) {
-    for (int i = 0; i < NUM_CATEGORIES; i++) {
-        if (strcmp(category, category_text[i]) == 0) {
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-int is_valid_dfa(const DFA *automaton) {
+int is_valid_dfa(const DFA *automaton, const char *categories) {
     if (!automaton) { 
         return FALSE; 
     };
@@ -164,12 +161,13 @@ int is_valid_dfa(const DFA *automaton) {
     condition &= automaton->states_size > 0;
     condition &= automaton->alphabet_size > 0;
     condition &= automaton->accepting_states_size > 0;
+    condition &= automaton->transitions_size > 0;
     condition &= automaton->category != NULL;
     condition &= automaton->alphabet != NULL;
     condition &= automaton->transitions != NULL;
     condition &= automaton->accepting_states != NULL;
     condition &= automaton->char_map != NULL;
-    condition &= is_valid_category(automaton->category);
+    condition &= strstr(categories, automaton->category) != NULL;
 
     return condition;
 }
@@ -198,7 +196,10 @@ void clear_dfa(DFA *dfa) {
     dfa->states_size = 0;
     dfa->alphabet_size = 0;
     dfa->accepting_states_size = 0;
+    dfa->transitions_size = 0;
     dfa->initial_state = 0;
+    dfa->current_state = 0;
+    dfa->empty_state = 0;
 }
 
 void delete_dfa(DFA **dfa) {
@@ -214,7 +215,8 @@ void print_dfa(const DFA *automaton) {
     printf("category: %s,\n", automaton->category);
     printf("alphabet: %s,\n", automaton->alphabet);
     printf("alphabet_size: %d,\n", automaton->alphabet_size);
-    printf("states_size: %d,\n", automaton->states_size );
+    printf("transitions_size: %d\n", automaton->transitions_size);
+    printf("states_size: %d,\n", automaton->states_size);
     printf("initial_state: %d,\n", automaton->initial_state);
     printf("accepting_states: ");
     print_raw_integer_array(
@@ -229,7 +231,7 @@ void print_dfa(const DFA *automaton) {
     print_raw_integer_matrix(
         automaton->transitions,
         automaton->states_size,
-        automaton->alphabet_size
+        automaton->transitions_size
     );
     printf("}\n");
 }

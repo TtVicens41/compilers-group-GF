@@ -132,6 +132,7 @@
  * ============================================================================ */
 
 #define AUTOMATA_FILE                   "automata.txt"
+#define CATEGORIES_FILE                 "categories.txt"
 #define MANUAL_PAGE                     "man_page.txt"
 
 #define AUTOMATA_SEPARATOR              '#'
@@ -141,26 +142,6 @@
 #define INITIAL_STATE_NUM               1
 #define NUM_CATEGORIES                  7
 #define SCANNER_OUTPUT_SUFFIX           "scn"
-
-typedef enum {
-    CAT_NUMBER,
-    CAT_IDENTIFIER,
-    CAT_KEYWORD,
-    CAT_LITERAL,
-    CAT_OPERATOR,
-    CAT_SPECIALCHAR,
-    CAT_NONRECOGNIZED
-} TokenCategory;
-
-static const char *const category_text[] = {
-    [CAT_NUMBER] = "CAT_NUMBER",
-    [CAT_IDENTIFIER] = "CAT_IDENTIFIER",
-    [CAT_KEYWORD] = "CAT_KEYWORD",
-    [CAT_LITERAL] = "CAT_LITERAL",
-    [CAT_OPERATOR] = "CAT_OPERATOR",
-    [CAT_SPECIALCHAR] = "CAT_SPECIALCHAR",
-    [CAT_NONRECOGNIZED] = "CAT_NONRECOGNIZED"
-};
 
 typedef enum {
     CATEGORY,

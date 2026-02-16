@@ -41,14 +41,14 @@ void delete_lexer(Lexer **lexer) {
     *lexer = NULL;
 }
 
-void append_token_to_lexer(Lexer *lexer, SimpleToken *token) {
+void append_token_to_lexer(Lexer *lexer, Token *token) {
     if (!lexer) { return; }
     append_pointer_to_array(lexer->tokens, (void *)token);
 }
 
-SimpleToken *get_token_from_lexer(const Lexer *lexer, long position) {
-    if (!lexer) { return 0; }
-    return (SimpleToken *)get_pointer_from_array(lexer->tokens, position);
+Token *get_token_from_lexer(const Lexer *lexer, long position) {
+    if (!lexer) { return NULL; }
+    return (Token *)get_pointer_from_array(lexer->tokens, position);
 }
 
 size_t get_num_tokens(const Lexer *lexer) {
@@ -56,11 +56,9 @@ size_t get_num_tokens(const Lexer *lexer) {
     return get_num_pointers(lexer->tokens);
 }
 
-char *get_formatted_lexer(void *lexer) {
+char *to_lexer_string(const Lexer *lexer) {
     if (!lexer) { return NULL; }
     
-    Lexer *lexer_cast = (Lexer *)lexer;
-    const size_t num_tokens = get_num_tokens(lexer_cast);
     char *str_lexer = "";
 
 #if (DEBUG == 1) 
@@ -69,9 +67,11 @@ char *get_formatted_lexer(void *lexer) {
     str_lexer = concat_strings(str_lexer, heading);
 #endif
 
+    const size_t num_tokens = get_num_tokens(lexer);
+
     for (size_t i = 0; i < num_tokens; i++) {
-        SimpleToken *token = get_token_from_lexer(lexer_cast, i);
-        char *str_token = get_formatted_token((void *)token);
+        Token *token = get_token_from_lexer(lexer, i);
+        char *str_token = to_token_string(token);
         str_lexer = concat_strings(str_lexer, str_token);
     }
 
@@ -80,14 +80,5 @@ char *get_formatted_lexer(void *lexer) {
 
 void print_lexer(const Lexer *lexer) {
     if (!lexer) { return; }
-    print_pointer_values(lexer->tokens, print_formatted_token);
+    printf("%s", to_lexer_string(lexer));
 }
-
-void print_formatted_lexer(void *lexer) {
-    if (!lexer) { return; }
-    printf("[line=%d] ", ((Lexer *)lexer)->line_count);
-    print_pointer_values(((Lexer *)lexer)->tokens, print_formatted_token);
-    printf("\n");
-}
-
-

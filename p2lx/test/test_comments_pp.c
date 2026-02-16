@@ -4,7 +4,7 @@ int main() {
 
     printf("Hello World"); 
         
-    int z =  42;
+    int z = 42;
     return 0; 
 }
 
