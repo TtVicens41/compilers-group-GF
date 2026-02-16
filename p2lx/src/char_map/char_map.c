@@ -25,18 +25,19 @@ char *empty_char_map(void) {
 }
 
 void set_character(char *map, const char *value, char character) {
-    if (map[character] == KEY_ERROR) {
-        map[character] = *value;
+    unsigned char key = (unsigned char)character;
+    if (map[key] == KEY_ERROR) {
+        map[key] = *value;
     }
 }
 
-void set_range(char *map, const char *value, char start, char end) {
+void set_range(char *map, const char *value, int start, int end) {
     if (!map) { 
         return; 
     }
     start = max(min(start, end), 0);
     end = min(max(start, end), ASCII_SIZE - 1);
-    for (size_t key = start; key <= end; key++) {
+    for (int key = start; key <= end; key++) {
         if (map[key] == KEY_ERROR)  {
             map[key] = *value;
         }
@@ -49,7 +50,7 @@ void set_characters(char *map, char *value, const char *characters) {
     }
     size_t length = strlen(characters);
     for (size_t i = 0; i < length; i++) {
-        char key = characters[i];
+        unsigned char key = (unsigned char)characters[i];
         if (map[key] == KEY_ERROR) {
             map[key] = (*value)++;
         }

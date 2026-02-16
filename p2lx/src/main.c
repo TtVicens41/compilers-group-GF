@@ -20,6 +20,45 @@ static void print_usage(const char *argv0) {
     fprintf(stderr, "Usage: %s <input_file>\n", argv0);
 }
 
+static int file_exists(const char *path) {
+    FILE *probe = fopen(path, "r");
+    if (!probe) {
+        return FALSE;
+    }
+    fclose(probe);
+    return TRUE;
+}
+
+static char *resolve_resource_path(const char *argv0, const char *resource_name) {
+    char *path;
+
+    path = concat_strings(get_resources_dir(), resource_name);
+    if (file_exists(path)) {
+        return path;
+    }
+    free(path);
+
+    path = concat_strings("./p2lx/resources/", resource_name);
+    if (file_exists(path)) {
+        return path;
+    }
+    free(path);
+
+    if (argv0 && strchr(argv0, PATH_SEPARATOR)) {
+        char *bin_dir = get_prefix_r(argv0, PATH_SEPARATOR);
+        char *base = concat_strings(bin_dir, "/resources/");
+        path = concat_strings(base, resource_name);
+        free(base);
+        free(bin_dir);
+        if (file_exists(path)) {
+            return path;
+        }
+        free(path);
+    }
+
+    return NULL;
+}
+
 int main(int argc, char *argv[]) {
     LexerContext ctx;
     Scanner *scanner = NULL;
@@ -43,14 +82,14 @@ int main(int argc, char *argv[]) {
         goto cleanup;
     }
 
-    ctx.categories_file = concat_strings(get_resources_dir(), CATEGORIES_FILE);
+    ctx.categories_file = resolve_resource_path(argv[0], CATEGORIES_FILE);
     ctx.categories_file_str = read_file(ctx.categories_file);
     if (!ctx.categories_file_str) {
         exit_code = ERR_FILE_NOT_FOUND;
         goto cleanup;
     }
     
-    ctx.automata_file = concat_strings(get_resources_dir(), AUTOMATA_FILE);
+    ctx.automata_file = resolve_resource_path(argv[0], AUTOMATA_FILE);
     ctx.automata_file_str = read_file(ctx.automata_file);
     if (!ctx.automata_file_str) {
         exit_code = ERR_FILE_NOT_FOUND;
