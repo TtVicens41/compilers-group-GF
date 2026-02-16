@@ -1,6 +1,6 @@
-CAT_KEYWORD
-if
-else
+CAT_KEYWORD 
+if 
+else 
 while
 return
 int
@@ -9,7 +9,7 @@ char
 
 CAT_OPERATOR
 =
->
+> 
 +
 *
 
@@ -22,12 +22,5 @@ CAT_SPECIALCHAR
 }
 [
 ]
-
-CAT_NUMBER
-[0-9]+
-
-CAT_IDENTIFIER
-[A-Za-z][A-Za-z0-9]*
-
-CAT_LITERAL
-"<alphabet>*"
+\n
+\t

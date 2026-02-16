@@ -1,8 +1,9 @@
 /**
  * @title: file_utils.h
- * @authors:
- * @creation:
+ * @authors: Marc Bosch
+ * @creation: 16/02/2026
  */
+
 
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H
@@ -10,40 +11,54 @@
 #include "../language_defs.h"
 
 /**
- * @brief Describes the responsibility of `print_file` in the compiler pipeline.
- * @param Receives: `const char *path`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
+ * Prints a file content into standard output.
+ * @param path File path to be printed.
  */
 void print_file(const char *path);
-char *read_file(const char *path);
+
 /**
- * @brief Describes the responsibility of `dump_file` in the compiler pipeline.
- * @param Receives: `const char *path, char *str, int max_len`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
+ * Reads the full content of a file into a string.
+ * @param[in] path Path from we read content.
+ * @return A dynamically string containing the full file body.
+ */
+char *read_file(const char *path);
+
+/**
+ * Writes string into a file, overwritting it.
+ * @param[in] path Path from we write content.
+ * @param[in] string A read-only character array.
+ */
+void write_file(const char *path, const char *string);
+
+/**
+ * Reads the full content of a file into a string.
+ * @param[in] path Path from we read content.
+ * @param[inout] str An overwritten string to dump the body of the file.
+ * @param[in] max_len Maximum characters to be read.
  */
 void dump_file(const char *path, char *str, int max_len);
+
 /**
- * @brief Describes the responsibility of `copy_file` in the compiler pipeline.
- * @param Receives: `const char *input_path, const char *output_path`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
+ * Copies file content to another file, overwritting it.
+ * @param input_path Path from we read content.
+ * @param output_path Path from we write content.
  */
 void copy_file(const char *input_path, const char *output_path);
+
 /**
- * @brief Describes the responsibility of `check_input_file` in the compiler pipeline.
- * @param Receives: `const char *input_path`.
- * @return Returns a value of type `int`.
- * @details Performs a focused task to keep the code modular and easier to maintain.
+ * Function used to check wether a file can be open in read mode.
+ * @param input_path File to be read.
+ * @return 1 if file correctly opened, 0 otherwise.
+ * @note Prints the error reason in case the file cannot be open.
  */
 int check_input_file(const char *input_path);
-/**
- * @brief Describes the responsibility of `check_output_file` in the compiler pipeline.
- * @param Receives: `const char *output_path`.
- * @return Returns a value of type `int`.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-int check_output_file(const char *output_path);
 
-#endif
+/**
+ * Function used to check wether a file can be open in write mode.
+ * @param output_path File to be write.
+ * @return 1 if file correctly opened, 0 otherwise.
+ * @note Prints the error reason in case the file cannot be open.
+ */
+int check_output_file(const char *output_path); 
+
+#endif // FILE_UTILS_H

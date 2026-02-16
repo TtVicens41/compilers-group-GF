@@ -2,30 +2,14 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-SRC_DIR="$SCRIPT_DIR/src"
-OUT_BIN="$SCRIPT_DIR/lexer"
-EXTRA_CFLAGS="${EXTRA_CFLAGS:-}"
 
-printf 'Building C Lexical Analyzer...\n'
+echo "Building C Lexical Analyzer..."
 
-cc -std=c11 -Wall -Wextra -pedantic \
-  $EXTRA_CFLAGS \
-  -I"$SRC_DIR" \
-  "$SRC_DIR/automata/automata.c" \
-  "$SRC_DIR/char_map/char_map.c" \
-  "$SRC_DIR/token.c" \
-  "$SRC_DIR/counter.c" \
-  "$SRC_DIR/lexer.c" \
-  "$SRC_DIR/utils/error.c" \
-  "$SRC_DIR/utils/error_utils.c" \
-  "$SRC_DIR/utils/string_utils.c" \
-  "$SRC_DIR/utils/string_list.c" \
-  "$SRC_DIR/utils/file_utils.c" \
-  "$SRC_DIR/main.c" \
-  -o "$OUT_BIN"
+debug=0
+local=1
+"$SCRIPT_DIR/build.sh" "$debug" "$local"
 
-chmod +x "$OUT_BIN"
-
-printf 'Build successful!\n'
-printf 'Executable: %s\n' "$OUT_BIN"
-printf 'Usage: %s <input_file.c>\n' "$OUT_BIN"
+echo "Build successful!"
+echo "Lexical Analyzer executable created: $SCRIPT_DIR/lexer"
+echo ""
+echo "Usage: $SCRIPT_DIR/lexer <input_file>"

@@ -1,137 +1,109 @@
 /**
  * @title: file_utils.c
- * @authors:
- * @creation:
+ * @authors: Marc Bosch
+ * @creation: 16/02/2026
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "file_utils.h"
 #include "error_utils.h"
 
-/**
- * @brief Describes the responsibility of `print_file` in the compiler pipeline.
- * @param Receives: `const char *path`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-void print_file(const char *path) {
-    FILE *file_ptr;
-    int c;
-
-    if (!check_input_file(path)) {
+void print_file(
+    const char *path
+) {
+    if (!check_input_file(path)) 
         return;
-    }
 
-    file_ptr = fopen(path, "r");
-    if (!file_ptr) {
-        return;
-    }
-
+    FILE *file_ptr = fopen(path, "r");
+    char c;
     while ((c = fgetc(file_ptr)) != EOF) {
         fputc(c, stdout);
     }
+    fclose(file_ptr);
+}
 
+void dump_file(const char *path, char *str, int max_len) {
+    if (!check_input_file(path)) 
+        return;
+
+    FILE *file_ptr = fopen(path, "r"); 
+    int i = 0;
+    char c = 0;
+
+    while ((c = fgetc(file_ptr)) != EOF && i < max_len - 1) {
+        str[i++] = c;
+    }
+    str[i] = '\0';
     fclose(file_ptr);
 }
 
 char *read_file(const char *path) {
-    FILE *file_ptr;
-    long size;
-    long bytes;
-    char *buffer;
-
-    if (!check_input_file(path)) {
+    if (!check_input_file(path))
         return NULL;
-    }
-
-    file_ptr = fopen(path, "r");
+    
+    FILE *file_ptr = fopen(path, "r");
     if (!file_ptr) {
         return NULL;
     }
-
-    if (fseek(file_ptr, 0, SEEK_END) != 0) {
+    const int m = BUFFER_SIZE_MEDIUM;
+    char *str = calloc(1, sizeof(char));
+    if (!str) {
         fclose(file_ptr);
         return NULL;
     }
-
-    size = ftell(file_ptr);
-    if (size < 0) {
-        fclose(file_ptr);
-        return NULL;
-    }
-
-    rewind(file_ptr);
-
-    buffer = (char *)calloc((size_t)size + 1, sizeof(char));
-    if (!buffer) {
-        fclose(file_ptr);
-        return NULL;
-    }
-
-    bytes = (long)fread(buffer, sizeof(char), (size_t)size, file_ptr);
-    buffer[bytes] = '\0';
-
-    fclose(file_ptr);
-    return buffer;
-}
-
-/**
- * @brief Describes the responsibility of `dump_file` in the compiler pipeline.
- * @param Receives: `const char *path, char *str, int max_len`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-void dump_file(const char *path, char *str, int max_len) {
-    FILE *file_ptr;
+    char c = 0;
     int i = 0;
-    int c;
 
-    if (!check_input_file(path)) {
-        return;
+    while ((c = fgetc(file_ptr)) != EOF) {
+        if ((i % m) == 0) {
+            char *tmp = (char *)realloc(str, (i + 1) * m);
+            if (!tmp) {
+                free(str);
+                fclose(file_ptr);
+                return NULL;
+            }
+            str = tmp;
+        }
+        str[i++] = c;
     }
 
-    file_ptr = fopen(path, "r");
+    fclose(file_ptr);
+    str[i] = '\0';
+    return str;
+}
+
+void write_file(const char *path, const char *string) {
+    if (!check_output_file(path) || !string)
+        return;
+    
+    FILE *file_ptr = fopen(path, "w");
     if (!file_ptr) {
         return;
     }
-
-    while ((c = fgetc(file_ptr)) != EOF && i < max_len - 1) {
-        str[i++] = (char)c;
+    const size_t str_length = strlen(string);
+    
+    for (size_t i = 0; i < str_length; i++) {
+        fputc(string[i], file_ptr);
     }
-    str[i] = '\0';
-
     fclose(file_ptr);
 }
 
-/**
- * @brief Describes the responsibility of `copy_file` in the compiler pipeline.
- * @param Receives: `const char *input_path, const char *output_path`.
- * @return Does not return a value.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-void copy_file(const char *input_path, const char *output_path) {
-    FILE *input_file_ptr;
-    FILE *output_file_ptr;
-    int c;
 
-    if (!check_input_file(input_path) || !check_output_file(output_path)) {
+void copy_file(
+    const char *input_path,
+    const char *output_path
+) {
+    if (!check_input_file(input_path) || !check_output_file(output_path))
         return;
-    }
+        
+    FILE *input_file_ptr = fopen(input_path, "r");
+    FILE *output_file_ptr = fopen(output_path, "w");
 
-    input_file_ptr = fopen(input_path, "r");
-    output_file_ptr = fopen(output_path, "w");
-    if (!input_file_ptr || !output_file_ptr) {
-        if (input_file_ptr) {
-            fclose(input_file_ptr);
-        }
-        if (output_file_ptr) {
-            fclose(output_file_ptr);
-        }
-        return;
-    }
-
+    char c;
     while ((c = fgetc(input_file_ptr)) != EOF) {
         fputc(c, output_file_ptr);
     }
@@ -140,13 +112,12 @@ void copy_file(const char *input_path, const char *output_path) {
     fclose(output_file_ptr);
 }
 
-/**
- * @brief Describes the responsibility of `check_input_file` in the compiler pipeline.
- * @param Receives: `const char *input_path`.
- * @return Returns a value of type `int`.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-int check_input_file(const char *input_path) {
+int check_input_file(
+    const char *input_path
+) {
+    if (!input_path) {
+        return 0;
+    }
     FILE *input_file = fopen(input_path, "r");
     if (!input_file) {
         print_file_error(input_path);
@@ -156,13 +127,12 @@ int check_input_file(const char *input_path) {
     return 1;
 }
 
-/**
- * @brief Describes the responsibility of `check_output_file` in the compiler pipeline.
- * @param Receives: `const char *output_path`.
- * @return Returns a value of type `int`.
- * @details Performs a focused task to keep the code modular and easier to maintain.
- */
-int check_output_file(const char *output_path) {
+int check_output_file(
+    const char *output_path
+) {
+    if (!output_path) {
+        return 0;
+    }
     FILE *output_file = fopen(output_path, "w");
     if (!output_file) {
         print_file_error(output_path);

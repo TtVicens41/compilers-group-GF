@@ -1,8 +1,9 @@
 /**
  * @title: string_utils.c
- * @authors:
- * @creation:
+ * @authors: Alejandro Poole
+ * @creation: 16/02/2026
  */
+
 
 #include <stdio.h>
 #include <string.h>
@@ -11,24 +12,12 @@
 
 #include "string_utils.h"
 
-/**
- * @brief Creates a heap copy of the input string.
- * @param Receives: `const char *string`.
- * @return Returns a newly allocated copy of `string`.
- * @details This helper centralizes allocation strategy for string clones.
- */
 char *get_copy(const char *string) {
     char *buffer = calloc(strlen(string) + 1, sizeof(char));
     strcpy(buffer, string);
     return buffer;
 }
 
-/**
- * @brief Returns the suffix starting at the first occurrence of `separator`.
- * @param Receives: `const char *string, char separator`.
- * @return Returns an allocated suffix string.
- * @details If separator is missing, it returns a full copy of the input.
- */
 char *get_suffix(const char *string, char separator) {
     if (!string) {
         return NULL;
@@ -40,12 +29,6 @@ char *get_suffix(const char *string, char separator) {
     return get_copy(suffix);
 }
 
-/**
- * @brief Returns the suffix starting at the last occurrence of `separator`.
- * @param Receives: `const char *string, char separator`.
- * @return Returns an allocated suffix string.
- * @details If separator is missing, it returns a full copy of the input.
- */
 char *get_suffix_r(const char *string, char separator) {
     if (!string) {
         return NULL;
@@ -57,12 +40,6 @@ char *get_suffix_r(const char *string, char separator) {
     return get_copy(suffix);
 }
 
-/**
- * @brief Returns the prefix up to the first occurrence of `separator`.
- * @param Receives: `const char *string, char separator`.
- * @return Returns an allocated prefix string.
- * @details If separator is missing, it returns a full copy of the input.
- */
 char *get_prefix(const char *string, char separator) {
     if (!string) {
         return NULL;
@@ -78,12 +55,6 @@ char *get_prefix(const char *string, char separator) {
     return buffer;
 }
 
-/**
- * @brief Returns the prefix up to the last occurrence of `separator`.
- * @param Receives: `const char *string, char separator`.
- * @return Returns an allocated prefix string.
- * @details If separator is missing, it returns a full copy of the input.
- */
 char *get_prefix_r(const char *string, char separator) {
     if (!string) {
         return NULL;
@@ -99,12 +70,6 @@ char *get_prefix_r(const char *string, char separator) {
     return buffer;
 }
 
-/**
- * @brief Inserts `suffix` between file stem and extension in a path.
- * @param Receives: `const char *path, const char *suffix`.
- * @return Returns a newly allocated path string.
- * @details Used to generate derivative file names (`.cscn`, `_pp`, etc.).
- */
 char *add_suffix_to_path(const char *path, const char *suffix) {
     if (!path) {
         return NULL;
@@ -134,36 +99,32 @@ char *add_suffix_to_path(const char *path, const char *suffix) {
     return new_path;
 }
 
-/**
- * @brief Finds the first whitespace position in a string.
- * @param Receives: `const char *string`.
- * @return Returns the index of first trim char, or `0` if not found.
- * @details This helper is kept for compatibility with existing modules.
- */
+char *concat_strings(const char *left_string, const char *right_string) {
+    const size_t left_length = strlen(left_string);
+    const size_t right_length = strlen(right_string);
+    const size_t concat_length = left_length + right_length + 1;
+
+    char *concat_string = calloc(concat_length, sizeof(char));
+    strcat(concat_string, left_string);
+    strcat(concat_string, right_string);
+
+    return concat_string;
+}
+
 int find_trim(const char *string) {
-    size_t length;
-    size_t i;
+    if (!string) { NULL; }
 
-    if (!string) {
-        return 0;
-    }
-
-    length = strlen(string);
-    for (i = 0; i < length; i++) {
+    size_t length = strlen(string);
+    for (int i = 0; i < length; i++) {
         if (IS_WHITESPACE(string[i]))
-            return (int)i;
+            return i;
     }
+    
     return 0;
 }
 
-/**
- * @brief Copies characters until the first whitespace character.
- * @param Receives: `const char *string`.
- * @return Returns an allocated prefix without trailing trim chars.
- * @details Useful for quick token extraction in utility contexts.
- */
 char *copy_until_trim(const char *string) {
-    char *copy = calloc(BUFFER_SIZE_LINE, sizeof(char));
+    char *copy = calloc(BUFFER_SIZE_XLARGE, sizeof(char));
     int i = 0;
     while (*string && !IS_WHITESPACE(*string)) {
         copy[i++] = *string++;
@@ -172,60 +133,41 @@ char *copy_until_trim(const char *string) {
     return copy;
 }
 
-/**
- * @brief Returns a new string with leading/trailing whitespace removed.
- * @param Receives: `const char *str`.
- * @return Returns an allocated trimmed copy.
- * @details Keeps original source string immutable.
- */
 char *trim_string(const char *str) {
-    if (!str) {
-        return NULL;
-    }
+    if (!str) { return NULL; }
 
-    while (IS_WHITESPACE(*str))
+    while (IS_WHITESPACE(*str)) 
         str++;
 
-    if (*str == '\0')
+    if (*str == '\0') {
         return get_copy(str);
-
+    }
+    
     char *str_copy = get_copy(str);
     char *end = str_copy + strlen(str_copy) - 1;
-    while (end > str_copy && IS_WHITESPACE(*end))
+    while (end > str_copy && IS_WHITESPACE(*end)) 
         end--;
-
     *(end + 1) = '\0';
+
     return str_copy;
 }
 
-/**
- * @brief Trims leading and trailing whitespace in place.
- * @param Receives: `char *str`.
- * @return Does not return a value.
- * @details Mutates the provided buffer and preserves internal content order.
- */
 void trim_whitespace(char *str) {
     char *start = str;
-    while (isspace(*start))
+    while (isspace(*start)) 
         start++;
-
+    
     char *end = start + strlen(start) - 1;
-    while (end > start && isspace(*end))
+    while (end > start && isspace(*end)) 
         end--;
-
+    
     size_t len = end - start + 1;
     memmove(str, start, len);
     str[len] = '\0';
 }
 
-/**
- * @brief Extracts substring from `start` to `end` (both inclusive).
- * @param Receives: `const char *string, int start, int end`.
- * @return Returns an allocated substring.
- * @details Input bounds are clamped to valid string limits.
- */
 char *get_substring(const char *string, int start, int end) {
-    int length = (int)strlen(string);
+    int length = strlen(string);
     end = min(end, length - 1);
     start = max(start, 0);
     char *aux = (char *)calloc((end - start + 2), sizeof(char));
@@ -235,31 +177,51 @@ char *get_substring(const char *string, int start, int end) {
     return aux;
 }
 
-/**
- * @brief Escapes control characters for debug-friendly rendering.
- * @param Receives: `const char *string`.
- * @return Returns a newly allocated escaped string.
- * @details Converts `\n`, `\t`, `\r`, and `\\` into visible sequences.
- */
+char *get_raw_char(char c) {
+    char *out = calloc(3, sizeof(char));
+    size_t j = 0;
+    switch (c) {
+        case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+        case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+        case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
+        case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+        case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+        case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+        case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
+        case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
+        default: out[j++] = c;
+    }
+    return out;
+}
+
 char *get_raw_string(const char *string) {
-    size_t length = strlen(string);
+    int length = strlen(string);
     char *out = calloc(length * 2 + 1, sizeof(char));
     if (!out) {
         return NULL;
     }
-
+    
     size_t j = 0;
     for (size_t i = 0; i < length; i++) {
         char c = string[i];
         switch (c) {
-            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\0': out[j++] = '\\'; out[j++] = '0'; break;
+            case '\a': out[j++] = '\\'; out[j++] = 'a'; break;
+            case '\b': out[j++] = '\\'; out[j++] = 'b'; break;
             case '\t': out[j++] = '\\'; out[j++] = 't'; break;
+            case '\n': out[j++] = '\\'; out[j++] = 'n'; break;
+            case '\v': out[j++] = '\\'; out[j++] = 'v'; break;
+            case '\f': out[j++] = '\\'; out[j++] = 'f'; break;
             case '\r': out[j++] = '\\'; out[j++] = 'r'; break;
-            case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
+            //case '\\': out[j++] = '\\'; out[j++] = '\\'; break;
             default: out[j++] = c;
         }
     }
 
     out[j] = '\0';
     return out;
+}
+
+int is_not_empty(const char *string) {
+    return (int)strlen(string); 
 }
