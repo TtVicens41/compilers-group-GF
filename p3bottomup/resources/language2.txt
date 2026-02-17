@@ -1,0 +1,42 @@
+# Language 2: grammar from theory slides
+# 1 e -> e + ( e )
+# 2 e -> int
+
+SYMBOLS
+0 TERM int
+1 TERM +
+2 TERM (
+3 TERM )
+4 TERM $
+5 NONTERM e
+END_SYMBOLS
+
+START_SYMBOL e
+EOF_SYMBOL $
+
+PRODUCTIONS
+1 e -> e + ( e )
+2 e -> int
+END_PRODUCTIONS
+
+ACTION_TABLE
+TERMINALS int + ( ) $
+0 s2 err err err err
+1 err s3 err err acc
+2 err r2 err r2 r2
+3 err err s4 err err
+4 s2 err err err err
+5 err s3 err s6 err
+6 err r1 err r1 r1
+END_ACTION_TABLE
+
+GOTO_TABLE
+NONTERMINALS e
+0 1
+1 -1
+2 -1
+3 -1
+4 5
+5 -1
+6 -1
+END_GOTO_TABLE
