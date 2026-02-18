@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#include "string_utils.h"
+#include "./string_utils.h"
 
 char *get_copy(const char *string) {
     char *buffer = calloc(strlen(string) + 1, sizeof(char));

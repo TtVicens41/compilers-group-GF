@@ -10,8 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "file_utils.h"
-#include "error_utils.h"
+#include "./file_utils.h"
+#include "./error_utils.h"
 
 void print_file(
     const char *path

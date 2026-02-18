@@ -84,7 +84,7 @@ char *to_token_string(const Token *token) {
     
 #if (DEBUG == 1)
     char header[BUFFER_SIZE_TINY];
-    sprintf(header, "[column=%d] ", simple_token->column_count);
+    sprintf(header, "[column=%d] ", token->column_count);
     str_token = concat_strings(str_token, header);
 #endif
 

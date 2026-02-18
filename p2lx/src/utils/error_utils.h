@@ -10,18 +10,7 @@
 #define ERRORS_HANDLING_H
 
 #include <errno.h>
-
 #include "../language_defs.h"
-
-// /** Preprocessor arguments error messages. */
-// #define FILE_NOT_PROVIDED "No input file name provided\n"
-
-// /** File error messages. */
-// #define ENOENT_MSG "No such file or directory: %s\n"
-// #define EACCES_MSG "Permission denied: %s\n"
-// #define EISDIR_MSG "Is a directory: %s\n"
-// #define EMFILE_MSG "Too many open files: %s\n"
-// #define ENAMETOOLONG_MSG "Filename too long: %s\n"
 
 /**
  * @brief Compilation phase codes.

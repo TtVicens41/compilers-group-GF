@@ -63,7 +63,7 @@ char *to_lexer_string(const Lexer *lexer) {
 
 #if (DEBUG == 1) 
     char heading[BUFFER_SIZE_TINY];
-    sprintf(heading, "[line=%d] ", lexer_cast->line_count);
+    sprintf(heading, "[line=%d] ", lexer->line_count);
     str_lexer = concat_strings(str_lexer, heading);
 #endif
 

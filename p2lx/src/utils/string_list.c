@@ -10,8 +10,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "string_list.h"
-#include "string_utils.h"
+#include "./string_list.h"
+#include "./string_utils.h"
 
 StringList *init_string_list(char **buffer, int size) {
     StringList *string_list = malloc(sizeof(StringList));

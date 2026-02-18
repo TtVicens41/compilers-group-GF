@@ -10,7 +10,6 @@
 #include <stdio.h>
 
 #include "./char_map.h"
-#include "../scanner/token.h"
 #include "../utils/utils.h"
 
 char *empty_char_map(void) {
