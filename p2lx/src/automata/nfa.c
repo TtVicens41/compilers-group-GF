@@ -1,9 +1,9 @@
 /**
- * @title: nfa.c
- * @authors: Joan Vicente, Alejandro Poole, Marc Bosch
- * @creation: 16/02/2025
+ * @file nfa.c
+ * @brief DFA-Union Non-Deterministic Finite-State Automata
+ * @author Marc Bosch Manzano
+ * @since 2026-02-13
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,9 +26,9 @@ NFA *init_union_nfa(const char *automatons_string) {
         return NULL; 
     }
 
-    StringList *automata_strings;
+    StringArray *automata_strings;
     automata_strings = string_split(automatons_string, AUTOMATA_SEPARATOR);
-    automata_strings = apply_string_list(automata_strings, trim_string, TRUE);
+    automata_strings = apply_string_array(automata_strings, trim_string, TRUE);
     
     DFA **automatons = init_dfa_array(automata_strings);
     if (!automatons) {
@@ -38,7 +38,7 @@ NFA *init_union_nfa(const char *automatons_string) {
     nfa->automatons = automatons;
     nfa->size = automata_strings->size;
     
-    delete_string_list(&automata_strings);
+    delete_string_array(&automata_strings);
     return nfa;
 }
 

@@ -3,12 +3,12 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RES_DIR="$SCRIPT_DIR/resources"
+DEBUG=0
+LOCAL=0
 
 echo "Building C Lexical Analyzer..."
 
-debug=0
-local=0
-"$SCRIPT_DIR/build.sh" "$debug" "$local"
+"$SCRIPT_DIR/build.sh" "$DEBUG" "$LOCAL"
 
 mkdir -p ~/.local/bin
 mv "$SCRIPT_DIR/lexer" ~/.local/bin/lexer

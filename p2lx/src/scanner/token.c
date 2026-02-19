@@ -1,16 +1,21 @@
 /**
- * @title: token.c
- * @authors: Pau Puig , Marc Bosch
- * @creation: 16/02/2025
+ * @file token.c
+ * @brief Token Handling Functionalities
+ * @author Marc Bosch Manzano
+ * @since 2026-02-09
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "./token.h"
-#include "../utils/utils.h"
+
+struct Token {
+    char *lexeme;
+    char *category;
+    size_t column_count;
+};
 
 Token *init_token(const char *lexeme, const char *category, int column_count) {
     Token *token = calloc(1, sizeof(Token));
@@ -67,6 +72,11 @@ void clear_token(Token *token) {
     token->lexeme = NULL;
 
     token->column_count = 0;
+}
+
+size_t get_column_count_from_token(const Token *token) {
+    if (!token) { return 0; }
+    return token->column_count;
 }
 
 void delete_token(Token **token) {

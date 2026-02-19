@@ -1,9 +1,9 @@
 /**
- * @title: automata.h
- * @authors: Joan Vicente, Marc Bosch
- * @creation: 16/02/2025
+ * @file automata.h
+ * @brief Automata Module
+ * @author Marc Bosch Manzano
+ * @since 2026-02-08
  */
-
 
 #ifndef AUTOMATA_H
 #define AUTOMATA_H

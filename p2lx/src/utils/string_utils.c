@@ -1,9 +1,10 @@
 /**
- * @title: string_utils.c
- * @authors: Alejandro Poole
- * @creation: 16/02/2026
+ * @file string_utils.c
+ * @brief String Utilities
+ * @authors Marc Bosch Manzano & Pau Puig Guillén
+ * @since 2026-01-10
+ * @see Improved from P1 Preprocessor string_utils.c
  */
-
 
 #include <stdio.h>
 #include <string.h>

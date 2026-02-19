@@ -1,9 +1,9 @@
 /**
- * @title: char_map.c
- * @authors: Pol Goicochea
- * @creation: 16/02/2025
+ * @file char_map.c
+ * @brief Char Map Module
+ * @author Marc Bosch Manzano
+ * @since 2026-02-08
  */
-
 
 #include <stdlib.h>
 #include <string.h>
@@ -88,13 +88,13 @@ void set_regular_expression(char *map, char *value, const char *regular_expressi
     }
 }
 
-char *init_char_map_str(const char *alphabet) {
+char *init_char_map(const char *alphabet) {
     char *map = empty_char_map();
     if (!map || !alphabet) { 
         return NULL; 
     }
 
-    StringList *regular_expressions;
+    StringArray *regular_expressions;
     regular_expressions = string_split(alphabet, SYMBOL_SEPARATION);
     char value = 0;
 
@@ -126,7 +126,7 @@ void print_char_map(const char *map) {
 
 #if (0)
 int main(void) {
-    char *char_map = init_char_map_str("[a-z] [0-9] {} |");
+    char *char_map = init_char_map("[a-z] [0-9] {} |");
     print_char_map(char_map);
 }
 #endif

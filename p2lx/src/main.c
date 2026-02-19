@@ -1,9 +1,21 @@
 /**
- * @title: main.c
- * @authors: Pau Puig, Alejandro Poole, Marc Bosch, Pol Goicoechea, Davi Paiva, Joan Vicente
- * @creation: 16/02/2026
+ * @file main.c
+ * @brief Main Program for the Lexical Analyzer
+ * 
+ * The following steps of the main are:
+ * 
+ * 1) Parse arguments (call Man Page if needed)
+ * 2) Read input file to compile
+ * 3) Read automata configuration file
+ * 4) Initialize automata data structures
+ * 5) Call scanner
+ * 6) Write scan to output file.
+ * 7) Cleanup.
+ *  
+ * @authors Marc Bosch Manzano, Joan Vicente, Pau Puig, Alejandro Poole,  
+ * Davi Paiva, & Pol Goicoechea.
+ * @since 2026-01-30
  */
-
 
 #include <stdio.h>
 #include <string.h>
@@ -16,66 +28,22 @@
 #include "./automata/automata.h"
 #include "./scanner/scanner.h"
 
-static void print_usage(const char *argv0) {
-    fprintf(stderr, "Usage: %s <input_file>\n", argv0);
-}
-
-static int file_exists(const char *path) {
-    FILE *probe = fopen(path, "r");
-    if (!probe) {
-        return FALSE;
-    }
-    fclose(probe);
-    return TRUE;
-}
-
-static char *resolve_resource_path(const char *argv0, const char *resource_name) {
-    char *path;
-
-    path = concat_strings(get_resources_dir(), resource_name);
-    if (file_exists(path)) {
-        return path;
-    }
-    free(path);
-
-    path = concat_strings("./p2lx/resources/", resource_name);
-    if (file_exists(path)) {
-        return path;
-    }
-    free(path);
-
-    if (argv0 && strchr(argv0, PATH_SEPARATOR)) {
-        char *bin_dir = get_prefix_r(argv0, PATH_SEPARATOR);
-        char *base = concat_strings(bin_dir, "/resources/");
-        path = concat_strings(base, resource_name);
-        free(base);
-        free(bin_dir);
-        if (file_exists(path)) {
-            return path;
-        }
-        free(path);
-    }
-
-    return NULL;
-}
-
 int main(int argc, char *argv[]) {
-    LexerContext ctx;
-    Scanner *scanner = NULL;
+    LexerContext ctx = { 0 };
+    TokenLines *scanner = NULL;
     NFA *automaton_nfa = NULL;
     int exit_code = 0;
-    memset(&ctx, 0, sizeof(ctx));
 
-    if (argc != 2) {
-        print_usage(argv[0]);
+    if (argc <= 1) {
+        print_file(resolve_resource_path(argv[0], MANUAL_PAGE));
         return FILE_NOT_PROVIDED;
     }
     
     ctx.input_file = parse_arguments(argc, argv);
     if (!ctx.input_file) {
-        print_usage(argv[0]);
         return FILE_NOT_PROVIDED;
     }
+
     ctx.input_file_str = read_file(ctx.input_file);
     if (!ctx.input_file_str) {
         exit_code = ERR_FILE_NOT_FOUND;
@@ -101,23 +69,25 @@ int main(int argc, char *argv[]) {
         exit_code = ERR_AUTOMATA_NOT_LOADED;
         goto cleanup;
     }
-    
+
     scanner = scan_string(automaton_nfa, ctx.input_file_str);
     if (!scanner) {
         exit_code = ERR_AUTOMATA_NOT_LOADED;
         goto cleanup;
     }
     
-    ctx.output_file_str = to_scanner_string(scanner);
+    ctx.output_file_str = to_token_lines_string(scanner);
     if (!ctx.output_file_str) {
         exit_code = ERR_AUTOMATA_NOT_LOADED;
         goto cleanup;
     }
+
     ctx.output_file = concat_strings(ctx.input_file, SCANNER_OUTPUT_SUFFIX);
     if (!ctx.output_file) {
         exit_code = ERR_FILE_NOT_FOUND;
         goto cleanup;
     }
+
     write_file(ctx.output_file, ctx.output_file_str);
     
     printf("Input file: %s\n", ctx.input_file);
@@ -127,6 +97,6 @@ int main(int argc, char *argv[]) {
 cleanup:
     clear_context(&ctx);
     delete_nfa(&automaton_nfa);
-    delete_scanner(&scanner);
+    delete_token_lines(&scanner);
     return exit_code;
 }

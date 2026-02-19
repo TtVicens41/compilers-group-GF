@@ -1,9 +1,9 @@
 /**
- * @title: token.h
- * @authors: Pau Puig , Marc Bosch
- * @creation: 16/02/2025
+ * @file token.h
+ * @brief Token Handling Functionalities
+ * @author Marc Bosch Manzano
+ * @since 2026-01-30
  */
-
 
 #ifndef TOKEN_H
 #define TOKEN_H
@@ -13,11 +13,7 @@
 
 #define NON_RECOGNIZED_TOKEN "CAT_NONRECOGNIZED"
 
-typedef struct {
-    char *lexeme;
-    char *category;
-    int column_count;
-} Token;
+typedef struct Token Token;
 
 Token *init_token(const char *lexeme, const char *category, int column_count);
 Token *nonrecognized_token(const char *string);
@@ -27,6 +23,7 @@ Token *produce_token_from_string_nfa(NFA *automaton, const char *string);
 void clear_token(Token *token);
 void delete_token(Token **token);
 
+size_t get_column_count_from_token(const Token *token);
 void print_formatted_token(const Token *token);
 char *to_token_string(const Token *token);
 
