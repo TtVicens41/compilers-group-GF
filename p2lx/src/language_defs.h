@@ -1,9 +1,14 @@
 /**
- * @title: language_defs.h
- * @authors: Pau Puig, Marc Bosch
- * @creation: 16/02/2026
+ * @file language_defs.h
+ * @brief Language-Specific Definitions
+ * 
+ * Centralized header containing all character constants, string constants, 
+ * and language-specific defines used throughout the preprocessor.
+ * 
+ * @author Davi Penna-Mattos Dias de Paiva
+ * @since 2026-01-27
+ * @see Adapted by Marc Bosch Manzano from P1 Preprocessor language_defs.h
  */
-
 
 #ifndef LEXER_LANGUAGE_DEFS_H
 #define LEXER_LANGUAGE_DEFS_H

@@ -6,37 +6,37 @@ SYNOPSIS
     lexer -help
 
 DESCRIPTION
-    Reads a C source file and generates:
-      1) an in-memory token list
-      2) an output token file named <input_file.c>scn
-
-    Token output format is configurable at compile time:
-      - OUTFORMAT_RELEASE
-      - OUTFORMAT_DEBUG
-
-    Message destination is configurable at compile time:
-      - DEBUG_ON  -> output file
-      - DEBUG_OFF -> stdout
+    Reads a C source file and generates an output token file named 
+    <input_file.c>scn.
 
 TOKEN CATEGORIES
     CAT_KEYWORD       if else while return int char void
     CAT_OPERATOR      = > + *
     CAT_SPECIALCHAR   ( ) ; { } [ ] ,
     CAT_NUMBER        [0-9]+
-    CAT_IDENTIFIER    [A-Za-z][A-Za-z0-9]*
+    CAT_IDENTIFIER    (_[A-Za-z][A-Za-z0-9]*)+
     CAT_LITERAL       "..."
     CAT_NONRECOGNIZED unsupported lexemes
 
-COUNTERS
+COMPILE OPTIONS
     Counters are enabled only when:
-      COUNTCONFIG == COUNT_ENABLED and OUTFORMAT == OUTFORMAT_DEBUG
+        COUNTCONFIG == COUNT_ENABLED and 
+        OUTFORMAT == OUTFORMAT_DEBUG
 
     Counters:
-      COUNTCOMP, COUNTIO, COUNTGEN
+        COUNTCOMP, COUNTIO, COUNTGEN
 
     Destination:
-      COUNTOUT == OUT      -> output token file
-      COUNTOUT == DBGCOUNT -> <input_file.c>dbgcnt
+        COUNTOUT == OUT      -> output token file
+        COUNTOUT == DBGCOUNT -> <input_file.c>
+        
+    Token output format is configurable at compile time:
+        OUTFORMAT_RELEASE
+        OUTFORMAT_DEBUG
+
+    Message destination is configurable at compile time:
+        DEBUG_ON   the tokens are printed into an output file
+        DEBUG_OFF  the debug is printed into the standard output
 
 FILES
     resources/automata.txt

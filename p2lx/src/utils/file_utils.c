@@ -1,9 +1,10 @@
 /**
- * @title: file_utils.c
- * @authors: Marc Bosch
- * @creation: 16/02/2026
+ * @file file_utils.c
+ * @brief File I/O Utilities Module
+ * @author Marc Bosch Manzano
+ * @since 2026-02-16
+ * @see Improved from P1 Preprocessor file_utils.c
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>

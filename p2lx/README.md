@@ -1,5 +1,16 @@
 # Practice 2: Lexical Analysis (P2LX)
 
+Authors of this file:<br>
+- Joan Vicente Martín<br>
+- Pau Puig Guillén<br>
+- ...
+
+Reviewed by:<br>
+- Marc Bosch Manzano
+
+Creation:<br>
+- 2026-02-16
+
 ## Overview
 
 `p2lx` implements a character-by-character lexical scanner for the P2 assignment.

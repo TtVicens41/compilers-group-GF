@@ -1,15 +1,9 @@
-/**
- * @title: alphabet.h
- * @authors: Pol Goicoechea, Marc Bosch Manzano
- * @creation: 16/02/2026
- */
-
 #ifdef DEPRECATED
 /**
- * Alphabet Definition for the Language Lexer
- * 
- * @author: Marc Bosch Manzano
- * @creation: 2026/01/30
+ * @file alphabet.h
+ * @brief Alphabet Definition for the Language Lexer
+ * @authors Marc Bosch Manzano & Pol Goicoechea
+ * @since 2026-01-30
  */
 
 #ifndef ALPHABET_H

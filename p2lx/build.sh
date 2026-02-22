@@ -15,13 +15,14 @@ cc -I"$SRC_DIR" \
     "$SRC_DIR/automata/nfa.c" \
     "$SRC_DIR/char_map/char_map.c" \
     "$SRC_DIR/scanner/token.c" \
-    "$SRC_DIR/scanner/lexer.c" \
+    "$SRC_DIR/scanner/token_line.c" \
+    "$SRC_DIR/scanner/token_lines.c" \
     "$SRC_DIR/scanner/scanner.c" \
     "$SRC_DIR/utils/error_utils.c" \
     "$SRC_DIR/utils/string_utils.c" \
-    "$SRC_DIR/utils/string_list.c" \
+    "$SRC_DIR/utils/string_array.c" \
     "$SRC_DIR/utils/file_utils.c" \
-    "$SRC_DIR/utils/dynamic_array.c" \
+    "$SRC_DIR/utils/dynamic_value_array.c" \
     "$SRC_DIR/utils/dynamic_pointer_array.c" \
     "$SRC_DIR/utils/integer_utils.c" \
     "$SRC_DIR/main.c" \

@@ -1,21 +1,23 @@
 /**
- * @title: integer_utils.c
- * @authors: Joan Vicente
- * @creation: 16/06/2026
+ * @file integer_utils.c
+ * @brief Integer Array and Matrix Utilities
+ * @author Marc Bosch Manzano
+ * @since 2026-02-16
  */
 
-
 #include "integer_utils.h"
-#include "dynamic_array.h"
+#include "dynamic_value_array.h"
 #include "dynamic_pointer_array.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
-void print_int(void *integer);
+void print_int(const int *integer) {
+    printf("%d ", *integer);
+}
 
 struct IntegerArray {
-    DynamicArray *dynamic_array;
+    DynamicValueArray *dynamic_array;
 };
 
 IntegerArray *init_integer_array(void) {
@@ -24,13 +26,13 @@ IntegerArray *init_integer_array(void) {
     if (!integer_array) {
         return NULL; 
     }
-    integer_array->dynamic_array = init_dynamic_array(sizeof(int));
+    integer_array->dynamic_array = init_dynamic_value_array(sizeof(int));
     return integer_array;
 }
 
 void clear_integer_array(IntegerArray *integer_array) {
     if (!integer_array) { return; }
-    delete_dynamic_array(&(integer_array->dynamic_array));
+    delete_dynamic_value_array(&(integer_array->dynamic_array));
 }
 
 void delete_integer_array(IntegerArray **integer_array) {
@@ -63,7 +65,10 @@ void print_integer_array(const IntegerArray *integer_array) {
     }
 
     printf("[ ");
-    print_dynamic_array(integer_array->dynamic_array, print_int);
+    print_dynamic_value_array(
+        integer_array->dynamic_array, 
+        (void (*))(const void *)print_int
+    );
     printf("]");
 }
 
@@ -79,10 +84,6 @@ void print_raw_integer_array(const int *array, int size) {
     }
 
     printf("]");
-}
-
-void print_int(void *integer) {
-    printf("%d ", *(int *)integer);
 }
 
 struct IntegerMatrix {

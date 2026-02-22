@@ -1,9 +1,10 @@
 /**
- * @title: error_utils.h
- * @authors: Marc Bosch
- * @creation: 16/02/2026
+ * @file error_utils.h
+ * @brief Error Handling Utilities.
+ * @author Marc Bosch Manzano
+ * @since 2026-01-30
+ * @see Improved from P1 Preprocessor error_utils.h
  */
-
 
 #ifndef ERRORS_HANDLING_H
 #define ERRORS_HANDLING_H
@@ -11,16 +12,6 @@
 #include <errno.h>
 
 #include "../language_defs.h"
-
-// /** Preprocessor arguments error messages. */
-// #define FILE_NOT_PROVIDED "No input file name provided\n"
-
-// /** File error messages. */
-// #define ENOENT_MSG "No such file or directory: %s\n"
-// #define EACCES_MSG "Permission denied: %s\n"
-// #define EISDIR_MSG "Is a directory: %s\n"
-// #define EMFILE_MSG "Too many open files: %s\n"
-// #define ENAMETOOLONG_MSG "Filename too long: %s\n"
 
 /**
  * @brief Compilation phase codes.
@@ -88,19 +79,21 @@ typedef struct {
     int *line_content;
 } LineError;
 
-/** Static structure to store error messages. */ 
+/** 
+ * @brief Static variable to store error messages. 
+ */ 
 static Errors errors;
 
 /**
- * Initializes an error copying to it a message and a line position.
+ * @brief Initializes an error copying to it a message and a line position.
  * @param message A read-only string.
- * @param line An integer
+ * @param line An integer.
  */
 void init_error(const char *message, int line);
 
 /**
- * Tells user the reason that a file has failed to open.
- * @note The function works with `errno` of `errno.h` library
+ * @brief Tells user the reason that a file has failed to open.
+ * @note The function works with `errno` from `errno.h` library
  */
 void print_file_error(const char *path);
 

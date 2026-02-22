@@ -1,7 +1,9 @@
 /**
- * @title: parse_arguments.h
- * @authors: Joan Vicente, Pau Puig
- * @creation: 16/02/2025
+ * @file parse_arguments.h
+ * @brief Argumennts Menu
+ * @authors Marc Bosch Manzano, Joan Vicente Martín & Pau Puig Guillén
+ * @since 2026-01-15
+ * @see: Adapted from P1 Preprocessor parse_arguments.h
  */
 
 
@@ -9,11 +11,14 @@
 #define PARSE_ARGUMENTS_H
 
 /**
- * Parses the argument characters initializing the preprocessor context.
+ * @brief Parses the argument characters.
  * @param argc Argument count, i.e, number of strings in `argv`.
  * @param argv Argument vector, i.e., a string array.
- * @param ctx A pointer to a preprocessor context.
+ * @return Input file for the lexer, if providen.
  */
 char *parse_arguments(int argc, char *argv[]);
+
+void print_usage(const char *argv0);
+char *resolve_resource_path(const char *argv0, const char *resource_name);
 
 #endif

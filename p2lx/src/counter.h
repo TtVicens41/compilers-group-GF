@@ -1,9 +1,10 @@
-/**
- * @title: counter.h
- * @authors: Pol Goicoechea, Pau Puig
- * @creation: 16/02/2026
- */
+#ifdef NOT_IMPLEMENTED
 
+/**
+ * @brief Counters for Token Operations
+ * @author Marc Bosch Manzano
+ * @since 2026-01-30
+ */
 
 #ifndef COUNTER_H
 #define COUNTER_H
@@ -22,4 +23,5 @@ static int countio = 0;
 /// @brief Counter for counting generic operations.
 static int countgen = 0;
 
+#endif
 #endif

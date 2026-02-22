@@ -1,9 +1,16 @@
 /**
- * @title: nfa.h
- * @authors: Joan Vicente, Alejandro Poole, Marc Bosch
- * @creation: 16/02/2025
+ * @file nfa.h
+ * @brief DFA-Union Non-Deterministic Finite-State Automata
+ * 
+ * Particular case of a NFA defined as union of DFAs. Its implementation
+ * consists as a list of DFAs. The intial state of the NFA has epsilon 
+ * transitions to all initial states of DFA automatas. That can be considered 
+ * as running all DFA automatas and observe wether any automata
+ * accepts the imput string.
+ * 
+ * @author Marc Bosch Manzano
+ * @since 2026-02-13
  */
-
 
 #ifndef UNION_NFA_H
 #define UNION_NFA_H
@@ -11,7 +18,7 @@
 #include "./dfa.h"
 
 /**
- * DFA-Union Non-Deterministic Finite State Automata
+ * @brief DFA-Union Non-Deterministic Finite State Automata
  */
 typedef struct {
     DFA **automatons;
