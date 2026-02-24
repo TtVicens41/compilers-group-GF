@@ -1,0 +1,31 @@
+# Parse table for Grammar B (SLR(1))
+#
+# e → e + ( e )
+# e → int
+#
+# Terminals:     $ = 0, + = 1, ( = 2, ) = 3, int = 4
+# Non-terminals: s = 5, e = 6
+# States:        0 – 6
+
+STATES 7
+TERMINALS 5
+NONTERMINALS 2
+
+ACTION
+0 4 S 2
+1 1 S 3
+1 0 A 0
+2 1 R 2
+2 3 R 2
+2 0 R 2
+3 2 S 4
+4 4 S 2
+5 1 S 3
+5 3 S 6
+6 1 R 1
+6 3 R 1
+6 0 R 1
+
+GOTO
+0 6 1
+4 6 5

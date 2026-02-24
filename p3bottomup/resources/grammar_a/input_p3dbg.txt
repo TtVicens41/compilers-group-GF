@@ -1,0 +1,95 @@
+STEP 1
+  Operation:     SHIFT
+  InputPos:      0
+  PreviousState: 0
+  NewState:      5
+  Stack:         [0,?][5,NUM]
+
+STEP 2
+  Operation:     REDUCE
+  Production:    6 (f -> NUM)
+  Popped:        1
+  GotoState:     3
+  Stack:         [0,?][3,f]
+
+STEP 3
+  Operation:     REDUCE
+  Production:    4 (t -> f)
+  Popped:        1
+  GotoState:     2
+  Stack:         [0,?][2,t]
+
+STEP 4
+  Operation:     REDUCE
+  Production:    2 (e -> t)
+  Popped:        1
+  GotoState:     1
+  Stack:         [0,?][1,e]
+
+STEP 5
+  Operation:     SHIFT
+  InputPos:      1
+  PreviousState: 1
+  NewState:      6
+  Stack:         [0,?][1,e][6,+]
+
+STEP 6
+  Operation:     SHIFT
+  InputPos:      2
+  PreviousState: 6
+  NewState:      5
+  Stack:         [0,?][1,e][6,+][5,NUM]
+
+STEP 7
+  Operation:     REDUCE
+  Production:    6 (f -> NUM)
+  Popped:        1
+  GotoState:     3
+  Stack:         [0,?][1,e][6,+][3,f]
+
+STEP 8
+  Operation:     REDUCE
+  Production:    4 (t -> f)
+  Popped:        1
+  GotoState:     9
+  Stack:         [0,?][1,e][6,+][9,t]
+
+STEP 9
+  Operation:     SHIFT
+  InputPos:      3
+  PreviousState: 9
+  NewState:      7
+  Stack:         [0,?][1,e][6,+][9,t][7,*]
+
+STEP 10
+  Operation:     SHIFT
+  InputPos:      4
+  PreviousState: 7
+  NewState:      5
+  Stack:         [0,?][1,e][6,+][9,t][7,*][5,NUM]
+
+STEP 11
+  Operation:     REDUCE
+  Production:    6 (f -> NUM)
+  Popped:        1
+  GotoState:     10
+  Stack:         [0,?][1,e][6,+][9,t][7,*][10,f]
+
+STEP 12
+  Operation:     REDUCE
+  Production:    3 (t -> t * f)
+  Popped:        3
+  GotoState:     9
+  Stack:         [0,?][1,e][6,+][9,t]
+
+STEP 13
+  Operation:     REDUCE
+  Production:    1 (e -> e + t)
+  Popped:        3
+  GotoState:     1
+  Stack:         [0,?][1,e]
+
+STEP 14
+  Operation:     ACCEPT
+  Stack:         [0,?][1,e]
+

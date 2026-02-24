@@ -1,0 +1,23 @@
+# Grammar B
+#
+# e → e + ( e )
+# e → int
+#
+# Augmented start: production 0: s → e
+
+SYMBOLS
+T 0 $
+T 1 +
+T 2 (
+T 3 )
+T 4 int
+N 5 s
+N 6 e
+
+PRODUCTIONS
+0 5 1 6
+1 6 5 6 1 2 6 3
+2 6 1 4
+
+START
+5

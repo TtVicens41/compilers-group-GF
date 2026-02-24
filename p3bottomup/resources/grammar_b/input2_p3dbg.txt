@@ -1,0 +1,102 @@
+STEP 1
+  Operation:     SHIFT
+  InputPos:      0
+  PreviousState: 0
+  NewState:      2
+  Stack:         [0,?][2,int]
+
+STEP 2
+  Operation:     REDUCE
+  Production:    2 (e -> int)
+  Popped:        1
+  GotoState:     1
+  Stack:         [0,?][1,e]
+
+STEP 3
+  Operation:     SHIFT
+  InputPos:      1
+  PreviousState: 1
+  NewState:      3
+  Stack:         [0,?][1,e][3,+]
+
+STEP 4
+  Operation:     SHIFT
+  InputPos:      2
+  PreviousState: 3
+  NewState:      4
+  Stack:         [0,?][1,e][3,+][4,(]
+
+STEP 5
+  Operation:     SHIFT
+  InputPos:      3
+  PreviousState: 4
+  NewState:      2
+  Stack:         [0,?][1,e][3,+][4,(][2,int]
+
+STEP 6
+  Operation:     REDUCE
+  Production:    2 (e -> int)
+  Popped:        1
+  GotoState:     5
+  Stack:         [0,?][1,e][3,+][4,(][5,e]
+
+STEP 7
+  Operation:     SHIFT
+  InputPos:      4
+  PreviousState: 5
+  NewState:      3
+  Stack:         [0,?][1,e][3,+][4,(][5,e][3,+]
+
+STEP 8
+  Operation:     SHIFT
+  InputPos:      5
+  PreviousState: 3
+  NewState:      4
+  Stack:         [0,?][1,e][3,+][4,(][5,e][3,+][4,(]
+
+STEP 9
+  Operation:     SHIFT
+  InputPos:      6
+  PreviousState: 4
+  NewState:      2
+  Stack:         [0,?][1,e][3,+][4,(][5,e][3,+][4,(][2,int]
+
+STEP 10
+  Operation:     REDUCE
+  Production:    2 (e -> int)
+  Popped:        1
+  GotoState:     5
+  Stack:         [0,?][1,e][3,+][4,(][5,e][3,+][4,(][5,e]
+
+STEP 11
+  Operation:     SHIFT
+  InputPos:      7
+  PreviousState: 5
+  NewState:      6
+  Stack:         [0,?][1,e][3,+][4,(][5,e][3,+][4,(][5,e][6,)]
+
+STEP 12
+  Operation:     REDUCE
+  Production:    1 (e -> e + ( e ))
+  Popped:        5
+  GotoState:     5
+  Stack:         [0,?][1,e][3,+][4,(][5,e]
+
+STEP 13
+  Operation:     SHIFT
+  InputPos:      8
+  PreviousState: 5
+  NewState:      6
+  Stack:         [0,?][1,e][3,+][4,(][5,e][6,)]
+
+STEP 14
+  Operation:     REDUCE
+  Production:    1 (e -> e + ( e ))
+  Popped:        5
+  GotoState:     1
+  Stack:         [0,?][1,e]
+
+STEP 15
+  Operation:     ACCEPT
+  Stack:         [0,?][1,e]
+

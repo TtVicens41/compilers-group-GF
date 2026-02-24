@@ -1,0 +1,63 @@
+# Parse table for Grammar A (SLR(1))
+#
+# s → e
+# e → e + t | t
+# t → t * f | f
+# f → ( e ) | NUM
+#
+# Terminals:     $ = 0, + = 1, * = 2, ( = 3, ) = 4, NUM = 5
+# Non-terminals: s = 6, e = 7, t = 8, f = 9
+# States:        0 – 11
+
+STATES 12
+TERMINALS 6
+NONTERMINALS 4
+
+ACTION
+0 3 S 4
+0 5 S 5
+1 1 S 6
+1 0 A 0
+2 1 R 2
+2 2 S 7
+2 4 R 2
+2 0 R 2
+3 1 R 4
+3 2 R 4
+3 4 R 4
+3 0 R 4
+4 3 S 4
+4 5 S 5
+5 1 R 6
+5 2 R 6
+5 4 R 6
+5 0 R 6
+6 3 S 4
+6 5 S 5
+7 3 S 4
+7 5 S 5
+8 1 S 6
+8 4 S 11
+9 1 R 1
+9 2 S 7
+9 4 R 1
+9 0 R 1
+10 1 R 3
+10 2 R 3
+10 4 R 3
+10 0 R 3
+11 1 R 5
+11 2 R 5
+11 4 R 5
+11 0 R 5
+
+GOTO
+0 7 1
+0 8 2
+0 9 3
+4 7 8
+4 8 2
+4 9 3
+6 8 9
+6 9 3
+7 9 10
