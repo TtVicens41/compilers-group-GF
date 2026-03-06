@@ -59,15 +59,16 @@ char *grammar_format_production(const Language *lang, int prod_id)
     if (!p) return NULL;
 
     /* worst-case: lhs(31) + " -> " + 10 * (name(31) + ' ') + '\0' */
-    char *buf = malloc(400);
+    int cap = 400;
+    char *buf = malloc((size_t)cap);
     if (!buf) return NULL;
 
     int pos = 0;
-    pos += snprintf(buf + pos, 400 - (size_t)pos, "%s ->",
+    pos += snprintf(buf + pos, (size_t)(cap - pos), "%s ->",
                     grammar_symbol_name(lang, p->lhs));
 
-    for (int i = 0; i < p->rhs_len; i++) {
-        pos += snprintf(buf + pos, 400 - (size_t)pos, " %s",
+    for (int i = 0; i < p->rhs_len && pos < cap; i++) {
+        pos += snprintf(buf + pos, (size_t)(cap - pos), " %s",
                         grammar_symbol_name(lang, p->rhs[i]));
     }
     return buf;

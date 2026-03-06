@@ -20,8 +20,6 @@ int main(int argc, char *argv[])
     context_exit(&ctx);
 
     parser_run(&ctx);
-    FILE *out = fopen("context.json", "w");
-    fprintf(out, "%s", context_string(&ctx, 0));
     
     context_cleanup(&ctx);
     context_exit(&ctx);
