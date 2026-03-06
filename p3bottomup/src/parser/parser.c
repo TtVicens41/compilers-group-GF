@@ -21,6 +21,128 @@
 #include "../tokens/token_loader.h"
 #include "../utils/logger.h"
 
+/* ── verbose trace helpers ──────────────────────────────────────────── */
+
+static const char *action_type_str(ActionType t)
+{
+    switch (t) {
+    case ACTION_SHIFT:  return "S";
+    case ACTION_REDUCE: return "R";
+    case ACTION_ACCEPT: return "A";
+    default:            return ".";
+    }
+}
+
+static void print_symbols(const Language *lang)
+{
+    printf("\n╔══════════════════════════════════════════════╗\n");
+    printf("║            SYMBOL TABLE                      ║\n");
+    printf("╠════╦════════════╦════════════════════════════╣\n");
+    printf("║ ID ║    Type    ║  Name                      ║\n");
+    printf("╠════╬════════════╬════════════════════════════╣\n");
+    for (int i = 0; i < lang->symbol_count; i++) {
+        const char *type = (lang->symbols[i].type == SYMBOL_TERMINAL)
+                           ? "TERMINAL" : "NONTERM ";
+        printf("║ %2d ║ %s  ║  %-24s ║\n",
+               lang->symbols[i].id, type, lang->symbols[i].name);
+    }
+    printf("╚════╩════════════╩════════════════════════════╝\n");
+    printf("  Start symbol: id %d (%s)\n\n",
+           lang->start_symbol,
+           grammar_symbol_name(lang, lang->start_symbol));
+}
+
+static void print_productions(const Language *lang)
+{
+    printf("╔══════════════════════════════════════════════╗\n");
+    printf("║            PRODUCTIONS                       ║\n");
+    printf("╠════╦═════════════════════════════════════════╣\n");
+    for (int i = 0; i < lang->production_count; i++) {
+        char *pstr = grammar_format_production(lang, lang->productions[i].id);
+        printf("║ %2d ║  %-39s ║\n", lang->productions[i].id,
+               pstr ? pstr : "?");
+        free(pstr);
+    }
+    printf("╚════╩═════════════════════════════════════════╝\n\n");
+}
+
+static void print_action_table(const ParseTable *pt, const Language *lang)
+{
+    printf("╔═══════════════════════════════════════════════════════════╗\n");
+    printf("║                      ACTION TABLE                        ║\n");
+    printf("╠═══════╦═══════════════════════════════════════════════════╣\n");
+
+    /* header row with terminal names */
+    printf("║ State ║");
+    for (int t = 0; t < pt->terminal_count; t++) {
+        printf(" %6s", grammar_symbol_name(lang, t));
+    }
+    printf("  ║\n");
+    printf("╠═══════╬═══════════════════════════════════════════════════╣\n");
+
+    for (int s = 0; s < pt->state_count; s++) {
+        printf("║   %2d  ║", s);
+        for (int t = 0; t < pt->terminal_count; t++) {
+            Action a = pt->action_table[s][t];
+            if (a.type == ACTION_ERROR) {
+                printf("      .");
+            } else if (a.type == ACTION_ACCEPT) {
+                printf("    ACC");
+            } else {
+                printf("   %s%-3d", action_type_str(a.type), a.value);
+            }
+        }
+        printf("  ║\n");
+    }
+    printf("╚═══════╩═══════════════════════════════════════════════════╝\n\n");
+}
+
+static void print_goto_table(const ParseTable *pt, const Language *lang)
+{
+    printf("╔═══════════════════════════════════════════╗\n");
+    printf("║              GOTO TABLE                   ║\n");
+    printf("╠═══════╦═══════════════════════════════════╣\n");
+
+    printf("║ State ║");
+    for (int n = 0; n < pt->nonterminal_count; n++) {
+        printf(" %6s", grammar_symbol_name(lang, n + pt->terminal_count));
+    }
+    printf("  ║\n");
+    printf("╠═══════╬═══════════════════════════════════╣\n");
+
+    for (int s = 0; s < pt->state_count; s++) {
+        int any = 0;
+        for (int n = 0; n < pt->nonterminal_count; n++)
+            if (pt->goto_table[s][n] >= 0) { any = 1; break; }
+        if (!any) continue;  /* skip empty rows */
+
+        printf("║   %2d  ║", s);
+        for (int n = 0; n < pt->nonterminal_count; n++) {
+            int g = pt->goto_table[s][n];
+            if (g < 0)  printf("      .");
+            else        printf("   %3d", g);
+        }
+        printf("  ║\n");
+    }
+    printf("╚═══════╩═══════════════════════════════════╝\n\n");
+}
+
+static void print_token_stream(const TokenList *tokens, const Language *lang)
+{
+    printf("╔══════════════════════════════════════════════╗\n");
+    printf("║            INPUT TOKEN STREAM                ║\n");
+    printf("╠═════╦══════════════╦═════════════════════════╣\n");
+    printf("║ Pos ║  Terminal    ║  Lexeme                  ║\n");
+    printf("╠═════╬══════════════╬═════════════════════════╣\n");
+    int pos = 0;
+    for (Token *t = tokens->head; t; t = t->next) {
+        printf("║  %2d ║ %-12s ║  %-23s ║\n",
+               pos, grammar_symbol_name(lang, t->type), t->lexeme);
+        pos++;
+    }
+    printf("╚═════╩══════════════╩═════════════════════════╝\n\n");
+}
+
 /* ── output-path derivation ─────────────────────────────────────────── */
 
 /**
@@ -74,6 +196,8 @@ int parser_run(const char *language_file,
     }
     printf("Language loaded: %d symbols, %d productions\n",
            lang->symbol_count, lang->production_count);
+    print_symbols(lang);
+    print_productions(lang);
 
     /* ── 2. Load parse table ───────────────────────────────────────── */
     ptable = parse_table_load_from_file(table_file);
@@ -83,6 +207,8 @@ int parser_run(const char *language_file,
         goto cleanup;
     }
     printf("Parse table loaded: %d states\n", ptable->state_count);
+    print_action_table(ptable, lang);
+    print_goto_table(ptable, lang);
 
     /* ── 3. Load tokens ────────────────────────────────────────────── */
     tokens = token_loader_load_from_file(token_file, lang);
@@ -92,6 +218,7 @@ int parser_run(const char *language_file,
         goto cleanup;
     }
     printf("Tokens loaded successfully\n");
+    print_token_stream(tokens, lang);
 
     /* ── 4. Build engine components ────────────────────────────────── */
     dfa   = dfa_init(ptable);

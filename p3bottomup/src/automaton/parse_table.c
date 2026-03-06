@@ -106,7 +106,7 @@ static int parse_action_section(FILE *fp, ParseTable *pt)
         if (strcmp(t, "GOTO") == 0) break;
         if (strcmp(t, "ACTION") == 0) continue;
 
-        int state, tid, val;
+        int state, tid, val = 0;
         char type_ch;
         if (sscanf(t, "%d %d %c %d", &state, &tid, &type_ch, &val) < 3)
             continue;
