@@ -1,9 +1,15 @@
 /**
- * @title: string_utils.h
- * @authors: Davi Paiva
- * @creation: 16/02/2026
+ * @file string_utils.h
+ * @brief String Utilities
+ * 
+ * Declarations of functions and macro definitions of string handling 
+ * utilities. Most string functions get as argument an string and return 
+ * another string. Take account dinamyc allocated strings have to be freed.
+ * 
+ * @authors Marc Bosch Manzano & Pau Puig Guillén
+ * @since 2026-02-25
+ * @see Improved from P2 Lexer string_utils.h
  */
-
 
 #ifndef STRING_UTILS_H
 #define STRING_UTILS_H
@@ -71,7 +77,6 @@ char *get_suffix_r(const char *string, char separator);
  * @return A pointer to a dinamically allocated string of the new path.
  */
 char *add_suffix_to_path(const char *path, const char *suffix);
-
 
 /**
  * Concatenate two strings

@@ -1,0 +1,9 @@
+NAME
+    parser - Bottom-up parser for Practice 3
+
+SYNOPSIS
+    ./parser <input_file>
+
+DESCRIPTION
+    Reads a C scanned file and generates an output debug file named 
+    <input_file>_p3dbg.txt at the same directory of the input.

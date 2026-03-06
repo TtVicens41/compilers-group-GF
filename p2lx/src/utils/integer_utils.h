@@ -1,9 +1,9 @@
 /**
- * @title: integer_utils.h
- * @authors: Joan Vicente
- * @creation: 16/02/2026
+ * @file integer_utils.h
+ * @brief Integer Array and Matrix Utilities
+ * @author Marc Bosch Manzano
+ * @since 2026-02-16
  */
-
 
 #ifndef INTEGER_H
 #define INTEGER_H

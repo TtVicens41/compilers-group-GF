@@ -24,26 +24,7 @@
 #include <string.h>
 
 #include "parse_table.h"
-
-/* ── helpers ────────────────────────────────────────────────────────── */
-
-static char *trim(char *s)
-{
-    while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
-    char *end = s + strlen(s) - 1;
-    while (end > s && (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n'))
-        *end-- = '\0';
-    return s;
-}
-
-static int is_blank(const char *s)
-{
-    while (*s) {
-        if (*s != ' ' && *s != '\t' && *s != '\r' && *s != '\n') return 0;
-        s++;
-    }
-    return 1;
-}
+#include "../utils/string_utils.h"
 
 /* ── allocation helpers ─────────────────────────────────────────────── */
 
@@ -222,4 +203,33 @@ void parse_table_destroy(ParseTable *table)
         free(table->goto_table);
     }
     free(table);
+}
+
+char *parse_table_string(const ParseTable *table, int level) 
+{
+    if (!table) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    const int n = level + 1;
+    char *action_table = action_table_string(
+        table->action_table,
+        table->state_count,
+        table->terminal_count, 
+        n
+    );
+    char *goto_table = int_matrix_to_str(
+        table->goto_table, 
+        table->state_count, 
+        table->nonterminal_count, 
+        n
+    );
+    jsonify_wrap(&s, level, 1, "{");
+    jsonify(&s, n, 1, 1, "action_table",      action_table);
+    jsonify(&s, n, 1, 1, "goto_table",        goto_table);
+    jsonify(&s, n, 1, 1, "state_count",       int_to_str(table->state_count));
+    jsonify(&s, n, 1, 1, "terminal_count",    int_to_str(table->terminal_count));
+    jsonify(&s, n, 0, 1, "nonterminal_count", int_to_str(table->nonterminal_count));
+    jsonify_wrap(&s, level, 0, "}");
+    return s;
 }

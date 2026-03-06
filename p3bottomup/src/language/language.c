@@ -22,28 +22,7 @@
 #include <string.h>
 
 #include "language.h"
-
-/* ── helpers ────────────────────────────────────────────────────────── */
-
-/** Trim leading/trailing whitespace in place and return the pointer. */
-static char *trim(char *s)
-{
-    while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
-    char *end = s + strlen(s) - 1;
-    while (end > s && (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n'))
-        *end-- = '\0';
-    return s;
-}
-
-static int is_blank_or_empty(const char *line)
-{
-    while (*line) {
-        if (*line != ' ' && *line != '\t' && *line != '\r' && *line != '\n')
-            return 0;
-        line++;
-    }
-    return 1;
-}
+#include "../utils/string_utils.h"
 
 /* ── line-level parsers ──────────────────────────────────────────────── */
 
@@ -116,14 +95,14 @@ Language *language_load_from_file(const char *path)
     int sym_cap  = 16, prod_cap = 16;
     lang->symbols     = malloc(sizeof(Symbol)     * (size_t)sym_cap);
     lang->productions = malloc(sizeof(Production) * (size_t)prod_cap);
-    if (!lang->symbols || !lang->productions) goto fail;
+    if (!lang->symbols || !lang->productions) { goto fail; }
 
     int section = SEC_NONE;
     char line[256];
 
     while (fgets(line, sizeof(line), fp)) {
         char *t = trim(line);
-        if (is_blank_or_empty(t)) continue;
+        if (is_blank(t)) continue;
         if (t[0] == '#') continue;     /* comment */
 
         /* section headers */
@@ -165,3 +144,84 @@ void language_destroy(Language *lang)
     free(lang->productions);
     free(lang);
 }
+
+char *production_string(const Production *production) 
+{
+    if (!production) {
+        return NULL;
+    }
+    char *s = NULL;
+    char *rhs = int_array_to_str(production->rhs, production->rhs_len);  
+    jsonify_wrap(&s, 0, 0, "{");
+    jsonify(&s, 0, 1, 0, "id",      int_to_str(production->id));
+    jsonify(&s, 0, 1, 0, "lhs",     int_to_str(production->lhs));
+    jsonify(&s, 0, 1, 0, "rhs_len", int_to_str(production->lhs));
+    jsonify(&s, 0, 0, 0, "rhs",     rhs);
+    jsonify_wrap(&s, 0, 0, "}");
+    return s;
+}
+
+char *productions_string(const Production *productions, int count, int level)
+{
+    if (!productions) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    int n = level + 1;
+    jsonify_wrap(&s, level, 1, "[");
+    for (int i = 0; i < count; i++) {
+        char *production = production_string(&productions[i]);
+        jsonify_value(&s, n, i < count - 1, 1, production);
+    }
+    jsonify_wrap(&s, level, 0, "]");
+    return s;
+}
+
+char *symbol_string(const Symbol *symbol) 
+{
+    if (!symbol) {
+        return NULL;
+    }
+    char *s = NULL;
+    jsonify_wrap(&s, 0, 0, "{");
+    jsonify(&s, 0, 1, 0, "name",         add_quotes(symbol->name));
+    jsonify(&s, 0, 1, 0, "symbol_count", int_to_str(symbol->type));
+    jsonify(&s, 0, 0, 0, "productions",  int_to_str(symbol->id));
+    jsonify_wrap(&s, 0, 0, "}");
+    return s;
+}
+
+char *symbols_string(const Symbol *symbols, int count, int level) 
+{
+    if (!symbols) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    int n = level + 1;
+    jsonify_wrap(&s, level, 1, "[");
+    for (int i = 0; i < count; i++) {
+        char *symbol = symbol_string(&symbols[i]);
+        jsonify_value(&s, n, i < count - 1, 1, symbol);
+    }
+    jsonify_wrap(&s, level, 0, "]");
+    return s;
+}
+
+char *language_string(const Language *lang, int level) 
+{
+    if (!lang) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    int n = level + 1;
+    char *symbols = symbols_string(lang->symbols, lang->symbol_count, n);
+    char *productions = productions_string(lang->productions, lang->production_count, n);
+    jsonify_wrap(&s, level, 1, "{");
+    jsonify(&s, n, 1, 1, "symbols", symbols);
+    jsonify(&s, n, 1, 1, "symbol_count", int_to_str(lang->symbol_count));
+    jsonify(&s, n, 1, 1, "productions", productions);
+    jsonify(&s, n, 1, 1, "production_count", int_to_str(lang->production_count));
+    jsonify(&s, n, 0, 1, "start_symbol", int_to_str(lang->start_symbol));
+    jsonify_wrap(&s, level, 0, "}");
+    return s;
+} 

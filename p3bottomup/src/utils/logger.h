@@ -4,6 +4,9 @@
  *
  * Writes one block per parsing step to a file, producing human-readable
  * traces that document every SHIFT, REDUCE, ACCEPT, and ERROR action.
+ * 
+ * @author Davi Penna-Mattos Dias de Paiva.
+ * @review: Marc Bosch Manzano.
  */
 
 #ifndef LOGGER_H
@@ -11,12 +14,19 @@
 
 #include <stdio.h>
 
+/**
+ * @brief Structured debug logger for the shift/reduce parser.
+ */
 typedef struct {
     FILE *file;
     int step;
 } Logger;
 
-/** Open a log file and return a Logger. Returns NULL on failure. */
+/** 
+ * Open a log file and return a Logger. Returns NULL on failure. 
+ * @param output_path A path to output.
+ * @return A logger
+ */
 Logger *logger_init(const char *output_path);
 
 /**
@@ -44,7 +54,8 @@ void logger_log_reduce(Logger *logger, int prod_id,
 
 /**
  * Log an ACCEPT action.
- * @param stack_str  Final stack snapshot.
+ * @param stack_str   Final stack snapshot.
+ * @param stack_str   Formatted stack snapshot.
  */
 void logger_log_accept(Logger *logger, const char *stack_str);
 
@@ -57,7 +68,11 @@ void logger_log_accept(Logger *logger, const char *stack_str);
 void logger_log_error(Logger *logger, int state,
                       const char *token_str, const char *stack_str);
 
-/** Flush and close the log file. */
+/** 
+ * Flush and close the log file. 
+ */
 void logger_close(Logger *logger);
+
+char *logger_string(const Logger *logger, int level);
 
 #endif /* LOGGER_H */

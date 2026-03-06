@@ -18,7 +18,7 @@ typedef struct {
 } Stack;
 
 /** Allocate a stack with the given initial capacity. */
-Stack *stack_init(int capacity);
+Stack *stack_init(void);
 
 /** Push a (state, symbol) pair onto the stack. Grows if needed. */
 void stack_push(Stack *stack, int state, int symbol);
@@ -43,5 +43,8 @@ void stack_print(const Stack *stack);
 
 /** Free all memory owned by the stack. */
 void stack_destroy(Stack *stack);
+
+/** Dinamically allocated string representation of stack. */
+char *stack_string(const Stack *stack, int level);
 
 #endif /* STACK_H */

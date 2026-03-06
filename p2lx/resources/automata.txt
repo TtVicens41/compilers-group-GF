@@ -91,8 +91,8 @@ CAT_LITERAL
 0 0
 #
 CAT_IDENTIFIER
-[0-9] [a-zA-Z]
+[0-9] [a-zA-Z] _
 2
-0 0
-0 2
-2 2
+0 0 0
+0 2 2
+2 2 2

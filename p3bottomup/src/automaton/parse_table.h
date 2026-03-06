@@ -6,28 +6,17 @@
 #ifndef PARSE_TABLE_H
 #define PARSE_TABLE_H
 
-/* ── Action ─────────────────────────────────────────────────────────── */
+#include "action.h"
 
-typedef enum {
-    ACTION_SHIFT,
-    ACTION_REDUCE,
-    ACTION_ACCEPT,
-    ACTION_ERROR
-} ActionType;
-
+/**
+ * @brief ACTION / GOTO parse table data structure.
+ */
 typedef struct {
-    ActionType type;
-    int value;   /* target state (SHIFT) or production id (REDUCE) */
-} Action;
-
-/* ── ParseTable ─────────────────────────────────────────────────────── */
-
-typedef struct {
-    Action **action_table;   /* [state][terminal_id]          */
-    int   **goto_table;      /* [state][nonterminal_offset]   */
-    int state_count;
-    int terminal_count;      /* number of terminal symbols    */
-    int nonterminal_count;   /* number of nonterminal symbols */
+    Action **action_table;  /* A matrix of actions: [state][terminal_id] */
+    int **goto_table;       /* A goto matrix: [state][nonterminal_offset] */
+    int state_count;        /* Number of states. */
+    int terminal_count;     /* Number of terminal symbols. */
+    int nonterminal_count;  /* Number of nonterminal symbols. */
 } ParseTable;
 
 /**
@@ -51,5 +40,8 @@ int parse_table_get_goto(const ParseTable *table, int state,
 
 /** Free all memory owned by a ParseTable. */
 void parse_table_destroy(ParseTable *table);
+
+/** Dynamically allocated string representation of parse table. */
+char *parse_table_string(const ParseTable *table, int level);
 
 #endif /* PARSE_TABLE_H */

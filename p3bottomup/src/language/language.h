@@ -52,8 +52,24 @@ typedef struct {
 Language *language_load_from_file(const char *path);
 
 /**
- * Free all memory owned by a Language.
+ * Free all fields of a language, including the language itself.
+ * @param lang An allocated language.
  */
 void language_destroy(Language *lang);
+
+/** Inline string representation of a single production. */
+char *production_string(const Production *production);
+
+/** String representation of a production array. */
+char *productions_string(const Production *production, int count, int level);
+
+/** Inline tring representation of a single symbol. */
+char *symbol_string(const Symbol *symbol);
+
+/** String representation of a symbol array. */
+char *symbols_string(const Symbol *symbols, int count, int level);
+
+/** String representation of a language. */
+char *language_string(const Language *lang, int level);
 
 #endif /* LANGUAGE_H */

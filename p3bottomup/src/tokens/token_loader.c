@@ -18,23 +18,7 @@
 
 #include "token_loader.h"
 #include "../language/grammar.h"
-
-/* ── helpers ────────────────────────────────────────────────────────── */
-
-static char *trim(char *s)
-{
-    while (*s == ' ' || *s == '\t' || *s == '\r' || *s == '\n') s++;
-    char *end = s + strlen(s) - 1;
-    while (end > s && (*end == ' ' || *end == '\t' || *end == '\r' || *end == '\n'))
-        *end-- = '\0';
-    return s;
-}
-
-static int is_blank_or_comment(const char *line)
-{
-    while (*line == ' ' || *line == '\t') line++;
-    return (*line == '\0' || *line == '\n' || *line == '#');
-}
+#include "../utils/string_utils.h"
 
 /* ── public API ─────────────────────────────────────────────────────── */
 

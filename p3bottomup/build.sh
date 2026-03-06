@@ -11,10 +11,12 @@ OUT_BIN="$SCRIPT_DIR/parser"
 cc -Wall -Wextra -pedantic -std=c11 \
     -I"$SRC_DIR" \
     "$SRC_DIR/main.c" \
+    "$SRC_DIR/arguments/arguments.c" \
     "$SRC_DIR/parser/parser.c" \
     "$SRC_DIR/parser/sra.c" \
     "$SRC_DIR/automaton/dfa.c" \
     "$SRC_DIR/automaton/parse_table.c" \
+    "$SRC_DIR/automaton/action.c" \
     "$SRC_DIR/stack/stack.c" \
     "$SRC_DIR/language/language.c" \
     "$SRC_DIR/language/grammar.c" \
@@ -22,6 +24,8 @@ cc -Wall -Wextra -pedantic -std=c11 \
     "$SRC_DIR/tokens/token_list.c" \
     "$SRC_DIR/tokens/token_loader.c" \
     "$SRC_DIR/utils/logger.c" \
+    "$SRC_DIR/utils/file_utils.c" \
+    "$SRC_DIR/utils/string_utils.c" \
     -o "$OUT_BIN"
 
 chmod +x "$OUT_BIN"

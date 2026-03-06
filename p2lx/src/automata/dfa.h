@@ -1,9 +1,9 @@
 /**
- * @title: dfa.h
- * @authors: Joan Vicente, Davi Paiva, Marc Bosch
- * @creation: 16/02/2025
+ * @file dfa.h
+ * @brief Deterministic Finite-State Automata
+ * @author Marc Bosch Manzano
+ * @since 2026-02-13
  */
-
 
 #ifndef DFA_H
 #define DFA_H
@@ -11,7 +11,7 @@
 #include "../utils/utils.h"
 
 /**
- * Deterministic Finite State Automata
+ * @brief Deterministic Finite State Automata
  */
 typedef struct {
     char *category;
@@ -29,7 +29,7 @@ typedef struct {
 } DFA;
 
 DFA *init_dfa(const char *automaton_string);
-DFA **init_dfa_array(const StringList *automatons_strings);
+DFA **init_dfa_array(const StringArray *automatons_strings);
 void clear_dfa(DFA *automaton);
 void delete_dfa(DFA **automaton);
 void reset_dfa(DFA *automaton);

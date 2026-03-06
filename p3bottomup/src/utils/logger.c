@@ -1,12 +1,17 @@
 /**
  * @file logger.c
  * @brief Debug logger for the shift/reduce parser.
+ * 
+ * @author Davi Penna-Mattos Dias de Paiva.
+ * @review: Marc Bosch Manzano.
  */
 
 #include <stdlib.h>
 #include <string.h>
 
 #include "logger.h"
+#include "string_utils.h"
+
 
 Logger *logger_init(const char *output_path)
 {
@@ -95,4 +100,18 @@ void logger_close(Logger *logger)
     if (!logger) return;
     if (logger->file) fclose(logger->file);
     free(logger);
+}
+
+char *logger_string(const Logger *logger, int level)
+{
+    if (!logger) {
+        return NULL;
+    }
+    char *s = NULL;
+    int n = level + 1;
+    jsonify_wrap(&s, level, 1, "{");
+    jsonify(&s, n, 1, 1, "file", ptr_to_str(logger->file));
+    jsonify(&s, n, 0, 1, "step", int_to_str(logger->step));
+    jsonify_wrap(&s, level, 0, "}");
+    return s;
 }

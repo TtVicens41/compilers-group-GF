@@ -1,11 +1,11 @@
 /**
  * @file sra.c
- * @brief Shift / Reduce Automaton – table-driven, grammar-independent engine.
- *
+ * @brief Shift-Reduce Automaton (SRA) engine.
+ * 
  * Orchestrates the DFA (which owns the parse table) and the Stack
  * according to productions defined in the Language.  All grammar-
  * specific knowledge comes from the data files; this module contains
- * only the generic SRA algorithm.
+ * only the generic SRA algorithm. SRA is table-driven and grammar-independent.
  */
 
 #include <stdio.h>
@@ -14,13 +14,16 @@
 
 #include "sra.h"
 #include "../language/grammar.h"
+#include "../utils/string_utils.h"
 
 /* ── stack snapshot formatting ──────────────────────────────────────── */
 
 /**
  * Build a human-readable snapshot of the stack for logging.
  * Format: [state,symbol_name][state,symbol_name]...
- * Caller must free() the returned buffer.
+ * @param stack A read-only stack.
+ * @param lang A read-only language.
+ * @warning Caller must free() the returned buffer.
  */
 static char *format_stack(const Stack *stack, const Language *lang)
 {
@@ -144,9 +147,9 @@ static void handle_accept(SRA *sra, Logger *logger)
 static void handle_error(SRA *sra, Token *token, Logger *logger)
 {
     int state = stack_peek(sra->stack).state;
-    const char *tname = token
-        ? grammar_symbol_name(sra->language, token->type)
-        : "EOF";
+    const char *tname = token ? 
+        grammar_symbol_name(sra->language, token->type) : 
+        "EOF";
 
     fprintf(stderr, "sra: syntax error in state %d on token '%s'\n",
             state, tname);
@@ -162,7 +165,8 @@ static void handle_error(SRA *sra, Token *token, Logger *logger)
 
 int sra_parse(SRA *sra, TokenList *tokens, Logger *logger)
 {
-    if (!sra || !tokens) return -1;
+    if (!sra || !tokens) 
+        return EXIT_FAILURE;
 
     Token *current = tokens->head;
     int input_pos = 0;
@@ -170,7 +174,7 @@ int sra_parse(SRA *sra, TokenList *tokens, Logger *logger)
     while (1) {
         if (!current) {
             handle_error(sra, NULL, logger);
-            return -1;
+            return EXIT_FAILURE;
         }
 
         int state = stack_peek(sra->stack).state;
@@ -192,12 +196,26 @@ int sra_parse(SRA *sra, TokenList *tokens, Logger *logger)
 
         case ACTION_ACCEPT:
             handle_accept(sra, logger);
-            return 0;
+            return EXIT_SUCCESS;
 
         case ACTION_ERROR:
         default:
             handle_error(sra, current, logger);
-            return -1;
+            return EXIT_FAILURE;
         }
     }
+}
+
+char *sra_string(const SRA *sra, int level) {
+    if (!sra) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    int n = level + 1;
+    jsonify_wrap(&s, level, 1, "{");
+    jsonify(&s, n, 1, 1, "dfa",      dfa_string(sra->dfa, n));
+    jsonify(&s, n, 1, 1, "stack",    stack_string(sra->stack, n));
+    jsonify(&s, n, 0, 1, "language", language_string(sra->language, n));
+    jsonify_wrap(&s, level, 0, "}");
+    return s;
 }

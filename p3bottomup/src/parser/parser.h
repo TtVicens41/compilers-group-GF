@@ -10,19 +10,14 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "../arguments/arguments.h"
+
 /**
  * Run the parser end-to-end.
- *
- * @param language_file     Path to the language definition file.
- * @param table_file        Path to the parse-table file.
- * @param token_file        Path to the .cscn token file.
- * @param output_file       Path for the debug-output file (may be NULL
- *                          to derive from token_file automatically).
- * @return 0 on successful parse (ACCEPT), non-zero otherwise.
+ * @param ctx A read-write parser contxext to initialize the language, 
+ * parse table, etc. The status field is set to EXIT_SUCCESS (0) 
+ * EXIT_FAILURE (1).
  */
-int parser_run(const char *language_file,
-               const char *table_file,
-               const char *token_file,
-               const char *output_file);
+void parser_run(ParserContext *ctx);
 
 #endif /* PARSER_H */

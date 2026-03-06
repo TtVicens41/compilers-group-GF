@@ -1,7 +1,9 @@
 /**
- * @title: context.h
- * @authors: Joan Vicente, Pau Puig
- * @creation: 16/06/2026
+ * @file context.h
+ * @brief Lexer Context
+ * @author Marc Bosch Manzano
+ * @note Reviewed by Joan Vicente Martín
+ * @since 2026-06-16
  */
 
 #ifndef CONTEXT_H
@@ -11,7 +13,7 @@
 #include <stdlib.h>
 
 /**
- * Lexer Context
+ * @brief Lexer context data structure.
  *
  * Holds all shared state required by the lexical analyzer engine. This structure
  * is passed to all modules to avoid global state and to allow extensibility 

@@ -3,7 +3,7 @@
  * @brief Deterministic finite automaton wrapper around the parse table.
  *
  * The DFA tracks the current state and delegates look-ups to the
- * ParseTable.  It knows nothing about the parser stack.
+ * ParseTable. It knows nothing about the parser stack.
  */
 
 #ifndef DFA_H
@@ -30,5 +30,8 @@ void dfa_set_state(DFA *dfa, int state);
 
 /** Free the DFA struct (does NOT free the underlying ParseTable). */
 void dfa_destroy(DFA *dfa);
+
+/** Dynamically allocated string representation of DFA */
+char *dfa_string(const DFA *dfa, int level);
 
 #endif /* DFA_H */

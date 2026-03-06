@@ -1,9 +1,15 @@
 /**
- * @title: file_utils.h
- * @authors: Marc Bosch
- * @creation: 16/02/2026
+ * @file file_utils.h
+ * @brief File I/O Utilities Module
+ * 
+ * All functions recieve a path, or both input and output paths, as parameters. 
+ * The main logic is to read from that input path, and wirte content to that 
+ * output path.
+ * 
+ * @author Marc Bosch Manzano
+ * @since 2026-02-16
+ * @see Improved from P1 Preprocessor file_utils.h
  */
-
 
 #ifndef FILE_UTILS_H
 #define FILE_UTILS_H

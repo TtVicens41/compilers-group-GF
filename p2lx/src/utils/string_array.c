@@ -1,19 +1,21 @@
 /**
- * @title: string_list.c
- * @authors: Alejandro Poole
- * @creation: 16/02/2026
+ * @file string_array.c
+ * @brief String Array Utilities
+ * @author Marc Bosch Manzano
+ * @since 2026-02-09
  */
-
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
-#include "string_list.h"
-#include "string_utils.h"
+#include "./string_array.h"
+#include "./string_utils.h"
 
-StringList *init_string_list(char **buffer, int size) {
-    StringList *string_list = malloc(sizeof(StringList));
+#define UNSET_TOKEN (-1)
+
+StringArray *init_string_array(char **buffer, int size) {
+    StringArray *string_list = malloc(sizeof(StringArray));
     if (!string_list) { return NULL; }
 
     string_list->buffer = buffer;
@@ -21,8 +23,6 @@ StringList *init_string_list(char **buffer, int size) {
 
     return string_list;
 }
-
-#define UNSET_TOKEN (-1)
 
 int is_token_set(int token_start) {
     return token_start != UNSET_TOKEN;
@@ -36,7 +36,7 @@ int is_split_condition(char c, char splitter) {
     return c == splitter || c == '\0';
 }
 
-StringList *string_split(const char *string, char splitter) {
+StringArray *string_split(const char *string, char splitter) {
     int length = strlen(string);
     
     char **buffer = NULL;
@@ -57,11 +57,11 @@ StringList *string_split(const char *string, char splitter) {
         }
     }
 
-    return init_string_list(buffer, size);
+    return init_string_array(buffer, size);
 }
 
-StringList *apply_string_list(
-    StringList *string_list, 
+StringArray *apply_string_array(
+    StringArray *string_list, 
     char *(*applier)(const char *),
     int delete
 ) {
@@ -74,13 +74,13 @@ StringList *apply_string_list(
         buffer[i] = applier(string_list->buffer[i]);
     }
     if (delete) {
-        delete_string_list(&string_list);
+        delete_string_array(&string_list);
     }
-    return init_string_list(buffer, size);
+    return init_string_array(buffer, size);
 }
 
-StringList *filter_string_list(
-    StringList *string_list,
+StringArray *filter_string_list(
+    StringArray *string_list,
     int (*condition)(const char *),
     int delete
 ) {    
@@ -96,13 +96,13 @@ StringList *filter_string_list(
         }
     }
     if (delete) {
-        delete_string_list(&string_list);
+        delete_string_array(&string_list);
     }
-    return init_string_list(buffer, size);
+    return init_string_array(buffer, size);
 }
 
 
-void clear_string_list(StringList *string_list) {
+void clear_string_array(StringArray *string_list) {
     for (int i = 0; i < string_list->size; i++) {
         free(string_list->buffer[i]);
         string_list->buffer[i] = NULL;
@@ -112,13 +112,13 @@ void clear_string_list(StringList *string_list) {
     string_list->size = 0;
 }
 
-void delete_string_list(StringList **string_list) {
-    clear_string_list(*string_list);
+void delete_string_array(StringArray **string_list) {
+    clear_string_array(*string_list);
     free(*string_list);
     *string_list = NULL;
 }
 
-void print_string_list(const StringList *string_list, int raw) {
+void print_string_array(const StringArray *string_list, int raw) {
     if (!string_list) { return; }
     if (!string_list->buffer) { return; }
 
@@ -136,7 +136,7 @@ void print_string_list(const StringList *string_list, int raw) {
     printf("\n]\n");
 }
 
-int *to_integer_array(StringList *string_list, int delete) {
+int *to_integer_array(StringArray *string_list, int delete) {
     if (!string_list) { 
         return NULL;
     }
@@ -146,7 +146,7 @@ int *to_integer_array(StringList *string_list, int delete) {
         array[i] = atoi(string_list->buffer[i]);
     }
     if (delete) {
-        delete_string_list(&string_list);
+        delete_string_array(&string_list);
     }
     return array;
 }

@@ -1,9 +1,9 @@
 /**
- * @title: dfa.c
- * @authors: Joan Vicente, Davi Paiva, Marc Bosch
- * @creation: 16/02/2025
+ * @file dfa.c
+ * @brief Deterministic Finite-State Automata
+ * @author Marc Bosch Manzano
+ * @since 2026-02-13
  */
-
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -18,7 +18,7 @@ DFA *empty_dfa(void) {
 }
 
 DFA *init_dfa(const char *automaton_string) {
-    StringList *automaton_string_splitted;
+    StringArray *automaton_string_splitted;
     automaton_string_splitted = string_split(
         automaton_string, AUTOMATA_ATTRIBUTE_SEPARATOR
     );
@@ -46,14 +46,14 @@ DFA *init_dfa(const char *automaton_string) {
     }
 
     dfa->alphabet = get_copy(buffer[ALPHABET]);
-    dfa->char_map = init_char_map_str(buffer[ALPHABET]);
+    dfa->char_map = init_char_map(buffer[ALPHABET]);
     dfa->alphabet_size = compute_num_assigned_chars(dfa->char_map);
 
     if (size <= ACCEPTING_STATES) { 
         return dfa; 
     }
 
-    StringList *accepting_states;
+    StringArray *accepting_states;
     accepting_states = string_split(
         buffer[ACCEPTING_STATES], AUTOMATA_LIST_SEPARATOR
     );
@@ -69,18 +69,18 @@ DFA *init_dfa(const char *automaton_string) {
     dfa->transitions = calloc(dfa->states_size, sizeof(int *));
 
     for (int j = TRANSITIONS; j < size; j++) {
-        StringList *transitions;
+        StringArray *transitions;
         transitions = string_split(buffer[j], AUTOMATA_LIST_SEPARATOR);
         
         dfa->transitions_size = min(dfa->transitions_size, transitions->size);
         dfa->transitions[j - TRANSITIONS] = to_integer_array(transitions, TRUE);
     }
     
-    delete_string_list(&automaton_string_splitted);
+    delete_string_array(&automaton_string_splitted);
     return dfa;
 }
 
-DFA **init_dfa_array(const StringList *automatons_strings) {
+DFA **init_dfa_array(const StringArray *automatons_strings) {
     DFA **automatons = calloc(automatons_strings->size, sizeof(DFA *));
     if (!automatons) { 
         return NULL; 

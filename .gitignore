@@ -81,6 +81,4 @@ core.*
 *.core
 
 # Project-specific generated binaries/artifacts
-p2lx/lexer
-*.cscn
 *.cdbgcnt

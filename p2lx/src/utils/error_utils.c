@@ -1,9 +1,10 @@
 /**
- * @title: error_utils.c
- * @authors: Marc Bosch
- * @creation: 16/02/2026
+ * @file error_utils.c
+ * @brief Error Handling Utilities
+ * @author Marc Bosch Manzano
+ * @since 2026-02-16
+ * @see Improved from P1 Preprocessor error_utils.c
  */
-
 
 #include <string.h>
 #include <stdio.h>

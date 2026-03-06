@@ -4,11 +4,14 @@
  *
  * Tracks the current state and forwards look-ups to the ParseTable.
  * Has no knowledge of the parser stack.
+ * 
+ * @author Davi
  */
 
 #include <stdlib.h>
 
 #include "dfa.h"
+#include "../utils/string_utils.h"
 
 DFA *dfa_init(ParseTable *table)
 {
@@ -41,5 +44,18 @@ void dfa_set_state(DFA *dfa, int state)
 
 void dfa_destroy(DFA *dfa)
 {
-    free(dfa);   /* does NOT free the underlying ParseTable */
+    free(dfa); 
+}
+
+char *dfa_string(const DFA *dfa, int level) {
+    if (!dfa) {
+        return NULL;
+    }
+    char *s = get_copy("\n");
+    int n = level + 1;
+    jsonify_wrap(&s, level, 1, "{");
+    jsonify(&s, n, 1, 1, "parse_table",   parse_table_string(dfa->table, n));
+    jsonify(&s, n, 0, 1, "current_state", int_to_str(dfa->current_state));
+    jsonify_wrap(&s, level, 0, "}");
+    return s;
 }

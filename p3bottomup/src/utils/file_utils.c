@@ -1,0 +1,157 @@
+/**
+ * @file file_utils.c
+ * @brief File I/O Utilities Module.
+ * @author Marc Bosch Manzano.
+ * @since 2026-02-25.
+ * @see Improved from P2 Lexer file_utils.c
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "file_utils.h"
+
+/**
+ * Messages for file errors.
+ */
+static const char *const FILE_ERROR_MESSAGES[] = {   
+    [ENOENT] = "No such file or directory: %s\n",
+    [EACCES] = "Permission denied: %s\n",
+    [EISDIR] = "Is a directory: %s\n",
+    [EMFILE] = "Too many open files: %s\n",
+    [ENAMETOOLONG] = "Filename too long: %s\n",
+};
+
+/**
+ * A file buffer string size.
+ */
+#define FILE_BUFFER_STRING 256
+
+void print_file(const char *path) {
+    if (!check_input_file(path)) 
+        return;
+
+    FILE *file_ptr = fopen(path, "r");
+    char c;
+    while ((c = fgetc(file_ptr)) != EOF) {
+        fputc(c, stdout);
+    }
+    fclose(file_ptr);
+}
+
+void dump_file(const char *path, char *str, int max_len) {
+    if (!check_input_file(path)) 
+        return;
+
+    FILE *file_ptr = fopen(path, "r"); 
+    int i = 0;
+    char c = 0;
+
+    while ((c = fgetc(file_ptr)) != EOF && i < max_len - 1) {
+        str[i++] = c;
+    }
+    str[i] = '\0';
+    fclose(file_ptr);
+}
+
+char *read_file(const char *path) {
+    if (!check_input_file(path))
+        return NULL;
+    
+    FILE *file_ptr = fopen(path, "r");
+    if (!file_ptr) {
+        return NULL;
+    }
+    const int m = FILE_BUFFER_STRING;
+    char *str = calloc(1, sizeof(char));
+    if (!str) {
+        fclose(file_ptr);
+        return NULL;
+    }
+    char c = 0;
+    int i = 0;
+
+    while ((c = fgetc(file_ptr)) != EOF) {
+        if ((i % m) == 0) {
+            char *tmp = (char *)realloc(str, (i + 1) * m);
+            if (!tmp) {
+                free(str);
+                fclose(file_ptr);
+                return NULL;
+            }
+            str = tmp;
+        }
+        str[i++] = c;
+    }
+
+    fclose(file_ptr);
+    str[i] = '\0';
+    return str;
+}
+
+void write_file(const char *path, const char *string) {
+    if (!check_output_file(path) || !string)
+        return;
+    
+    FILE *file_ptr = fopen(path, "w");
+    if (!file_ptr) {
+        return;
+    }
+    const size_t str_length = strlen(string);
+    
+    for (size_t i = 0; i < str_length; i++) {
+        fputc(string[i], file_ptr);
+    }
+    fclose(file_ptr);
+}
+
+
+void copy_file(
+    const char *input_path,
+    const char *output_path
+) {
+    if (!check_input_file(input_path) || !check_output_file(output_path))
+        return;
+        
+    FILE *input_file_ptr = fopen(input_path, "r");
+    FILE *output_file_ptr = fopen(output_path, "w");
+
+    char c;
+    while ((c = fgetc(input_file_ptr)) != EOF) {
+        fputc(c, output_file_ptr);
+    }
+
+    fclose(input_file_ptr);
+    fclose(output_file_ptr);
+}
+
+int check_input_file(const char *input_path) {
+    if (!input_path) {
+        return 0;
+    }
+    FILE *input_file = fopen(input_path, "r");
+    if (!input_file) {
+        print_file_error(input_path);
+        return 0;
+    }
+    fclose(input_file);
+    return 1;
+}
+
+int check_output_file(const char *output_path) {
+    if (!output_path) {
+        return 0;
+    }
+    FILE *output_file = fopen(output_path, "w");
+    if (!output_file) {
+        print_file_error(output_path);
+        return 0;
+    }
+    fclose(output_file);
+    return 1;
+}
+
+void print_file_error(const char *path) {
+    fprintf(stderr, FILE_ERROR_MESSAGES[errno], path);
+}

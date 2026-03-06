@@ -1,5 +1,16 @@
 # P2LX Developer Manual
 
+Authors of this file:<br>
+- Joan Vicente Martín<br>
+- Pau Puig Guillén<br>
+- ...
+
+Reviewed by:<br>
+- Marc Bosch Manzano
+
+Creation:<br>
+- 2026-02-16
+
 ## 1. Scope
 
 This document describes implementation decisions for the P2 lexical scanner,
