@@ -129,6 +129,7 @@ static void print_goto_table(const ParseTable *pt, const Language *lang)
 
 static void print_token_stream(const TokenList *tokens, const Language *lang)
 {
+    if (!tokens || !lang) { return; }
     printf("╔══════════════════════════════════════════════╗\n");
     printf("║            INPUT TOKEN STREAM                ║\n");
     printf("╠═════╦══════════════╦═════════════════════════╣\n");
@@ -238,7 +239,6 @@ void parser_run(ParserContext *ctx)
         fprintf(stdout, "Debug output: %s\n", ctx->output_file);
     }
 
-    return;
     /* ── 6. Run parse ──────────────────────────────────────────────── */
     ctx->status = sra_parse(ctx->sra, ctx->tokens, ctx->logger);
     if (ctx->status == EXIT_SUCCESS) {

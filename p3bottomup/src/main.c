@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
     parser_run(&ctx);
     
-    context_cleanup(&ctx);
-    context_exit(&ctx);
+    // context_cleanup(&ctx);
+    // context_exit(&ctx);
     return 0;
 }
